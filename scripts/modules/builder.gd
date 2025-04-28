@@ -1,14 +1,17 @@
 extends Node2D
 
+class_name Builder
 
 @export var active := false
 @export var debugOccupied := false
 
-const TILE_SIZE = 128
+const TILE_SIZE = 32
 
 # dictionary of ShipModule in matrix [x][y] representing if tile is occupied or not
 @export var occupiedSpace := {}
 var lastPartPosition : Vector2
+
+@export var overlapping := false
 
 func _draw() -> void:
     if debugOccupied:
@@ -20,7 +23,7 @@ func _draw() -> void:
 #@export var modules : Dictionary[int, ShipModule]
 
 var holdingElement : ShipModule
-var isHoldingPlaceButton := false
+var isHoldingElement := false
 
 func _input(event: InputEvent) -> void:
     if !active: return
@@ -28,18 +31,27 @@ func _input(event: InputEvent) -> void:
         if event.pressed:
             if holdingElement: #started moving part
                 pickup_part(holdingElement)
-            isHoldingPlaceButton = true
+                isHoldingElement = true
         else:
-            if holdingElement: #ended moving part
+            if holdingElement and isHoldingElement: #ended moving part
                 place_part(holdingElement, get_global_mouse_position())
-            isHoldingPlaceButton = false
+            isHoldingElement = false
 
 func _process(delta: float) -> void:
     if !active: return
-    if holdingElement and isHoldingPlaceButton:
+    if holdingElement and isHoldingElement:
         holdingElement.global_position = lerp(holdingElement.global_position, get_global_mouse_position(), delta*10*clamp(distance(holdingElement.global_position, get_global_mouse_position())/1000, 1, 10))
+        overlapping = any_overlap(holdingElement, get_global_mouse_position())
     
     queue_redraw()
+
+func any_overlap(part: ShipModule, _position: Vector2) -> bool:
+    for t in part.tiles:
+        var x = t.x + int(floor(_position.x/part.TILE_SIZE))
+        var y = t.y + int(floor(_position.y/part.TILE_SIZE))
+        if occupiedSpace.has(x) and occupiedSpace[x].has(y):
+            return true
+    return false
 
 # position will be rounded to grid
 func pickup_part(part: ShipModule):
@@ -53,10 +65,10 @@ func pickup_part(part: ShipModule):
                 occupiedSpace.erase(x)
 
 # position will be rounded to grid
-func place_part(part: ShipModule, position: Vector2):
+func place_part(part: ShipModule, _position: Vector2):
     part.global_position = Vector2(
-        floor(position.x/part.TILE_SIZE)*part.TILE_SIZE + part.TILE_SIZE - part.TILE_SIZE/2,
-        floor(position.y/part.TILE_SIZE)*part.TILE_SIZE + part.TILE_SIZE - part.TILE_SIZE/2
+        floor(_position.x/part.TILE_SIZE)*part.TILE_SIZE + part.TILE_SIZE - part.TILE_SIZE/2,
+        floor(_position.y/part.TILE_SIZE)*part.TILE_SIZE + part.TILE_SIZE - part.TILE_SIZE/2
     )
     #check for collisions
     for t in part.tiles:

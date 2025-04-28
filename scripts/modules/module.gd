@@ -2,7 +2,7 @@
 extends Node2D
 class_name ShipModule
 
-const TILE_SIZE = 128
+const TILE_SIZE = 32
 
 # Tiles selection visualisation
 @export var tiles : Array[Vector2i]:
@@ -51,10 +51,16 @@ func _ready() -> void:
     health = maxHealth;
     energy = maxEnergy;
 
+func rotate_left() -> void:
+    pass
+
+func rotate_right() -> void:
+    pass
+
 func _mouse_entered():
     if !get_parent().holdingElement or !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
         get_parent().holdingElement = self
 
 func _mouse_exited():
-    if !get_parent().isHoldingPlaceButton and get_parent().holdingElement == self:
+    if !get_parent().isHoldingElement and get_parent().holdingElement == self:
         get_parent().holdingElement = null

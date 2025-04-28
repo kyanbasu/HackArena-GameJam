@@ -1,9 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=9 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://w204yqawbut1" path="res://scripts/modules/builder.gd" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://p71t6ovr8u2i" path="res://prefabs/modules/cockpit.tscn" id="3_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://bpw15hrocyjdr" path="res://prefabs/modules/hallway_L.tscn" id="4_iywne"]
 [ext_resource type="Script" uid="uid://bcq4ly521oa7u" path="res://scripts/draw_element.gd" id="4_lbhrr"]
+[ext_resource type="Texture2D" uid="uid://b6f8ru7gycbdv" path="res://art/placement.png" id="6_gee14"]
+[ext_resource type="Shader" uid="uid://dpnvhbkp3ki8f" path="res://shaders/placement_shader.tres" id="6_u5sy4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
+shader = ExtResource("6_u5sy4")
+shader_parameter/Color = Color(0, 0, 1, 1)
+shader_parameter/Scale = 5.0
+shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [node name="Node2D" type="Node2D"]
 
@@ -20,15 +29,19 @@ active = true
 debugOccupied = true
 
 [node name="cockpit" parent="ship/modules" instance=ExtResource("3_lnu2h")]
-position = Vector2(-384, 512)
+position = Vector2(-96, 160)
 
 [node name="cockpit2" parent="ship/modules" instance=ExtResource("3_lnu2h")]
-position = Vector2(592, 327)
+position = Vector2(224, 96)
+
+[node name="hallway_L" parent="ship/modules" instance=ExtResource("4_iywne")]
+position = Vector2(-320, 96)
 
 [node name="drawElement" type="Node2D" parent="ship" node_paths=PackedStringArray("builder")]
 z_index = 100
+material = SubResource("ShaderMaterial_u5sy4")
 script = ExtResource("4_lbhrr")
 builder = NodePath("../modules")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.5, 0.5)
+zoom = Vector2(1.5, 1.5)

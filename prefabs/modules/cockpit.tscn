@@ -4,13 +4,13 @@
 [ext_resource type="Texture2D" uid="uid://jhuap7ms6vwu" path="res://art/grid.tres" id="2_d0e65"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4kpxk"]
-size = Vector2(128, 128)
+size = Vector2(32, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ttrqs"]
-size = Vector2(128, 128)
+size = Vector2(32, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ux3ip"]
-size = Vector2(128, 128)
+size = Vector2(32, 32)
 
 [node name="cockpit" type="Node2D"]
 script = ExtResource("1_luea0")
@@ -18,40 +18,55 @@ tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(-1, 0)])
 
 [node name="Grid" type="Sprite2D" parent="."]
 z_index = -1
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("2_d0e65")
+
+[node name="Label" type="Label" parent="Grid"]
+z_index = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = -64.0
+offset_right = -64.0
+offset_bottom = -41.0
+grow_horizontal = 0
+text = "cockpit"
 
 [node name="Grid2" type="Sprite2D" parent="."]
 z_index = -1
-position = Vector2(128, 0)
+position = Vector2(-32, 0)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("2_d0e65")
+
+[node name="Label" type="Label" parent="Grid2"]
+z_index = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = -64.0
+offset_right = -64.0
+offset_bottom = -41.0
+grow_horizontal = 0
+text = "cockpit"
 
 [node name="Grid3" type="Sprite2D" parent="."]
 z_index = -1
-position = Vector2(-128, 0)
+position = Vector2(32, 0)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("2_d0e65")
 
-[node name="Label" type="Label" parent="."]
-z_index = -1
-offset_left = -123.0
-offset_top = -53.0
-offset_right = -67.0
-offset_bottom = -30.0
-text = "cockpit"
-
-[node name="Label2" type="Label" parent="."]
-z_index = -1
-offset_left = 4.0
-offset_top = -55.0
-offset_right = 60.0
-offset_bottom = -32.0
-text = "cockpit"
-
-[node name="Label3" type="Label" parent="."]
-z_index = -1
-offset_left = 132.0
-offset_top = -51.0
-offset_right = 188.0
-offset_bottom = -28.0
+[node name="Label" type="Label" parent="Grid3"]
+z_index = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = -64.0
+offset_right = -64.0
+offset_bottom = -41.0
+grow_horizontal = 0
 text = "cockpit"
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
@@ -59,15 +74,15 @@ collision_layer = 128
 collision_mask = 128
 input_pickable = true
 
-[node name="@CollisionShape2D@31993" type="CollisionShape2D" parent="boundingBox"]
+[node name="@CollisionShape2D@27941" type="CollisionShape2D" parent="boundingBox"]
 shape = SubResource("RectangleShape2D_4kpxk")
 
-[node name="@CollisionShape2D@31994" type="CollisionShape2D" parent="boundingBox"]
-position = Vector2(128, 0)
+[node name="@CollisionShape2D@27942" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(32, 0)
 shape = SubResource("RectangleShape2D_ttrqs")
 
-[node name="@CollisionShape2D@31995" type="CollisionShape2D" parent="boundingBox"]
-position = Vector2(-128, 0)
+[node name="@CollisionShape2D@27943" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(-32, 0)
 shape = SubResource("RectangleShape2D_ux3ip")
 
 [connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]

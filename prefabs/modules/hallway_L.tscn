@@ -1,0 +1,94 @@
+[gd_scene load_steps=7 format=3 uid="uid://bpw15hrocyjdr"]
+
+[ext_resource type="Script" uid="uid://chf6gf16v432" path="res://scripts/modules/module.gd" id="1_du1ww"]
+[ext_resource type="Texture2D" uid="uid://jhuap7ms6vwu" path="res://art/grid.tres" id="2_ootqm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_du1ww"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ootqm"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xdqny"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mverf"]
+size = Vector2(32, 32)
+
+[node name="hallway_L" type="Node2D"]
+script = ExtResource("1_du1ww")
+tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(1, -1)])
+
+[node name="Grid" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_ootqm")
+
+[node name="Label" type="Label" parent="Grid"]
+z_index = 1
+offset_left = -13.0
+offset_top = -53.0
+offset_right = 59.0
+offset_bottom = -30.0
+text = "hallway L"
+
+[node name="Grid2" type="Sprite2D" parent="."]
+position = Vector2(-32, 0)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_ootqm")
+
+[node name="Label" type="Label" parent="Grid2"]
+z_index = 1
+offset_left = -13.0
+offset_top = -53.0
+offset_right = 59.0
+offset_bottom = -30.0
+text = "hallway L"
+
+[node name="Grid3" type="Sprite2D" parent="."]
+position = Vector2(32, 0)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_ootqm")
+
+[node name="Label" type="Label" parent="Grid3"]
+z_index = 1
+offset_left = -13.0
+offset_top = -53.0
+offset_right = 59.0
+offset_bottom = -30.0
+text = "hallway L"
+
+[node name="Grid4" type="Sprite2D" parent="."]
+position = Vector2(32, -32)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_ootqm")
+
+[node name="Label" type="Label" parent="Grid4"]
+z_index = 1
+offset_left = -13.0
+offset_top = -53.0
+offset_right = 59.0
+offset_bottom = -30.0
+text = "hallway L"
+
+[node name="boundingBox" type="StaticBody2D" parent="."]
+collision_layer = 128
+collision_mask = 128
+input_pickable = true
+
+[node name="@CollisionShape2D@40256" type="CollisionShape2D" parent="boundingBox"]
+shape = SubResource("RectangleShape2D_du1ww")
+
+[node name="@CollisionShape2D@40257" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(32, 0)
+shape = SubResource("RectangleShape2D_ootqm")
+
+[node name="@CollisionShape2D@40258" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(-32, 0)
+shape = SubResource("RectangleShape2D_xdqny")
+
+[node name="@CollisionShape2D@40259" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(32, -32)
+shape = SubResource("RectangleShape2D_mverf")
+
+[connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]
+[connection signal="mouse_exited" from="boundingBox" to="." method="_mouse_exited"]
