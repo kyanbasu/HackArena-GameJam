@@ -17,6 +17,7 @@ script = ExtResource("1_uwrxv")
 [node name="modules" type="Node2D" parent="ship"]
 script = ExtResource("2_yqjtg")
 active = true
+debugOccupied = true
 
 [node name="cockpit" parent="ship/modules" instance=ExtResource("3_lnu2h")]
 position = Vector2(-384, 512)

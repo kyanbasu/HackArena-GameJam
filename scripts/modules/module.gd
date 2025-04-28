@@ -52,7 +52,8 @@ func _ready() -> void:
     energy = maxEnergy;
 
 func _mouse_entered():
-    get_parent().holdingElement = self
+    if !get_parent().holdingElement or !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+        get_parent().holdingElement = self
 
 func _mouse_exited():
     if !get_parent().isHoldingPlaceButton and get_parent().holdingElement == self:
