@@ -25,17 +25,9 @@ script = ExtResource("1_uwrxv")
 
 [node name="modules" type="Node2D" parent="ship"]
 script = ExtResource("2_yqjtg")
+parts = Array[PackedScene]([ExtResource("3_lnu2h"), ExtResource("4_iywne")])
 active = true
 debugOccupied = true
-
-[node name="cockpit" parent="ship/modules" instance=ExtResource("3_lnu2h")]
-position = Vector2(-96, 160)
-
-[node name="cockpit2" parent="ship/modules" instance=ExtResource("3_lnu2h")]
-position = Vector2(224, 96)
-
-[node name="hallway_L" parent="ship/modules" instance=ExtResource("4_iywne")]
-position = Vector2(-320, 96)
 
 [node name="drawElement" type="Node2D" parent="ship" node_paths=PackedStringArray("builder")]
 z_index = 100

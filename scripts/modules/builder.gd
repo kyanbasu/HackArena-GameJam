@@ -2,6 +2,8 @@ extends Node2D
 
 class_name Builder
 
+@export var parts : Array[PackedScene]
+
 @export var active := false
 @export var debugOccupied := false
 
@@ -25,6 +27,23 @@ func _draw() -> void:
 var holdingElement : ShipModule
 var isHoldingElement := false
 
+func _ready() -> void:
+    var p = parts[1].instantiate()
+    add_child(p)
+    place_part(p, Vector2(500, 200))
+    
+    p = parts[1].instantiate()
+    add_child(p)
+    place_part(p, Vector2(0, 200))
+    
+    p = parts[0].instantiate()
+    add_child(p)
+    place_part(p, Vector2(-200, 200))
+    
+    p = parts[0].instantiate()
+    add_child(p)
+    place_part(p, Vector2(-200, 0))
+
 func _input(event: InputEvent) -> void:
     if !active: return
     if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
@@ -36,6 +55,12 @@ func _input(event: InputEvent) -> void:
             if holdingElement and isHoldingElement: #ended moving part
                 place_part(holdingElement, get_global_mouse_position())
             isHoldingElement = false
+    
+    if holdingElement and isHoldingElement:
+        if Input.is_action_just_pressed("left"):
+            holdingElement.rotate_left()
+        elif Input.is_action_just_pressed("right"):
+            holdingElement.rotate_right()
 
 func _process(delta: float) -> void:
     if !active: return
