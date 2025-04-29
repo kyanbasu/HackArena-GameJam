@@ -4,6 +4,8 @@ class_name ShipModule
 
 const TILE_SIZE = 32
 
+@export var isRotateable : bool = true
+
 @export var tiles : Array[Vector2i]:
     set(new_tiles):
         tiles = new_tiles.duplicate() #duplicate fixes unique array problem
@@ -55,19 +57,21 @@ func _ready() -> void:
     energy = maxEnergy;
 
 func rotate_left() -> void:
+    if !isRotateable: return
     rotation -= PI/2
     for i in len(tiles):
         tiles[i] = Vector2i(tiles[i].y, -tiles[i].x)
 
 func rotate_right() -> void:
+    if !isRotateable: return
     rotation += PI/2
     for i in len(tiles):
         tiles[i] = Vector2i(-tiles[i].y, tiles[i].x)
 
 func _mouse_entered():
-    if !get_parent().holdingElement or !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-        get_parent().holdingElement = self
+    if !get_parent().selectedModule or !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+        get_parent().selectedModule = self
 
 func _mouse_exited():
-    if !get_parent().isHoldingElement and get_parent().holdingElement == self:
-        get_parent().holdingElement = null
+    if !get_parent().isHoldingModule and get_parent().selectedModule == self:
+        get_parent().selectedModule = null

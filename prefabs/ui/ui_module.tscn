@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2aglbvarsf3x"]
+
+[ext_resource type="Script" uid="uid://dtm2yoj0qoyqx" path="res://scripts/ui/inventory/ui_module.gd" id="1_q0uj6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wynce"]
+font_size = 26
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_q0uj6"]
+line_spacing = 0.0
+font_size = 20
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="ui_module" type="Panel"]
+custom_minimum_size = Vector2(0, 100)
+offset_right = 400.0
+offset_bottom = 100.0
+size_flags_horizontal = 3
+script = ExtResource("1_q0uj6")
+
+[node name="name" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 6.0
+offset_right = -73.0
+offset_bottom = 36.0
+grow_horizontal = 2
+text = "module name"
+label_settings = SubResource("LabelSettings_wynce")
+
+[node name="amount" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 334.0
+offset_right = -4.0
+offset_bottom = 36.0
+grow_horizontal = 2
+text = "x1"
+label_settings = SubResource("LabelSettings_wynce")
+horizontal_alignment = 2
+
+[node name="desc" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = -60.0
+offset_right = -7.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "description"
+label_settings = SubResource("LabelSettings_q0uj6")
+autowrap_mode = 3
+clip_text = true
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

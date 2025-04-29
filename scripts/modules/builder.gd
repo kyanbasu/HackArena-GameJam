@@ -2,7 +2,7 @@ extends Node2D
 
 class_name Builder
 
-@export var parts : Array[PackedScene]
+@export var inventory : Inventory
 
 @export var active := false
 @export var debugOccupied := false
@@ -26,55 +26,43 @@ func _draw() -> void:
                 Color(1, 0, 0, 0.5), false, 6)
 #@export var modules : Dictionary[int, ShipModule]
 
-var holdingElement : ShipModule
-var isHoldingElement := false
+var selectedModule : ShipModule
+var isHoldingModule := false
 
 func _ready() -> void:
-    for x in range(-4,5):
+    if inventory: inventory.builder = self
+    
+    for x in range(-5,6):
         for y in range(-4,5):
             if !buildableSpace.has(x):
                 buildableSpace[x] = {}
             buildableSpace[x][y] = true
-    var p = parts[1].instantiate()
-    add_child(p)
-    place_part(p, Vector2(500, 200))
-    
-    p = parts[1].instantiate()
-    add_child(p)
-    place_part(p, Vector2(0, 200))
-    
-    p = parts[0].instantiate()
-    add_child(p)
-    place_part(p, Vector2(-200, 200))
-    
-    p = parts[0].instantiate()
-    add_child(p)
-    place_part(p, Vector2(-200, 0))
 
 func _input(event: InputEvent) -> void:
     if !active: return
     if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
         if event.pressed:
-            if holdingElement: #started moving part
-                pickup_part(holdingElement)
-                isHoldingElement = true
+            if selectedModule: #started moving part
+                pickup_part(selectedModule)
+                isHoldingModule = true
         else:
-            if holdingElement and isHoldingElement: #ended moving part
-                place_part(holdingElement, get_global_mouse_position())
-            isHoldingElement = false
+            if selectedModule and isHoldingModule: #ended moving part
+                place_part(selectedModule, get_global_mouse_position())
+            isHoldingModule = false
+            selectedModule = null
     
-    if holdingElement and isHoldingElement:
+    if selectedModule and isHoldingModule and selectedModule.isRotateable:
         if Input.is_action_just_pressed("left"):
-            holdingElement.rotate_left()
+            selectedModule.rotate_left()
         elif Input.is_action_just_pressed("right"):
-            holdingElement.rotate_right()
+            selectedModule.rotate_right()
 
 func _process(delta: float) -> void:
     if !active: return
     overlapping = []
-    if holdingElement and isHoldingElement:
-        holdingElement.global_position = lerp(holdingElement.global_position, get_global_mouse_position(), delta*10*clamp(distance(holdingElement.global_position, get_global_mouse_position())/1000, 1, 10))
-        overlapping = get_overlap(holdingElement, get_global_mouse_position())
+    if selectedModule and isHoldingModule:
+        selectedModule.global_position = lerp(selectedModule.global_position, get_global_mouse_position(), delta*10*clamp(distance(selectedModule.global_position, get_global_mouse_position())/1000, 1, 10))
+        overlapping = get_overlap(selectedModule, get_global_mouse_position())
         
     
     queue_redraw()
@@ -96,6 +84,10 @@ func get_overlap(part: ShipModule, _position: Vector2) -> Array[Vector2i]:
             _o.append(t)
     return _o
 
+# returns if any other module is near this module
+func is_part_adjacent(part: ShipModule):
+    pass
+
 # position will be rounded to grid
 func pickup_part(part: ShipModule):
     lastPartPositionRotation = Vector3(part.global_position.x, part.global_position.y, part.rotation)
@@ -109,6 +101,10 @@ func pickup_part(part: ShipModule):
 
 # position will be rounded to grid
 func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
+    if inventory.isMouseOver:
+        inventory.add_module(part)
+        part.queue_free()
+        return
     if _rotation != -1:
         while (int(abs(part.rotation - _rotation)*180/PI))%360 > 10:
             part.rotate_left()
@@ -118,6 +114,10 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
     )
     #check for collisions
     if any_overlap(part, _position):
+        if lastPartPositionRotation == Vector3.INF:
+            inventory.add_module(part)
+            part.queue_free()
+            return
         var new_pos = Vector2(lastPartPositionRotation.x, lastPartPositionRotation.y)
         if new_pos == _position:
             return
