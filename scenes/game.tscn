@@ -10,7 +10,6 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
-shader_parameter/Color = Color(0, 0, 1, 1)
 shader_parameter/Scale = 5.0
 shader_parameter/Texture2D = ExtResource("6_gee14")
 
@@ -29,7 +28,7 @@ parts = Array[PackedScene]([ExtResource("3_lnu2h"), ExtResource("4_iywne")])
 active = true
 debugOccupied = true
 
-[node name="drawElement" type="Node2D" parent="ship" node_paths=PackedStringArray("builder")]
+[node name="placementDraw" type="Node2D" parent="ship" node_paths=PackedStringArray("builder")]
 z_index = 100
 material = SubResource("ShaderMaterial_u5sy4")
 script = ExtResource("4_lbhrr")
