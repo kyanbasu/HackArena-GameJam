@@ -43,10 +43,12 @@ func _input(event: InputEvent) -> void:
     if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
         if event.pressed:
             if selectedModule: #started moving part
+                selectedModule.z_index = 10
                 pickup_part(selectedModule)
                 isHoldingModule = true
         else:
             if selectedModule and isHoldingModule: #ended moving part
+                selectedModule.z_index = 0
                 place_part(selectedModule, get_global_mouse_position())
             isHoldingModule = false
             selectedModule = null

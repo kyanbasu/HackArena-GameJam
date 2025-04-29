@@ -64,6 +64,7 @@ func get_module(part: PackedScene) -> ShipModule:
         update_ui_module(part)
         var p = part.instantiate() as ShipModule
         p.set_meta("packed_scene", part)
+        p.z_index = 10
         builder.selectedModule = p
         builder.isHoldingModule = true
         builder.lastPartPositionRotation = Vector3.INF

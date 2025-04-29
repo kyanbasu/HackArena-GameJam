@@ -38,7 +38,7 @@ inventory = NodePath("../UI/inventory")
 active = true
 
 [node name="placementDraw" type="Node2D" parent="ship" node_paths=PackedStringArray("builder")]
-z_index = -100
+z_index = 11
 material = SubResource("ShaderMaterial_u5sy4")
 script = ExtResource("4_lbhrr")
 builder = NodePath("../modules")
