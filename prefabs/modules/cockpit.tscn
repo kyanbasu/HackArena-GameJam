@@ -74,14 +74,14 @@ collision_layer = 128
 collision_mask = 128
 input_pickable = true
 
-[node name="@CollisionShape2D@27941" type="CollisionShape2D" parent="boundingBox"]
+[node name="0,0" type="CollisionShape2D" parent="boundingBox"]
 shape = SubResource("RectangleShape2D_4kpxk")
 
-[node name="@CollisionShape2D@27942" type="CollisionShape2D" parent="boundingBox"]
+[node name="1,0" type="CollisionShape2D" parent="boundingBox"]
 position = Vector2(32, 0)
 shape = SubResource("RectangleShape2D_ttrqs")
 
-[node name="@CollisionShape2D@27943" type="CollisionShape2D" parent="boundingBox"]
+[node name="-1,0" type="CollisionShape2D" parent="boundingBox"]
 position = Vector2(-32, 0)
 shape = SubResource("RectangleShape2D_ux3ip")
 

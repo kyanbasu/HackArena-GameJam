@@ -4,11 +4,10 @@ class_name ShipModule
 
 const TILE_SIZE = 32
 
-# Tiles selection visualisation
 @export var tiles : Array[Vector2i]:
     set(new_tiles):
-        tiles = new_tiles
-        if Engine.is_editor_hint():
+        tiles = new_tiles.duplicate() #duplicate fixes unique array problem
+        if Engine.is_editor_hint(): # Tiles selection visualisation
             queue_redraw()
             
             if !get_node_or_null("boundingBox"):
@@ -21,13 +20,17 @@ const TILE_SIZE = 32
             
             # remove all children of bounding box to then redo every for tiles
             queue_free_children($boundingBox)
+            var col_added : Array[Vector2i] = []
             for t in tiles:
+                if t in col_added: continue
                 var box = CollisionShape2D.new()
                 $boundingBox.add_child(box)
                 box.owner = self
+                box.name = "%s,%s" % [t.x, t.y]
                 box.shape = RectangleShape2D.new()
                 box.shape.size = Vector2(TILE_SIZE, TILE_SIZE)
                 box.position = t * TILE_SIZE
+                col_added.append(t)
 
 static func queue_free_children(node: Node) -> void:
     for n in node.get_children():
@@ -52,10 +55,14 @@ func _ready() -> void:
     energy = maxEnergy;
 
 func rotate_left() -> void:
-    pass
+    rotation -= PI/2
+    for i in len(tiles):
+        tiles[i] = Vector2i(tiles[i].y, -tiles[i].x)
 
 func rotate_right() -> void:
-    pass
+    rotation += PI/2
+    for i in len(tiles):
+        tiles[i] = Vector2i(-tiles[i].y, tiles[i].x)
 
 func _mouse_entered():
     if !get_parent().holdingElement or !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
