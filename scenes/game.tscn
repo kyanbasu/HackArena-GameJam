@@ -37,6 +37,7 @@ z_index = 10
 script = ExtResource("2_yqjtg")
 inventory = NodePath("../UI/inventory")
 active = true
+debugOccupied = true
 
 [node name="placementGridDraw" type="Node2D" parent="ship" node_paths=PackedStringArray("builder")]
 z_index = 11

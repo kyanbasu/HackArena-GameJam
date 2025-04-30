@@ -43,12 +43,10 @@ func _input(event: InputEvent) -> void:
     if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
         if event.pressed:
             if selectedModule: #started moving part
-                selectedModule.z_index = 10
                 pickup_part(selectedModule)
-                isHoldingModule = true
+                
         else:
             if selectedModule and isHoldingModule: #ended moving part
-                selectedModule.z_index = 0
                 place_part(selectedModule, get_global_mouse_position())
             isHoldingModule = false
             selectedModule = null
@@ -87,11 +85,27 @@ func get_overlap(part: ShipModule, _position: Vector2) -> Array[Vector2i]:
     return _o
 
 # returns if any other module is near this module
-func is_part_adjacent(part: ShipModule):
-    pass
+func is_part_adjacent(part: ShipModule) -> bool:
+    for t in part.tiles:
+        if is_part_adjacent_check_one(part, t + Vector2i(1, 0)):
+            return true
+        if is_part_adjacent_check_one(part, t + Vector2i(-1, 0)):
+            return true
+        if is_part_adjacent_check_one(part, t + Vector2i(0, 1)):
+            return true
+        if is_part_adjacent_check_one(part, t + Vector2i(0, -1)):
+            return true
+    return false
+
+func is_part_adjacent_check_one(part: ShipModule, offset: Vector2i) -> bool:
+    var checkPos = Vector2i(part.global_position/part.TILE_SIZE - Vector2(.5,.5)) + offset
+    if occupiedSpace.has(checkPos.x) and occupiedSpace[checkPos.x].has(checkPos.y) and occupiedSpace[checkPos.x][checkPos.y] != part:
+        return true
+    return false
 
 # position will be rounded to grid
 func pickup_part(part: ShipModule):
+    selectedModule.z_index = 10
     lastPartPositionRotation = Vector3(part.global_position.x, part.global_position.y, part.rotation)
     for t in part.tiles:
         var x = t.x + int(floor(part.global_position.x/part.TILE_SIZE))
@@ -100,9 +114,11 @@ func pickup_part(part: ShipModule):
             occupiedSpace[x].erase(y)
             if occupiedSpace[x].is_empty():
                 occupiedSpace.erase(x)
+    isHoldingModule = true
 
 # position will be rounded to grid
 func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
+    selectedModule.z_index = 0
     if inventory.isMouseOver:
         inventory.add_module(part)
         part.queue_free()
@@ -114,8 +130,8 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
         floor(_position.x/part.TILE_SIZE)*part.TILE_SIZE + part.TILE_SIZE - part.TILE_SIZE/2,
         floor(_position.y/part.TILE_SIZE)*part.TILE_SIZE + part.TILE_SIZE - part.TILE_SIZE/2
     )
-    #check for collisions
-    if any_overlap(part, _position):
+    #check for collisions and if any part is adjacent or it is the first part
+    if any_overlap(part, _position) or (!is_part_adjacent(part) and occupiedSpace.size() > 0):
         if lastPartPositionRotation == Vector3.INF:
             inventory.add_module(part)
             part.queue_free()
