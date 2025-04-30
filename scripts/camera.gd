@@ -9,6 +9,8 @@ var target_zoom : float
 
 const ZOOM_SPEED = 10
 
+const CAMERA_BOUND := Vector2(600, 350)
+
 func _ready() -> void:
     target_zoom = zoom.x
 
@@ -27,7 +29,9 @@ func _input(event: InputEvent) -> void:
         target_zoom = clamp(target_zoom, 0.5, 5)
     if event is InputEventMouseMotion:
         if isMiddleDown:
-            position = lastCameraPos - get_local_mouse_position() + lastMousePos     
+            position = lastCameraPos - get_local_mouse_position() + lastMousePos
+            position.x = clamp(position.x, -CAMERA_BOUND.x, CAMERA_BOUND.x)
+            position.y = clamp(position.y, -CAMERA_BOUND.y, CAMERA_BOUND.y)
 
 func _process(delta):
     smooth_zoom = lerp(smooth_zoom, target_zoom, ZOOM_SPEED * delta)
