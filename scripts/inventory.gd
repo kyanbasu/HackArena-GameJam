@@ -24,7 +24,11 @@ func create_ui_module(part: PackedScene):
     ui_mod.inventory = self
     ui_mod.module_amount = modules[part]
     ui_mod.mouse_filter = Control.MOUSE_FILTER_PASS
+    ui_mod.module_name = get_name_from_file(part)
     uiModulesContainer.add_child(ui_mod)
+
+static func get_name_from_file(scene: PackedScene):
+    return scene.resource_path.get_file().trim_suffix('.tscn').replace("_", " ")
 
 func update_ui_module(part: PackedScene):
     if ui_modules.has(part):
