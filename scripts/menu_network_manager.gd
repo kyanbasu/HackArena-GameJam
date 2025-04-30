@@ -3,6 +3,7 @@ extends Node
 var localPlayer
 
 @export var connectionMenu : CanvasLayer
+@export var lobbyMenu : CanvasLayer
 
 # These signals can be connected to by a UI lobby scene or the game scene.
 signal player_connected(peer_id, player_info)
@@ -16,6 +17,8 @@ const defaultIp : String = "127.0.0.1"
 const MAX_CONNECTIONS = 20
 
 @export var playersNode : Node2D
+
+@export var gameScene : PackedScene
 
 # This will contain player info for every player,
 # with the keys being each player's unique IDs.
@@ -57,6 +60,8 @@ func _on_host_pressed() -> void:
         connectionMenu.get_node("connect").disabled = false
         return
     connectionMenu.visible = false
+    lobbyMenu.visible = true
+    lobbyMenu.get_node("start").disabled = false
     
 func _on_join_pressed() -> void:
     connectionMenu.get_node("host").disabled = true
@@ -69,6 +74,15 @@ func _on_join_pressed() -> void:
         connectionMenu.get_node("connect").disabled = false
         return
     connectionMenu.visible = false
+    lobbyMenu.visible = true
+    lobbyMenu.get_node("start").disabled = true
+
+func _host_start_game() -> void:
+    _load_scene.rpc(gameScene.resource_path)
+
+@rpc("call_local", "reliable")
+func _load_scene(scene: String) -> void:
+    get_tree().change_scene_to_file(scene)
 
 func _on_connect_pressed() -> void:
     pass
@@ -101,13 +115,6 @@ func create_game() -> Error:
 func remove_multiplayer_peer():
     multiplayer.multiplayer_peer = null
     players.clear()
-
-
-# When the server decides to start the game from a UI scene,
-# do Lobby.load_game.rpc(filepath)
-@rpc("call_local", "reliable")
-func load_game(game_scene_path):
-    get_tree().change_scene_to_file(game_scene_path)
 
 
 # Every peer will call this when they have loaded the game scene.

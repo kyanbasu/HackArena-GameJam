@@ -3,20 +3,20 @@
 [ext_resource type="Script" uid="uid://dtm2yoj0qoyqx" path="res://scripts/ui/inventory/ui_module.gd" id="1_q0uj6"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_wynce"]
-font_size = 26
+font_size = 14
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_q0uj6"]
 line_spacing = 0.0
-font_size = 20
+font_size = 12
 shadow_size = 2
 shadow_color = Color(0, 0, 0, 1)
 
 [node name="ui_module" type="Panel"]
-custom_minimum_size = Vector2(0, 100)
-offset_right = 400.0
-offset_bottom = 100.0
+custom_minimum_size = Vector2(0, 40)
+offset_right = 140.0
+offset_bottom = 40.0
 size_flags_horizontal = 3
 script = ExtResource("1_q0uj6")
 
@@ -24,8 +24,8 @@ script = ExtResource("1_q0uj6")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 6.0
-offset_right = -73.0
+offset_left = 4.0
+offset_right = -29.0
 offset_bottom = 36.0
 grow_horizontal = 2
 text = "module name"
@@ -35,9 +35,10 @@ label_settings = SubResource("LabelSettings_wynce")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_left = 334.0
-offset_right = -4.0
-offset_bottom = 36.0
+offset_left = 123.0
+offset_top = 1.0
+offset_right = -1.0
+offset_bottom = 37.0
 grow_horizontal = 2
 text = "x1"
 label_settings = SubResource("LabelSettings_wynce")
@@ -49,9 +50,10 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 7.0
-offset_top = -60.0
-offset_right = -7.0
+offset_left = 4.0
+offset_top = -19.0
+offset_right = -10.0
+offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "description"

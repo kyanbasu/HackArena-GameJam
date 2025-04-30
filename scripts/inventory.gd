@@ -63,7 +63,7 @@ func remove_module_scene(part: PackedScene) -> Error:
         return 1
 
 func get_module(part: PackedScene) -> ShipModule:
-    if modules.has(part) and modules[part] > 0:
+    if builder.active and modules.has(part) and modules[part] > 0:
         modules[part] -= 1
         update_ui_module(part)
         var p = part.instantiate() as ShipModule

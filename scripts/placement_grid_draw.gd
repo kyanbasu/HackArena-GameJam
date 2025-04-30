@@ -1,9 +1,9 @@
 extends Node2D
 
-@export var builder : Builder
+var builder : Builder
 
 func _draw() -> void:
-    if builder.selectedModule and builder.isHoldingModule:
+    if builder.active and builder.selectedModule and builder.isHoldingModule:
         for t in builder.selectedModule.tiles:
             var col = Color(0,1,0,0.5)
             if builder.overlapping.has(t):
@@ -16,6 +16,3 @@ func _draw() -> void:
                     builder.TILE_SIZE, builder.TILE_SIZE), 
                 col
             )
-
-func _process(_delta: float) -> void:
-    queue_redraw()

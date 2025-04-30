@@ -1,20 +1,24 @@
-[gd_scene load_steps=2 format=3 uid="uid://bf77y0m31uitl"]
+[gd_scene load_steps=3 format=3 uid="uid://bf77y0m31uitl"]
 
 [ext_resource type="Script" uid="uid://daj1ri7i6cl3h" path="res://scripts/menu_network_manager.gd" id="1_yqeox"]
+[ext_resource type="PackedScene" uid="uid://vm08dmxa78b" path="res://scenes/game.tscn" id="2_vjb58"]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="MenuNetworkManager" type="Node" parent="." node_paths=PackedStringArray("connectionMenu")]
+[node name="MenuNetworkManager" type="Node" parent="." node_paths=PackedStringArray("connectionMenu", "lobbyMenu")]
 script = ExtResource("1_yqeox")
 connectionMenu = NodePath("../ConnectionMenu")
+lobbyMenu = NodePath("../Lobby")
+gameScene = ExtResource("2_vjb58")
 
 [node name="playerList" type="Label" parent="MenuNetworkManager"]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -101.0
-offset_right = -21.0
-offset_bottom = 23.0
+offset_left = -89.0
+offset_top = 13.0
+offset_right = -9.0
+offset_bottom = 36.0
 grow_horizontal = 0
 text = "Player List"
 horizontal_alignment = 2
@@ -67,18 +71,50 @@ grow_vertical = 2
 placeholder_text = "port"
 
 [node name="host" type="Button" parent="ConnectionMenu"]
-offset_left = 725.0
-offset_top = 275.0
-offset_right = 769.0
-offset_bottom = 306.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 124.0
+offset_top = -89.0
+offset_right = 168.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "Host"
 
 [node name="connect" type="Button" parent="ConnectionMenu"]
-offset_left = 725.0
-offset_top = 336.0
-offset_right = 769.0
-offset_bottom = 367.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 125.0
+offset_top = -12.0
+offset_right = 197.0
+offset_bottom = 19.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "Connect"
+
+[node name="Lobby" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="start" type="Button" parent="Lobby"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 91.0
+offset_top = 64.0
+offset_right = 184.0
+offset_bottom = 95.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Start game"
 
 [connection signal="button_down" from="ConnectionMenu/host" to="MenuNetworkManager" method="_on_host_pressed"]
 [connection signal="button_down" from="ConnectionMenu/connect" to="MenuNetworkManager" method="_on_join_pressed"]
+[connection signal="button_down" from="Lobby/start" to="MenuNetworkManager" method="_host_start_game"]

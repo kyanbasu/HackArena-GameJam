@@ -4,7 +4,14 @@ class_name Builder
 
 @export var inventory : Inventory
 
-@export var active := false
+@export var placementGrid : Node2D
+@export var spaceGrid : Node2D
+
+@export var active := false:
+    set(new_val):
+        active = new_val
+        if spaceGrid:
+            spaceGrid.queue_redraw()
 @export var debugOccupied := false
 
 const TILE_SIZE = 32
@@ -29,6 +36,8 @@ var selectedModule : ShipModule
 var isHoldingModule := false
 
 func _ready() -> void:
+    placementGrid.builder = self
+    spaceGrid.builder = self
     if inventory: inventory.builder = self
     
     for x in range(-5,6):
@@ -47,6 +56,8 @@ func _input(event: InputEvent) -> void:
                 place_part(selectedModule, get_global_mouse_position())
             isHoldingModule = false
             selectedModule = null
+            placementGrid.queue_redraw()
+            queue_redraw()
     
     if selectedModule and isHoldingModule and selectedModule.isRotateable:
         if Input.is_action_just_pressed("left"):
@@ -60,8 +71,9 @@ func _process(delta: float) -> void:
     if selectedModule and isHoldingModule:
         selectedModule.global_position = lerp(selectedModule.global_position, get_global_mouse_position(), delta*10*clamp(distance(selectedModule.global_position, get_global_mouse_position())/1000, 1, 10))
         overlapping = get_overlap(selectedModule, get_global_mouse_position())
-    
-    queue_redraw()
+        
+        placementGrid.queue_redraw()
+        queue_redraw()
 
 func any_overlap(part: ShipModule, pos: Vector2) -> bool:
     for t in part.tiles:
