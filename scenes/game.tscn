@@ -24,13 +24,17 @@ shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [node name="Node2D" type="Node2D"]
 
-[node name="GameNetworkManager" type="Node2D" parent="."]
+[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "builder")]
 script = ExtResource("1_uwrxv")
+nextTurnBtn = NodePath("../ship/UI/nextTurn")
+ship = NodePath("../ship")
+builder = NodePath("../ship/modules")
 
 [node name="players" type="Node2D" parent="."]
 
-[node name="ship" type="Node2D" parent="."]
+[node name="ship" type="Node2D" parent="." node_paths=PackedStringArray("builder")]
 script = ExtResource("2_dinhu")
+builder = NodePath("modules")
 
 [node name="modules" type="Node2D" parent="ship" node_paths=PackedStringArray("inventory", "placementGrid", "spaceGrid")]
 z_index = 10
@@ -112,9 +116,24 @@ text = "a/d obracanie, kokpit ma je wylaczone
 drag n drop budowanie"
 label_settings = SubResource("LabelSettings_vtaks")
 
+[node name="nextTurn" type="Button" parent="ship/UI"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -101.0
+offset_top = -42.0
+offset_right = -15.0
+offset_bottom = -11.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Next Turn"
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(64, 0)
 script = ExtResource("10_vtaks")
 
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_exited"]
+[connection signal="button_down" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn"]

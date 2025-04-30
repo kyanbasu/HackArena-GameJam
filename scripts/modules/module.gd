@@ -2,8 +2,6 @@
 extends Node2D
 class_name ShipModule
 
-@export var isRotateable : bool = true
-
 @export var tiles : Array[Vector2i]:
     set(new_tiles):
         tiles = new_tiles.duplicate() #duplicate fixes unique array problem
@@ -46,11 +44,15 @@ func _draw():
                 Color(0, 1, 0, 0.1)
             )
 
-var health;
-var maxHealth = 2;
+@export var isRotateable : bool = true
 
+# Total health of module
+@export var maxHealth = 2;
+var health;
+
+# Total energy used by module
+@export var maxEnergy = 1;
 var energy;
-var maxEnergy = 1;
 
 func _ready() -> void:
     health = maxHealth;
@@ -67,6 +69,12 @@ func rotate_right() -> void:
     rotation += PI/2
     for i in len(tiles):
         tiles[i] = Vector2i(-tiles[i].y, tiles[i].x)
+
+func damage(amount: int) -> void:
+    if health - amount < 0:
+        health = 0
+        return
+    health -= amount
 
 func _mouse_entered():
     if !get_parent().selectedModule or !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
