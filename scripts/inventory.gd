@@ -36,19 +36,22 @@ func update_ui_module(part: PackedScene):
     else:
         create_ui_module(part)
         
-func add_module(part: ShipModule) -> void:
+func add_module(part: ShipModule, amount: int=1) -> bool:
     if part.has_meta("packed_scene"):
         var s = part.get_meta("packed_scene", PackedScene) #getting PackedScene from instance
         if modules.has(s):
-            modules[s] += 1
+            if modules[s] + amount <= 0: return false
+            modules[s] += amount
         else:
-            modules[s] = 1
+            if amount <= 0: return false
+            modules[s] = amount
         
         update_ui_module(s)
+    return true
 
 #takes ShipModule with meta packed_scene as argument
 func remove_module(part: ShipModule) -> void:
-    if part.has_meta("packed_sceneed"):
+    if part.has_meta("packed_scene"):
         var s = part.get_meta("packed_scene", PackedScene) #getting PackedScene from instance
         remove_module_scene(s)
 
@@ -64,7 +67,6 @@ func remove_module_scene(part: PackedScene) -> Error:
 
 func get_module(part: PackedScene) -> ShipModule:
     if builder.active and modules.has(part) and modules[part] > 0:
-        modules[part] -= 1
         update_ui_module(part)
         var p = part.instantiate() as ShipModule
         p.set_meta("packed_scene", part)

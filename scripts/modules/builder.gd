@@ -118,13 +118,13 @@ func pickup_part(part: ShipModule):
         var chk = t + Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5))
         if occupiedSpace.has(chk):
             occupiedSpace.erase(chk)
+    inventory.add_module(part)
     isHoldingModule = true
 
 # position will be rounded to grid
 func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
     selectedModule.z_index = 0
     if inventory.isMouseOver:
-        inventory.add_module(part)
         part.queue_free()
         return
     if _rotation != -1:
@@ -138,7 +138,6 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
     #check for collisions and if any part is adjacent or it is the first part
     if any_overlap(part, _position) or (!is_part_adjacent(part) and occupiedSpace.size() > 0):
         if lastPartPositionRotation == Vector3.INF:
-            inventory.add_module(part)
             part.queue_free()
             return
         var new_pos = Vector2(lastPartPositionRotation.x, lastPartPositionRotation.y)
@@ -150,6 +149,7 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
     for t in part.tiles:
         var v = t + Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5))
         occupiedSpace[v] = part
+    inventory.add_module(part, -1)
 
 func distance(v1: Vector2, v2: Vector2) -> float:
     return sqrt((v1.x + v2.x)**2 + (v1.y + v2.y)**2);
