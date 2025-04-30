@@ -2,9 +2,6 @@ extends Node
 
 var localPlayer
 
-@export var connectionMenu : CanvasLayer
-@export var lobbyMenu : CanvasLayer
-
 # These signals can be connected to by a UI lobby scene or the game scene.
 signal player_connected(peer_id, player_info)
 signal player_disconnected(peer_id)
@@ -18,7 +15,7 @@ const MAX_CONNECTIONS = 20
 
 @export var playersNode : Node2D
 
-@export var gameScene : PackedScene
+var isInGame := false
 
 # This will contain player info for every player,
 # with the keys being each player's unique IDs.
@@ -33,52 +30,17 @@ var player_info = {"name": "Name"}
 var players_loaded = 0
 
 func _ready() -> void:
-    
     if OS.has_feature("windows"):
         if OS.has_environment("COMPUTERNAME"):
             localIp =  IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")),IP.TYPE_IPV4)
     
     #print(localIp, ":", localPort)
-    connectionMenu.get_node("ip").text = defaultIp
-    connectionMenu.get_node("port").text = str(localPort)
     
     multiplayer.peer_connected.connect(_on_player_connected)
     multiplayer.peer_disconnected.connect(_on_player_disconnected)
     multiplayer.connected_to_server.connect(_on_connected_ok)
     multiplayer.connection_failed.connect(_on_connected_fail)
     multiplayer.server_disconnected.connect(_on_server_disconnected)
-
-func _on_host_pressed() -> void:
-    connectionMenu.get_node("host").disabled = true
-    connectionMenu.get_node("connect").disabled = true
-    localPort = int(connectionMenu.get_node("port").text)
-    player_info.name = connectionMenu.get_node("name").text
-    var err = create_game()
-    if err != OK:
-        printerr("Error creating session")
-        connectionMenu.get_node("host").disabled = false
-        connectionMenu.get_node("connect").disabled = false
-        return
-    connectionMenu.visible = false
-    lobbyMenu.visible = true
-    lobbyMenu.get_node("start").disabled = false
-    
-func _on_join_pressed() -> void:
-    connectionMenu.get_node("host").disabled = true
-    connectionMenu.get_node("connect").disabled = true
-    player_info.name = connectionMenu.get_node("name").text
-    var err = join_game(connectionMenu.get_node("ip").text, int(connectionMenu.get_node("port").text))
-    if err != OK:
-        printerr("Error joining session")
-        connectionMenu.get_node("host").disabled = false
-        connectionMenu.get_node("connect").disabled = false
-        return
-    connectionMenu.visible = false
-    lobbyMenu.visible = true
-    lobbyMenu.get_node("start").disabled = true
-
-func _host_start_game() -> void:
-    _load_scene.rpc(gameScene.resource_path)
 
 @rpc("call_local", "reliable")
 func _load_scene(scene: String) -> void:
@@ -107,7 +69,6 @@ func create_game() -> Error:
 
     players[1] = player_info
     player_connected.emit(1, player_info)
-    refresh_player_list()
     
     return OK
 
@@ -144,16 +105,12 @@ func _register_player(new_player_info):
         print("[Host] New player connected: %s %s" % [new_player_id, new_player_info.name])
     else:
         print("[Client] New player connected: %s %s" % [new_player_id, new_player_info.name])
-    
-    refresh_player_list()
 
 
 func _on_player_disconnected(id):
     print("player disconnected %s %s" % [id, players[id].name])
     players.erase(id)
     player_disconnected.emit(id)
-    
-    refresh_player_list()
 
 
 func _on_connected_ok():
@@ -170,12 +127,3 @@ func _on_server_disconnected():
     multiplayer.multiplayer_peer = null
     players.clear()
     server_disconnected.emit()
-
-func refresh_player_list():
-    $playerList.text = "Player List\n"
-    var names : Array[String]
-    for p in players.values():
-        names.append(p.name)
-    names.sort()
-    for n in names:
-        $playerList.text += "%s\n" % n

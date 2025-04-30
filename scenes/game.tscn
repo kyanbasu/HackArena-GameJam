@@ -1,6 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=16 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
 [ext_resource type="Script" uid="uid://w204yqawbut1" path="res://scripts/modules/builder.gd" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://p71t6ovr8u2i" path="res://prefabs/modules/cockpit_A.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://bpw15hrocyjdr" path="res://prefabs/modules/hallway_L.tscn" id="4_iywne"]
@@ -29,6 +30,7 @@ script = ExtResource("1_uwrxv")
 [node name="players" type="Node2D" parent="."]
 
 [node name="ship" type="Node2D" parent="."]
+script = ExtResource("2_dinhu")
 
 [node name="modules" type="Node2D" parent="ship" node_paths=PackedStringArray("inventory", "placementGrid", "spaceGrid")]
 z_index = 10
