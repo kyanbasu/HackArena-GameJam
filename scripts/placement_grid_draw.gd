@@ -11,8 +11,8 @@ func _draw() -> void:
                 
             draw_rect(
                 Rect2(
-                    floor(get_global_mouse_position().x/builder.TILE_SIZE)*builder.TILE_SIZE + builder.TILE_SIZE*t.x, 
-                    floor(get_global_mouse_position().y/builder.TILE_SIZE)*builder.TILE_SIZE + builder.TILE_SIZE*t.y, 
-                    builder.TILE_SIZE, builder.TILE_SIZE), 
+                    floor(get_global_mouse_position().x/G.TILE_SIZE)*G.TILE_SIZE + G.TILE_SIZE*t.x, 
+                    floor(get_global_mouse_position().y/G.TILE_SIZE)*G.TILE_SIZE + G.TILE_SIZE*t.y, 
+                    G.TILE_SIZE, G.TILE_SIZE), 
                 col
             )

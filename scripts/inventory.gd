@@ -60,7 +60,7 @@ func remove_module_scene(part: PackedScene) -> Error:
         return OK
     else:
         print("what? you dont have this module")
-        return 1
+        return ERR_PRINTER_ON_FIRE
 
 func get_module(part: PackedScene) -> ShipModule:
     if builder.active and modules.has(part) and modules[part] > 0:

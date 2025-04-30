@@ -14,8 +14,6 @@ class_name Builder
             spaceGrid.queue_redraw()
 @export var debugOccupied := false
 
-const TILE_SIZE = 32
-
 # dictionary of ShipModule in Vector2i(x,y) representing if tile is occupied or not
 @export var occupiedSpace : Dictionary[Vector2i, ShipModule] = {}
 var lastPartPositionRotation : Vector3
@@ -28,7 +26,7 @@ func _draw() -> void:
     if debugOccupied:
         for v in occupiedSpace.keys():
             draw_rect(
-            Rect2(TILE_SIZE*v.x-2, TILE_SIZE*v.y-2, TILE_SIZE+4, TILE_SIZE+4), 
+            Rect2(G.TILE_SIZE*v.x-2, G.TILE_SIZE*v.y-2, G.TILE_SIZE+4, G.TILE_SIZE+4), 
             Color(1, 0, 0, 0.5), false, 6)
 #@export var modules : Dictionary[int, ShipModule]
 
@@ -83,7 +81,7 @@ func any_overlap(part: ShipModule, pos: Vector2) -> bool:
     return false
 
 func world_to_grid(pos: Vector2) -> Vector2i:
-    return Vector2i(floor(pos.x/TILE_SIZE), floor(pos.y/TILE_SIZE))
+    return Vector2i(floor(pos.x/G.TILE_SIZE), floor(pos.y/G.TILE_SIZE))
 
 func get_overlap(part: ShipModule, pos: Vector2) -> Array[Vector2i]:
     var _o : Array[Vector2i] = []
@@ -107,7 +105,7 @@ func is_part_adjacent(part: ShipModule) -> bool:
     return false
 
 func is_part_adjacent_check_one(part: ShipModule, offset: Vector2i) -> bool:
-    var chk = Vector2i(part.global_position/part.TILE_SIZE - Vector2(.5,.5)) + offset
+    var chk = Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5)) + offset
     if occupiedSpace.has(chk) and occupiedSpace[chk] != part:
         return true
     return false
@@ -117,7 +115,7 @@ func pickup_part(part: ShipModule):
     selectedModule.z_index = 10
     lastPartPositionRotation = Vector3(part.global_position.x, part.global_position.y, part.rotation)
     for t in part.tiles:
-        var chk = t + Vector2i(part.global_position/part.TILE_SIZE - Vector2(.5,.5))
+        var chk = t + Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5))
         if occupiedSpace.has(chk):
             occupiedSpace.erase(chk)
     isHoldingModule = true
@@ -132,9 +130,10 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
     if _rotation != -1:
         while (int(abs(part.rotation - _rotation)*180/PI))%360 > 10:
             part.rotate_left()
+    @warning_ignore("integer_division")
     part.global_position = Vector2(
-        floor(_position.x/part.TILE_SIZE)*part.TILE_SIZE + part.TILE_SIZE - part.TILE_SIZE/2,
-        floor(_position.y/part.TILE_SIZE)*part.TILE_SIZE + part.TILE_SIZE - part.TILE_SIZE/2
+        floor(_position.x/G.TILE_SIZE)*G.TILE_SIZE + G.TILE_SIZE - G.TILE_SIZE/2,
+        floor(_position.y/G.TILE_SIZE)*G.TILE_SIZE + G.TILE_SIZE - G.TILE_SIZE/2
     )
     #check for collisions and if any part is adjacent or it is the first part
     if any_overlap(part, _position) or (!is_part_adjacent(part) and occupiedSpace.size() > 0):
@@ -149,7 +148,7 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
         return
     #reserve space
     for t in part.tiles:
-        var v = t + Vector2i(part.global_position/part.TILE_SIZE - Vector2(.5,.5))
+        var v = t + Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5))
         occupiedSpace[v] = part
 
 func distance(v1: Vector2, v2: Vector2) -> float:

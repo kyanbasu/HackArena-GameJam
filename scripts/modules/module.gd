@@ -2,8 +2,6 @@
 extends Node2D
 class_name ShipModule
 
-const TILE_SIZE = 32
-
 @export var isRotateable : bool = true
 
 @export var tiles : Array[Vector2i]:
@@ -30,8 +28,8 @@ const TILE_SIZE = 32
                 box.owner = self
                 box.name = "%s,%s" % [t.x, t.y]
                 box.shape = RectangleShape2D.new()
-                box.shape.size = Vector2(TILE_SIZE, TILE_SIZE)
-                box.position = t * TILE_SIZE
+                box.shape.size = Vector2(G.TILE_SIZE, G.TILE_SIZE)
+                box.position = t * G.TILE_SIZE
                 col_added.append(t)
 
 static func queue_free_children(node: Node) -> void:
@@ -42,9 +40,11 @@ static func queue_free_children(node: Node) -> void:
 func _draw():
     if Engine.is_editor_hint():
         for t in tiles:
+            @warning_ignore("integer_division")
             draw_rect(
-                Rect2(TILE_SIZE*t.x - TILE_SIZE/2, TILE_SIZE*t.y - TILE_SIZE/2, TILE_SIZE, TILE_SIZE), 
-                Color(0, 1, 0, 0.1))
+                Rect2(G.TILE_SIZE*t.x - G.TILE_SIZE/2, G.TILE_SIZE*t.y - G.TILE_SIZE/2, G.TILE_SIZE, G.TILE_SIZE), 
+                Color(0, 1, 0, 0.1)
+            )
 
 var health;
 var maxHealth = 2;
