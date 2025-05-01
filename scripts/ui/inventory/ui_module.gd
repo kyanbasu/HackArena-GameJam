@@ -21,5 +21,5 @@ var module_desc : String:
         $desc.text = new_value
 
 func _on_gui_input(event: InputEvent) -> void:
-    if event is InputEventMouseButton and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+    if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed == true:
         inventory.get_module(part)
