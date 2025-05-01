@@ -21,7 +21,7 @@ var max_thrusters : int
 var thrusters : int
 
 
-func damage(amount: int, position: Vector2i):
-    if builder.occupiedSpace.has(position): # don't damage anything if projectiles can't hit ship
-        builder.occupiedSpace[position].damage(amount)
+func damage(amount: int, _position: Vector2i):
+    if builder.occupiedSpace.has(_position): # don't damage anything if projectiles can't hit ship
+        builder.occupiedSpace[_position].damage(amount)
         total_damage += amount

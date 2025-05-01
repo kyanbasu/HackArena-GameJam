@@ -35,10 +35,26 @@ var isReady : bool = false:
 var fightTurn : int = 0
 
 func _ready():
+    builder.gameNetworkManager = self
     map.process_mode = Node.PROCESS_MODE_DISABLED
     map.visible = false
     if Lobby.players.size() == 0:
         Lobby.players[0] = {"name": "Player"}
+
+func _process(delta: float) -> void:
+    if nextTurnBtn.button_pressed and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+        nextTurnCounter += delta
+        nextTurnBtn.get_node("ProgressBar").value = nextTurnCounter / nextTurnCounterFire
+        if nextTurnCounter > nextTurnCounterFire:
+            nextTurnCounter = 0
+            next_turn()
+
+var nextTurnCounter : float = 0
+const nextTurnCounterFire : float = .5 #time in seconds after which skipping turn is confirmed
+
+func next_turn_btn_up():
+    nextTurnCounter = 0
+    nextTurnBtn.get_node("ProgressBar").value = nextTurnCounter
 
 # Invoked when player presses next turn button, everyone must be ready
 func next_turn():
@@ -54,13 +70,21 @@ func player_ready(id, readiness: bool=true):
             playersReady -= 1
         
         if playersReady == Lobby.players.size(): #all players are ready
-            host_called_next_turn(gameState)
+            host_called_end_turn.rpc(gameState) #does cleanup and increments gameState
             playersReady = 0
+            # Loading screen or something
+            if gameState == GameState.MAP:
+                map.host_position_planets()
+                map.sync_planets.rpc(map.planets)
+                
+            host_called_next_turn.rpc(gameState)
 
 @rpc("any_peer", "call_local", "reliable")
-func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
+func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
     isReady = false
+    nextTurnBtn.disabled = true
     gameState = _gameState
+    camera.position = Vector2.ZERO
     # Previous gamestate ends
     match gameState:
         GameState.BUILDING:
@@ -76,8 +100,11 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             ship.visible = true
             map.process_mode = Node.PROCESS_MODE_DISABLED
             map.visible = false
-        
-    # New gamestate starts
+            gameState = GameState.BUILDING
+            map.playerPlanet = map.nextPlayerPlanet
+
+@rpc("any_peer", "call_local", "reliable")
+func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
     match gameState:
         GameState.BUILDING:
             camera.change_param()
@@ -89,9 +116,12 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
         
         GameState.MAP:
             camera.change_param(Vector2(1000, 1400), .2, 4)
+            camera.position = map.planetNodes[map.playerPlanet].position
             ship.process_mode = Node.PROCESS_MODE_DISABLED
             ship.visible = false
             map.process_mode = Node.PROCESS_MODE_INHERIT
             map.visible = true
+    
+    nextTurnBtn.disabled = false
         
         

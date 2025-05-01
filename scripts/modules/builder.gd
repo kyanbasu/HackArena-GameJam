@@ -24,6 +24,8 @@ var lastPartPositionRotation : Vector3
 
 @export var overlapping : Array[Vector2i]
 
+var gameNetworkManager
+
 func _draw() -> void:
     if debugOccupied:
         for v in occupiedSpace.keys():
@@ -45,7 +47,7 @@ func _ready() -> void:
             buildableSpace[Vector2i(x,y)] = true
 
 func _input(event: InputEvent) -> void:
-    if !active: return
+    if !active or gameNetworkManager.isReady: return
     if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
         if event.pressed:
             if selectedModule: #started moving part
@@ -66,10 +68,10 @@ func _input(event: InputEvent) -> void:
             selectedModule.rotate_right()
 
 func _process(delta: float) -> void:
-    if !active: return
+    if !active or gameNetworkManager.isReady: return
     overlapping = []
     if selectedModule and isHoldingModule:
-        selectedModule.global_position = lerp(selectedModule.global_position, get_global_mouse_position(), delta*10*clamp(distance(selectedModule.global_position, get_global_mouse_position())/1000, 1, 10))
+        selectedModule.global_position = lerp(selectedModule.global_position, get_global_mouse_position(), delta*10*clamp(G.distance(selectedModule.global_position, get_global_mouse_position())/1000, 1, 10))
         overlapping = get_overlap(selectedModule, get_global_mouse_position())
         
         placementGrid.queue_redraw()
@@ -152,6 +154,3 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
         var v = t + Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5))
         occupiedSpace[v] = part
     inventory.add_module(part, -1)
-
-func distance(v1: Vector2, v2: Vector2) -> float:
-    return sqrt((v1.x + v2.x)**2 + (v1.y + v2.y)**2);

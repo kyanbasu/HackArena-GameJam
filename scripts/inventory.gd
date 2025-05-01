@@ -66,7 +66,7 @@ func remove_module_scene(part: PackedScene) -> Error:
         return ERR_PRINTER_ON_FIRE
 
 func get_module(part: PackedScene) -> ShipModule:
-    if builder.active and modules.has(part) and modules[part] > 0:
+    if builder.active and !builder.gameNetworkManager.isReady and modules.has(part) and modules[part] > 0:
         update_ui_module(part)
         var p = part.instantiate() as ShipModule
         p.set_meta("packed_scene", part)

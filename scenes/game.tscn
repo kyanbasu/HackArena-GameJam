@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=20 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -12,7 +12,10 @@
 [ext_resource type="Script" uid="uid://bb423b538twto" path="res://scripts/inventory.gd" id="8_gee14"]
 [ext_resource type="PackedScene" uid="uid://d2aglbvarsf3x" path="res://prefabs/ui/ui_module.tscn" id="9_0tnpc"]
 [ext_resource type="Script" uid="uid://bqb4vgkqpjdtp" path="res://scripts/camera.gd" id="10_vtaks"]
+[ext_resource type="Script" uid="uid://uwvudelkoifu" path="res://scripts/button.gd" id="12_ca42v"]
 [ext_resource type="Script" uid="uid://cth3fv6wnsr2" path="res://scripts/ui/map.gd" id="13_kvuet"]
+[ext_resource type="PackedScene" uid="uid://xo66orsxga73" path="res://prefabs/planet.tscn" id="14_ir15t"]
+[ext_resource type="Texture2D" uid="uid://fm2qsrbasrrv" path="res://icon.svg" id="14_trtic"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
@@ -62,7 +65,6 @@ script = ExtResource("6_kvpfn")
 [node name="UI" type="CanvasLayer" parent="ship"]
 
 [node name="inventory" type="CanvasLayer" parent="ship/UI" node_paths=PackedStringArray("uiModulesContainer")]
-visible = false
 script = ExtResource("8_gee14")
 uiModulesContainer = NodePath("Panel/ScrollContainer/VBoxContainer")
 uiModule = ExtResource("9_0tnpc")
@@ -113,6 +115,7 @@ text = "Inventory"
 label_settings = SubResource("LabelSettings_gee14")
 
 [node name="info" type="Label" parent="ship/UI"]
+visible = false
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 299.0
@@ -136,13 +139,48 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "Next Turn"
 
+[node name="ProgressBar" type="ProgressBar" parent="ship/UI/nextTurn"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="Button" type="Button" parent="ship/UI"]
+process_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -149.0
+offset_top = 14.0
+offset_right = -38.0
+offset_bottom = 45.0
+grow_horizontal = 0
+text = "canvas_items"
+script = ExtResource("12_ca42v")
+
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(64, 0)
 script = ExtResource("10_vtaks")
 
 [node name="Map" type="Node2D" parent="."]
+visible = false
 script = ExtResource("13_kvuet")
+planet = ExtResource("14_ir15t")
+
+[node name="Sprite2D" type="Sprite2D" parent="Map"]
+modulate = Color(0, 0, 0, 1)
+z_index = -100
+position = Vector2(-311, -347)
+scale = Vector2(99.4063, 86.7031)
+texture = ExtResource("14_trtic")
 
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_exited"]
-[connection signal="button_down" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn"]
+[connection signal="button_up" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn_btn_up"]
+[connection signal="button_down" from="ship/UI/Button" to="ship/UI/Button" method="_on_button_down"]
