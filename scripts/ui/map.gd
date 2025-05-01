@@ -10,7 +10,7 @@ var planets : Dictionary[int, Dictionary] = {}
 @export var planet : PackedScene
 
 @export var playerPlanet : int = 0
-@export var playerRange : int = 300
+@export var playerRange : int = 200
 @export var nextPlayerPlanet : int
 
 var planetCount = 30
@@ -23,13 +23,18 @@ func host_position_planets() -> void:
     if planets.size() == 0:
         init.rpc()
     else:
+        var i : int = 0
         for p in planets.values():
             var rot = p.orbit.rotation
             var rad = p.orbit.radius
             var planet_rot = randf_range(0, TAU)
             var new_planet_pos = Vector2(rot.x * cos(planet_rot), rot.y * sin(planet_rot))*rad
+            while dist_to_closest_planet(new_planet_pos, i) < 60: # Adjust positions if planets are too close
+                planet_rot = randf_range(0, TAU)
+                new_planet_pos = Vector2(rot.x * cos(planet_rot), rot.y * sin(planet_rot))*rad
             
             p.planet.position = new_planet_pos
+            i+=1
 
 @rpc("authority", "call_local", "reliable")
 func init():
@@ -49,7 +54,7 @@ func init():
         init_server()
 
 func select_planet(index: int):
-    if G.distance(planetNodes[index].position, planetNodes[playerPlanet].position) > playerRange:
+    if G.distance(planetNodes[index].position, planetNodes[playerPlanet].position) > playerRange + playerPlanet*10:
         planetNodes[index].release_focus()
         planetNodes[nextPlayerPlanet].grab_focus()
         return
@@ -110,4 +115,4 @@ func _draw() -> void:
     
     # Selected planet and fly range
     draw_circle(planetNodes[playerPlanet].position + planetNodes[playerPlanet].size/2, 30, Color(0, 1, 0, .8), false, 6)
-    draw_circle(planetNodes[playerPlanet].position + planetNodes[playerPlanet].size/2, playerRange, Color(.5, .5, .5, .8), false, 4)
+    draw_circle(planetNodes[playerPlanet].position + planetNodes[playerPlanet].size/2, playerRange + playerPlanet*10, Color(.5, .5, .5, .8), false, 4)
