@@ -8,8 +8,12 @@ extends Node
 func _ready() -> void:
     connectionMenu.get_node("ip").text = Lobby.defaultIp
     connectionMenu.get_node("port").text = str(Lobby.localPort)
+    
     Lobby.player_connected.connect(player_connected)
     Lobby.player_disconnected.connect(player_disconnected)
+    
+    multiplayer.connected_to_server.connect(_on_connected_ok)
+    multiplayer.connection_failed.connect(_on_connected_fail)
 
 func player_connected(peer_id, player_info):
     refresh_player_list()
@@ -38,13 +42,19 @@ func _on_join_pressed() -> void:
     Lobby.player_info.name = connectionMenu.get_node("name").text
     var err = Lobby.join_game(connectionMenu.get_node("ip").text, int(connectionMenu.get_node("port").text))
     if err != OK:
-        printerr("Error joining session")
-        connectionMenu.get_node("host").disabled = false
-        connectionMenu.get_node("connect").disabled = false
+
         return
+
+
+func _on_connected_ok():
     connectionMenu.visible = false
     lobbyMenu.visible = true
     lobbyMenu.get_node("start").disabled = true
+
+func _on_connected_fail():
+    printerr("Error joining session")
+    connectionMenu.get_node("host").disabled = false
+    connectionMenu.get_node("connect").disabled = false
 
 func _host_start_game() -> void:
     Lobby.isInGame = true
