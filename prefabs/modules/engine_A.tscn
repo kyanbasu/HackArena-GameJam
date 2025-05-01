@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3 uid="uid://cy1h7dfvyrqbx"]
+
+[ext_resource type="Script" uid="uid://yb71drptt4ua" path="res://scripts/modules/engine.gd" id="1_xcdbn"]
+[ext_resource type="Texture2D" uid="uid://jhuap7ms6vwu" path="res://art/grid.tres" id="2_xcdbn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qg0q7"]
+size = Vector2(32, 32)
+
+[node name="engine" type="Node2D"]
+script = ExtResource("1_xcdbn")
+tiles = Array[Vector2i]([Vector2i(0, 0)])
+isRotateable = false
+maxHealth = 500
+
+[node name="Grid" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_xcdbn")
+
+[node name="Label" type="Label" parent="Grid"]
+z_index = 1
+offset_left = -13.0
+offset_top = -53.0
+offset_right = 59.0
+offset_bottom = -30.0
+text = "engine A"
+
+[node name="boundingBox" type="StaticBody2D" parent="."]
+collision_layer = 128
+collision_mask = 128
+input_pickable = true
+
+[node name="0,0" type="CollisionShape2D" parent="boundingBox"]
+shape = SubResource("RectangleShape2D_qg0q7")
+
+[connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]
+[connection signal="mouse_exited" from="boundingBox" to="." method="_mouse_exited"]

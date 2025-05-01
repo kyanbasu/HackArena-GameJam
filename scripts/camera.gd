@@ -15,7 +15,12 @@ var camera_bound := Vector2(600, 350)
 
 const ZOOM_SPEED = 10
 
+var inventory : Inventory
+
+@export var subViewport : SubViewport
+
 func _ready() -> void:
+    lastCameraPos = position
     target_zoom = zoom.x
     change_param()
 
@@ -30,6 +35,7 @@ func change_param(_camera_bound: Vector2=Vector2(600, 350), _min_zoom: float=.5,
 
 
 func _input(event: InputEvent) -> void:
+    if inventory.isMouseOver or subViewport.isMouseOver: return
     if event is InputEventMouseButton:
         match event.button_index:
             MOUSE_BUTTON_WHEEL_DOWN:

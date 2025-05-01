@@ -1,28 +1,28 @@
-[gd_scene load_steps=7 format=3 uid="uid://bpw15hrocyjdr"]
+[gd_scene load_steps=7 format=3 uid="uid://yqkvwn43lux7"]
 
-[ext_resource type="Script" uid="uid://chf6gf16v432" path="res://scripts/modules/module.gd" id="1_du1ww"]
-[ext_resource type="Texture2D" uid="uid://jhuap7ms6vwu" path="res://art/grid.tres" id="2_ootqm"]
+[ext_resource type="Script" uid="uid://chf6gf16v432" path="res://scripts/modules/module.gd" id="1_4hni7"]
+[ext_resource type="Texture2D" uid="uid://jhuap7ms6vwu" path="res://art/grid.tres" id="2_b6ejq"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_du1ww"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4hni7"]
 size = Vector2(32, 32)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ootqm"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6ejq"]
 size = Vector2(32, 32)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xdqny"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dit71"]
 size = Vector2(32, 32)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_mverf"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k0wea"]
 size = Vector2(32, 32)
 
-[node name="hallway_L" type="Node2D"]
-script = ExtResource("1_du1ww")
-tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(1, -1)])
-maxHealth = 6
+[node name="hallway_A" type="Node2D"]
+script = ExtResource("1_4hni7")
+tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(-1, -1)])
+maxHealth = 4
 
 [node name="Grid" type="Sprite2D" parent="."]
 scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_ootqm")
+texture = ExtResource("2_b6ejq")
 
 [node name="Label" type="Label" parent="Grid"]
 z_index = 1
@@ -35,7 +35,7 @@ text = "hallway L"
 [node name="Grid2" type="Sprite2D" parent="."]
 position = Vector2(-32, 0)
 scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_ootqm")
+texture = ExtResource("2_b6ejq")
 
 [node name="Label" type="Label" parent="Grid2"]
 z_index = 1
@@ -46,9 +46,9 @@ offset_bottom = -30.0
 text = "hallway L"
 
 [node name="Grid3" type="Sprite2D" parent="."]
-position = Vector2(32, 0)
+position = Vector2(0, -32)
 scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_ootqm")
+texture = ExtResource("2_b6ejq")
 
 [node name="Label" type="Label" parent="Grid3"]
 z_index = 1
@@ -59,9 +59,9 @@ offset_bottom = -30.0
 text = "hallway L"
 
 [node name="Grid4" type="Sprite2D" parent="."]
-position = Vector2(32, -32)
+position = Vector2(-32, -32)
 scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_ootqm")
+texture = ExtResource("2_b6ejq")
 
 [node name="Label" type="Label" parent="Grid4"]
 z_index = 1
@@ -77,19 +77,19 @@ collision_mask = 128
 input_pickable = true
 
 [node name="0,0" type="CollisionShape2D" parent="boundingBox"]
-shape = SubResource("RectangleShape2D_du1ww")
+shape = SubResource("RectangleShape2D_4hni7")
 
-[node name="1,0" type="CollisionShape2D" parent="boundingBox"]
-position = Vector2(32, 0)
-shape = SubResource("RectangleShape2D_ootqm")
+[node name="0,-1" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_b6ejq")
 
 [node name="-1,0" type="CollisionShape2D" parent="boundingBox"]
 position = Vector2(-32, 0)
-shape = SubResource("RectangleShape2D_xdqny")
+shape = SubResource("RectangleShape2D_dit71")
 
-[node name="1,-1" type="CollisionShape2D" parent="boundingBox"]
-position = Vector2(32, -32)
-shape = SubResource("RectangleShape2D_mverf")
+[node name="-1,-1" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(-32, -32)
+shape = SubResource("RectangleShape2D_k0wea")
 
 [connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]
 [connection signal="mouse_exited" from="boundingBox" to="." method="_mouse_exited"]

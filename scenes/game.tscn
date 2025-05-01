@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=24 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -13,18 +13,22 @@
 [ext_resource type="PackedScene" uid="uid://d2aglbvarsf3x" path="res://prefabs/ui/ui_module.tscn" id="9_0tnpc"]
 [ext_resource type="Script" uid="uid://bqb4vgkqpjdtp" path="res://scripts/camera.gd" id="10_vtaks"]
 [ext_resource type="Script" uid="uid://uwvudelkoifu" path="res://scripts/button.gd" id="12_ca42v"]
+[ext_resource type="PackedScene" uid="uid://cy1h7dfvyrqbx" path="res://prefabs/modules/engine_A.tscn" id="12_rysoc"]
+[ext_resource type="PackedScene" uid="uid://yqkvwn43lux7" path="res://prefabs/modules/hallway_A.tscn" id="13_264po"]
 [ext_resource type="Script" uid="uid://cth3fv6wnsr2" path="res://scripts/ui/map.gd" id="13_kvuet"]
-[ext_resource type="PackedScene" uid="uid://xo66orsxga73" path="res://prefabs/planet.tscn" id="14_ir15t"]
+[ext_resource type="PackedScene" uid="uid://lcatv4qen6b" path="res://prefabs/modules/hallway_I.tscn" id="14_1kice"]
+[ext_resource type="PackedScene" uid="uid://xo66orsxga73" path="res://prefabs/ui/planet.tscn" id="14_ir15t"]
 [ext_resource type="Texture2D" uid="uid://fm2qsrbasrrv" path="res://icon.svg" id="14_trtic"]
+[ext_resource type="Script" uid="uid://bel37yc8d2nnm" path="res://scripts/sub_viewport.gd" id="16_1kice"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
 shader_parameter/Scale = 5.0
 shader_parameter/Texture2D = ExtResource("6_gee14")
 
-[sub_resource type="LabelSettings" id="LabelSettings_gee14"]
-
 [sub_resource type="LabelSettings" id="LabelSettings_vtaks"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_gee14"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -64,13 +68,66 @@ script = ExtResource("6_kvpfn")
 
 [node name="UI" type="CanvasLayer" parent="ship"]
 
+[node name="info" type="Label" parent="ship/UI"]
+visible = false
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 299.0
+offset_bottom = 53.0
+text = "a/d obracanie, kokpit ma je wylaczone
+drag n drop budowanie"
+label_settings = SubResource("LabelSettings_vtaks")
+
+[node name="nextTurn" type="Button" parent="ship/UI"]
+process_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -101.0
+offset_top = -42.0
+offset_right = -15.0
+offset_bottom = -11.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Next Turn"
+
+[node name="ProgressBar" type="ProgressBar" parent="ship/UI/nextTurn"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="changeRenderingBtn" type="Button" parent="ship/UI"]
+process_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -149.0
+offset_top = 14.0
+offset_right = -38.0
+offset_bottom = 45.0
+grow_horizontal = 0
+text = "canvas_items"
+script = ExtResource("12_ca42v")
+
 [node name="inventory" type="CanvasLayer" parent="ship/UI" node_paths=PackedStringArray("uiModulesContainer")]
 script = ExtResource("8_gee14")
 uiModulesContainer = NodePath("Panel/ScrollContainer/VBoxContainer")
 uiModule = ExtResource("9_0tnpc")
 modules = Dictionary[PackedScene, int]({
 ExtResource("3_lnu2h"): 3,
-ExtResource("4_iywne"): 5
+ExtResource("4_iywne"): 5,
+ExtResource("12_rysoc"): 2,
+ExtResource("13_264po"): 2,
+ExtResource("14_1kice"): 3
 })
 
 [node name="Panel" type="Panel" parent="ship/UI/inventory"]
@@ -114,59 +171,32 @@ grow_vertical = 2
 text = "Inventory"
 label_settings = SubResource("LabelSettings_gee14")
 
-[node name="info" type="Label" parent="ship/UI"]
-visible = false
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 299.0
-offset_bottom = 53.0
-text = "a/d obracanie, kokpit ma je wylaczone
-drag n drop budowanie"
-label_settings = SubResource("LabelSettings_vtaks")
+[node name="Fight" type="CanvasLayer" parent="ship/UI"]
 
-[node name="nextTurn" type="Button" parent="ship/UI"]
-process_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
+[node name="SubViewportContainer" type="SubViewportContainer" parent="ship/UI/Fight"]
+anchors_preset = 9
 anchor_bottom = 1.0
-offset_left = -101.0
-offset_top = -42.0
-offset_right = -15.0
-offset_bottom = -11.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "Next Turn"
-
-[node name="ProgressBar" type="ProgressBar" parent="ship/UI/nextTurn"]
-z_index = -1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
+offset_right = 100.0
 grow_vertical = 2
-mouse_filter = 2
-max_value = 1.0
-show_percentage = false
+mouse_filter = 0
 
-[node name="Button" type="Button" parent="ship/UI"]
-process_mode = 3
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -149.0
-offset_top = 14.0
-offset_right = -38.0
-offset_bottom = 45.0
-grow_horizontal = 0
-text = "canvas_items"
-script = ExtResource("12_ca42v")
+[node name="SubViewport" type="SubViewport" parent="ship/UI/Fight/SubViewportContainer" node_paths=PackedStringArray("target")]
+disable_3d = true
+size = Vector2i(100, 100)
+script = ExtResource("16_1kice")
+target = NodePath("../../../../Icon")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera" type="Camera2D" parent="ship/UI/Fight/SubViewportContainer/SubViewport"]
+
+[node name="Icon" type="Sprite2D" parent="ship"]
+position = Vector2(-304, 2168.25)
+scale = Vector2(2.125, 2.03516)
+texture = ExtResource("14_trtic")
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("subViewport")]
 position = Vector2(64, 0)
 script = ExtResource("10_vtaks")
+subViewport = NodePath("../ship/UI/Fight/SubViewportContainer/SubViewport")
 
 [node name="Map" type="Node2D" parent="."]
 visible = false
@@ -180,7 +210,10 @@ position = Vector2(-311, -347)
 scale = Vector2(99.4063, 86.7031)
 texture = ExtResource("14_trtic")
 
+[connection signal="button_up" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn_btn_up"]
+[connection signal="button_down" from="ship/UI/changeRenderingBtn" to="ship/UI/changeRenderingBtn" method="_on_button_down"]
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_exited"]
-[connection signal="button_up" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn_btn_up"]
-[connection signal="button_down" from="ship/UI/Button" to="ship/UI/Button" method="_on_button_down"]
+[connection signal="gui_input" from="ship/UI/Fight/SubViewportContainer" to="ship/UI/Fight/SubViewportContainer/SubViewport" method="_on_sub_viewport_container_gui_input"]
+[connection signal="mouse_entered" from="ship/UI/Fight/SubViewportContainer" to="ship/UI/Fight/SubViewportContainer/SubViewport" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="ship/UI/Fight/SubViewportContainer" to="ship/UI/Fight/SubViewportContainer/SubViewport" method="_on_mouse_exited"]

@@ -62,7 +62,7 @@ func next_turn():
     player_ready.rpc(1, isReady)
 
 @rpc("any_peer", "call_local", "reliable")
-func player_ready(id, readiness: bool=true):
+func player_ready(_id, readiness: bool=true):
     if multiplayer.is_server():
         if readiness:
             playersReady += 1

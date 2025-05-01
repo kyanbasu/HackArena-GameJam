@@ -120,7 +120,6 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(-708.735, 172.266)
 mode = 1
 flags/light_only = false
 preview_params/Texture2D = "Resource(\"res://art/placement.png\")"

@@ -14,6 +14,7 @@ var builder: Builder
 var isMouseOver := false
 
 func _ready() -> void:
+    builder.gameNetworkManager.camera.inventory = self # d-_-b cool
     for m in modules.keys():
         create_ui_module(m)
 
@@ -40,7 +41,7 @@ func add_module(part: ShipModule, amount: int=1) -> bool:
     if part.has_meta("packed_scene"):
         var s = part.get_meta("packed_scene", PackedScene) #getting PackedScene from instance
         if modules.has(s):
-            if modules[s] + amount <= 0: return false
+            if modules[s] + amount < 0: return false
             modules[s] += amount
         else:
             if amount <= 0: return false

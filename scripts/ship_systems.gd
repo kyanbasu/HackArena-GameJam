@@ -20,6 +20,9 @@ var oxygen : int
 var max_thrusters : int
 var thrusters : int
 
+var max_weapons : int
+var weapons : int
+
 
 func damage(amount: int, _position: Vector2i):
     if builder.occupiedSpace.has(_position): # don't damage anything if projectiles can't hit ship
