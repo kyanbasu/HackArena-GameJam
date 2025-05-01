@@ -21,8 +21,16 @@ var turn : int = 0
 @export var ship : Ship
 @export var builder : Builder
 @export var map: Map
+@export var camera : Camera
 
-var isReady : bool = false
+var isReady : bool = false:
+    set(new_val):
+        isReady = new_val
+        if nextTurnBtn:
+            if isReady:
+                nextTurnBtn.text = "Cancel"
+            else:
+                nextTurnBtn.text = "Next Turn"
 
 var fightTurn : int = 0
 
@@ -36,10 +44,6 @@ func _ready():
 func next_turn():
     isReady = !isReady
     player_ready.rpc(1, isReady)
-    if isReady:
-        nextTurnBtn.text = "Cancel"
-    else:
-        nextTurnBtn.text = "Next Turn"
 
 @rpc("any_peer", "call_local", "reliable")
 func player_ready(id, readiness: bool=true):
@@ -55,7 +59,7 @@ func player_ready(id, readiness: bool=true):
 
 @rpc("any_peer", "call_local", "reliable")
 func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
-    nextTurnBtn.text = "Next Turn"
+    isReady = false
     gameState = _gameState
     # Previous gamestate ends
     match gameState:
@@ -76,6 +80,7 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
     # New gamestate starts
     match gameState:
         GameState.BUILDING:
+            camera.change_param()
             builder.active = true
             
         GameState.ACTION:
@@ -83,6 +88,7 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             pass
         
         GameState.MAP:
+            camera.change_param(Vector2(1000, 1400), .2, 4)
             ship.process_mode = Node.PROCESS_MODE_DISABLED
             ship.visible = false
             map.process_mode = Node.PROCESS_MODE_INHERIT

@@ -25,13 +25,14 @@ shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [node name="Node2D" type="Node2D"]
 
-[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "builder", "map")]
+[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "builder", "map", "camera")]
 process_mode = 3
 script = ExtResource("1_uwrxv")
 nextTurnBtn = NodePath("../ship/UI/nextTurn")
 ship = NodePath("../ship")
 builder = NodePath("../ship/modules")
 map = NodePath("../Map")
+camera = NodePath("../Camera2D")
 
 [node name="players" type="Node2D" parent="."]
 
@@ -139,10 +140,8 @@ text = "Next Turn"
 position = Vector2(64, 0)
 script = ExtResource("10_vtaks")
 
-[node name="Map" type="CanvasLayer" parent="."]
+[node name="Map" type="Node2D" parent="."]
 script = ExtResource("13_kvuet")
-
-[node name="orbits" type="Node2D" parent="Map"]
 
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_exited"]
