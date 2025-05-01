@@ -115,7 +115,7 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             pass
         
         GameState.MAP:
-            camera.change_param(Vector2(1000, 1400), .2, 4)
+            camera.change_param(Vector2(1000, 1400), .2, 1)
             camera.position = map.planetNodes[map.playerPlanet].position
             ship.process_mode = Node.PROCESS_MODE_DISABLED
             ship.visible = false

@@ -33,6 +33,11 @@ func host_position_planets() -> void:
 
 @rpc("authority", "call_local", "reliable")
 func init():
+    # Make sure planetNodes dict is clear
+    for p in planetNodes.values():
+        p.queue_free()
+    planetNodes = {}
+    
     for i in range(planetCount):
         var pl = planet.instantiate()
         pl.button_down.connect(select_planet.bind(i))
@@ -58,6 +63,9 @@ func init_server():
         
         var planet_rot = randf_range(0, TAU)
         var planet_pos = Vector2(rot.x * cos(planet_rot), rot.y * sin(planet_rot))*rad
+        while dist_to_closest_planet(planet_pos, i) < 60: # Adjust positions if planets are too close
+            planet_rot = randf_range(0, TAU)
+            planet_pos = Vector2(rot.x * cos(planet_rot), rot.y * sin(planet_rot))*rad
         
         planets[i] = {
             "planet": {
@@ -69,6 +77,14 @@ func init_server():
                 #"offset": off,
             }
         }
+
+func dist_to_closest_planet(pos: Vector2, index: int) -> float:
+    var minimum = INF
+    for i in range(max(index-3, 0), index):
+        var d = G.distance(pos, planets[i].planet.position)
+        if d < minimum:
+            minimum = d
+    return minimum
 
 @rpc("authority", "call_local", "reliable")
 func sync_planets(_planets : Dictionary):
