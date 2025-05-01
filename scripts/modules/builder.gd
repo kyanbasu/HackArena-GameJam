@@ -123,7 +123,26 @@ func pickup_part(part: ShipModule):
         if occupiedSpace.has(chk):
             occupiedSpace.erase(chk)
     inventory.add_module(part)
+    if flood_occupied() != occupiedSpace.size():
+        var new_pos = Vector2(lastPartPositionRotation.x, lastPartPositionRotation.y)
+        place_part(part, new_pos, lastPartPositionRotation.z)
+        return
     isHoldingModule = true
+
+const FOUR_SIDES : Array[Vector2i] = [Vector2i(-1,0), Vector2i(1,0), Vector2i(0,-1), Vector2i(0,1)]
+func flood_occupied() -> int:
+    if occupiedSpace.size() == 0: return 0
+    var floodedOccupied : Dictionary[Vector2i, bool] = {}
+    var checkQueue : Array[Vector2i] = [occupiedSpace.keys()[0]]
+    
+    while checkQueue.size() > 0:
+        for s in FOUR_SIDES:
+            var chk = checkQueue[0] + s
+            if occupiedSpace.has(chk) and !floodedOccupied.has(chk):
+                checkQueue.append(chk)
+        floodedOccupied[checkQueue.pop_front()] = true
+    return floodedOccupied.size()
+    
 
 # position will be rounded to grid
 func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
