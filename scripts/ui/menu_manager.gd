@@ -8,12 +8,16 @@ extends Node
 func _ready() -> void:
     connectionMenu.get_node("ip").text = Lobby.defaultIp
     connectionMenu.get_node("port").text = str(Lobby.localPort)
+    connectionMenu.get_node("name").text = NameGenerator.get_random_name()
     
     Lobby.player_connected.connect(player_connected)
     Lobby.player_disconnected.connect(player_disconnected)
     
     multiplayer.connected_to_server.connect(_on_connected_ok)
     multiplayer.connection_failed.connect(_on_connected_fail)
+
+func regenerate_name():
+    connectionMenu.get_node("name").text = NameGenerator.get_random_name()
 
 func player_connected(peer_id, player_info):
     refresh_player_list()
@@ -68,3 +72,8 @@ func refresh_player_list():
     names.sort()
     for n in names:
         $playerList.text += "%s\n" % n
+
+func text_edit_input():
+    connectionMenu.get_node("name").text = connectionMenu.get_node("name").text.strip_escapes()
+    connectionMenu.get_node("ip").text = connectionMenu.get_node("ip").text.strip_escapes().replace(" ", "")
+    connectionMenu.get_node("port").text = connectionMenu.get_node("port").text.strip_escapes().replace(" ", "")

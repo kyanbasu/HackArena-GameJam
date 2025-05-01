@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=17 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" uid="uid://bb423b538twto" path="res://scripts/inventory.gd" id="8_gee14"]
 [ext_resource type="PackedScene" uid="uid://d2aglbvarsf3x" path="res://prefabs/ui/ui_module.tscn" id="9_0tnpc"]
 [ext_resource type="Script" uid="uid://bqb4vgkqpjdtp" path="res://scripts/camera.gd" id="10_vtaks"]
+[ext_resource type="Script" uid="uid://cth3fv6wnsr2" path="res://scripts/ui/map.gd" id="13_kvuet"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
@@ -24,11 +25,13 @@ shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [node name="Node2D" type="Node2D"]
 
-[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "builder")]
+[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "builder", "map")]
+process_mode = 3
 script = ExtResource("1_uwrxv")
 nextTurnBtn = NodePath("../ship/UI/nextTurn")
 ship = NodePath("../ship")
 builder = NodePath("../ship/modules")
+map = NodePath("../Map")
 
 [node name="players" type="Node2D" parent="."]
 
@@ -58,6 +61,7 @@ script = ExtResource("6_kvpfn")
 [node name="UI" type="CanvasLayer" parent="ship"]
 
 [node name="inventory" type="CanvasLayer" parent="ship/UI" node_paths=PackedStringArray("uiModulesContainer")]
+visible = false
 script = ExtResource("8_gee14")
 uiModulesContainer = NodePath("Panel/ScrollContainer/VBoxContainer")
 uiModule = ExtResource("9_0tnpc")
@@ -117,6 +121,7 @@ drag n drop budowanie"
 label_settings = SubResource("LabelSettings_vtaks")
 
 [node name="nextTurn" type="Button" parent="ship/UI"]
+process_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -133,6 +138,11 @@ text = "Next Turn"
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(64, 0)
 script = ExtResource("10_vtaks")
+
+[node name="Map" type="CanvasLayer" parent="."]
+script = ExtResource("13_kvuet")
+
+[node name="orbits" type="Node2D" parent="Map"]
 
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_exited"]

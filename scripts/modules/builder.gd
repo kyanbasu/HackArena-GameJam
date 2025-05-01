@@ -12,6 +12,8 @@ class_name Builder
         active = new_val
         if spaceGrid:
             spaceGrid.queue_redraw()
+        if inventory:
+            inventory.visible = new_val
 @export var debugOccupied := false
 
 # dictionary of ShipModule in Vector2i(x,y) representing if tile is occupied or not
