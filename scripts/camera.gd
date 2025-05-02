@@ -43,6 +43,8 @@ func _input(event: InputEvent) -> void:
             MOUSE_BUTTON_WHEEL_UP:
                 target_zoom += 0.1
             MOUSE_BUTTON_MIDDLE:
+                if event.double_click:
+                    position = Vector2.ZERO
                 if event.pressed:
                     lastCameraPos = position
                     lastMousePos = get_local_mouse_position()

@@ -70,9 +70,9 @@ func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
 
 
 func _process(delta):
-    smoothZoom = lerp(smoothZoom, targetZoom, ZOOM_SPEED * delta)
-    if smoothZoom != targetZoom:
-        camera.set_zoom(Vector2(smoothZoom, smoothZoom))
+    #smoothZoom = lerp(smoothZoom, targetZoom, ZOOM_SPEED * delta)
+    #if smoothZoom != targetZoom:
+        #camera.set_zoom(Vector2(smoothZoom, smoothZoom))
     
     smoothSize = lerp(smoothSize, targetSize, SIZE_SPEED * delta)
     if smoothSize != targetSize:

@@ -15,14 +15,14 @@ enum GameState {
 # Host dictates gameState
 var gameState : GameState = GameState.BUILDING
 
-enum Actions {
+enum Action {
     FIGHT,
     MINING,
     RANDOM,
     SHOP
 }
 
-var currentAction : Actions
+var currentAction : Action
 
 var shopPlanet : int = 14
 
@@ -40,10 +40,19 @@ var startingMaterials : int = 100
 @export var map: Map
 @export var camera : Camera
 @export var inventory : Inventory
+@export var actionPicker : CanvasLayer
+@export var actionControl : PackedScene # action instance to spawn
+@export var actionIcons : Dictionary[Action, Texture2D] = {}
 
 # Fighting
 @export var fightUI : CanvasLayer
 @export var playerFighting : int = 0 # UID of peer that you are fighting, 0 if not fighting
+
+var canNextTurn : bool = true:
+    set(new_val):
+        canNextTurn = new_val
+        if nextTurnBtn:
+            nextTurnBtn.disabled = !canNextTurn
 
 var isReady : bool = false:
     set(new_val):
@@ -59,9 +68,15 @@ var fightTurn : int = 0
 func _ready():
     if !Array(OS.get_cmdline_args()).has("editor"):
         Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+    elif multiplayer.get_peers().size() == 0:
+        var err = Lobby.create_game()
+        if err != OK:
+            printerr("IF IN EDITOR- RUN ONLY ONE INSTANCE (or connect via main menu)")
     builder.gameNetworkManager = self
     map.process_mode = Node.PROCESS_MODE_DISABLED
     map.visible = false
+    actionPicker.visible = false
+    actionPicker.process_mode = Node.PROCESS_MODE_DISABLED
     fightUI.visible = false
     builder.active = false
     if Lobby.players.size() == 0:
@@ -100,8 +115,12 @@ func player_ready(readiness: bool=true):
         if playersReady + playersDead == Lobby.players.size(): #all players are ready
             if turn == 0:
                 add_materials.rpc(startingMaterials)
+                generate_meteors_bg.rpc(randi_range(-1000,1000))
                 for i in Lobby.players.keys():
-                    var planet = 2
+                    # Starting Planet
+                    var planet = randi_range(0, map.planetCount-1)
+                    if i == 1:
+                        planet = shopPlanet
                     host_called_end_turn.rpc_id(i, gameState, {"planet": planet})
                     Lobby.players[i].planet = planet
             else:
@@ -121,6 +140,9 @@ func player_ready(readiness: bool=true):
                         playersOnPlanet[Lobby.players[p].planet] = []
                     playersOnPlanet[Lobby.players[p].planet].push_back(p)
                 
+                if shopPlanet in playersOnPlanet.keys():
+                    playersOnPlanet.erase(shopPlanet)
+                
                 for arr in playersOnPlanet.values():
                     arr.shuffle()
                     while arr.size() >= 2: # while, because there is rare chance that there are >=4 players on the same planet
@@ -128,12 +150,16 @@ func player_ready(readiness: bool=true):
                         var p2 = arr.pop_back()
                         init_fight.rpc_id(p1, p2)
                         init_fight.rpc_id(p2, p1)
-                        playersAndActions[p1] = [Actions.FIGHT]
-                        playersAndActions[p2] = [Actions.FIGHT]
+                        playersAndActions[p1] = [Action.FIGHT]
+                        playersAndActions[p2] = [Action.FIGHT]
                 
                 for p in Lobby.players.keys():
                     if !playersAndActions.has(p):
-                        playersAndActions[p] = [Actions.MINING, Actions.RANDOM]
+                        if Lobby.players[p].planet == shopPlanet:
+                            playersAndActions[p] = [Action.SHOP]
+                        else:
+                            playersAndActions[p] = [Action.MINING, Action.RANDOM]
+                    send_available_actions.rpc_id(p, playersAndActions[p])
                         
                 
             
@@ -143,7 +169,7 @@ func player_ready(readiness: bool=true):
 @rpc("any_peer", "call_local", "reliable")
 func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
     isReady = false
-    nextTurnBtn.disabled = true
+    canNextTurn = false
     gameState = _gameState
     camera.position = Vector2.ZERO
     if turn == 0:
@@ -160,6 +186,8 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
         GameState.ACTION:
             fightUI.visible = false
             fightUI.process_mode = Node.PROCESS_MODE_DISABLED
+            actionPicker.visible = false
+            actionPicker.process_mode = Node.PROCESS_MODE_DISABLED
             gameState = GameState.MAP
         
         GameState.MAP:
@@ -175,17 +203,17 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
     if turn == 0:
         gameState = GameState.BUILDING
     turn += 1
-    print(gameState)
+    print("GAME STATE> ", gameState)
     match gameState:
         GameState.BUILDING:
             camera.change_param()
             builder.active = true
+            canNextTurn = true
             
         GameState.ACTION:
             #pick random encounter - call host to give it, so its fair
-            if playerFighting:
-                fightUI.visible = true
-                fightUI.process_mode = Node.PROCESS_MODE_INHERIT
+            actionPicker.visible = true
+            actionPicker.process_mode = Node.PROCESS_MODE_INHERIT
             
         
         GameState.MAP:
@@ -195,8 +223,7 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             ship.visible = false
             map.process_mode = Node.PROCESS_MODE_INHERIT
             map.visible = true
-    
-    nextTurnBtn.disabled = false
+            canNextTurn = true
 
 ### Host
 
@@ -205,7 +232,22 @@ func flew_to_planet(index: int):
     if multiplayer.is_server():
         Lobby.players[multiplayer.get_remote_sender_id()].planet = index
 
-
+@rpc("any_peer", "call_local", "reliable")
+func process_and_send_action(action: Action):
+    if multiplayer.is_server():
+        var peer_id = multiplayer.get_remote_sender_id()
+        var _data = {}
+        match action:
+            Action.SHOP:
+                _data.items = {}
+            
+            Action.MINING:
+                _data.material = randi_range(20, 60)
+            
+            Action.RANDOM:
+                pass # some random action
+        
+        send_action_data.rpc_id(peer_id, _data)
 
 ### Host and client
 
@@ -232,10 +274,41 @@ func send_enemy_ship(p: Array):
         parts[Vector3i(p[i], p[i+1], p[i+2])] = p[i+3]
     enemyShip.generate_ship(parts)
 
+# Send available actions to pick, client specific
+# additional _data parameter for small information about certain actions
 @rpc("authority", "call_local", "reliable")
-func send_available_actions(actions: Array[Actions]):
+func send_available_actions(actions: Array, _data: Dictionary={}):
+    for c in actionPicker.get_child(0).get_child(0).get_children():
+        c.queue_free()
     print(actions)
+    for a in actions:
+        var act = actionControl.instantiate() as Button
+        act.get_node("title").text = tr(Action.keys()[a])
+        act.get_node("desc").text = tr(Action.keys()[a] + "_DESC")
+        act.get_node("icon").texture = actionIcons[a]
+        actionPicker.get_child(0).get_child(0).add_child(act)
+        act.button_down.connect(pick_action.bind(a))
+
+func pick_action(action: Action):
+    for c in actionPicker.get_child(0).get_child(0).get_children():
+        c.queue_free()
+    process_and_send_action.rpc_id(1, action)
+
+# More precise information about picked action, like items in the shop
+@rpc("authority", "call_local", "reliable")
+func send_action_data(_data: Dictionary):
+    canNextTurn = true
+    print(_data)
+    if _data.has("material"):
+        inventory.materials += _data.material
+    if playerFighting:
+        fightUI.visible = true
+        fightUI.process_mode = Node.PROCESS_MODE_INHERIT
 
 @rpc("authority", "call_local", "reliable")
 func add_materials(amount: int):
     inventory.materials += amount 
+
+@rpc("authority", "call_local", "reliable")
+func generate_meteors_bg(_seed: int):
+    map.generate_meteors(_seed)

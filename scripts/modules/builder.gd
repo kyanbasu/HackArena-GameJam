@@ -6,14 +6,13 @@ class_name Builder
 
 @export var placementGrid : Node2D
 @export var spaceGrid : Node2D
-@export var BG : Node2D
+@export var BG : TextureRect
 
 @export var active := false:
     set(new_val):
         active = new_val
         if BG:
             BG.visible = new_val
-            BG.get_node("CanvasLayer").visible = new_val
         if spaceGrid:
             spaceGrid.queue_redraw()
         if inventory:

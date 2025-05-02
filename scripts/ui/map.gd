@@ -47,9 +47,6 @@ func init():
         p.queue_free()
     planetNodes = {}
     
-    meteorsTilemap.clear()
-    generate_meteors(randi_range(-1000,1000))
-    
     for i in range(planetCount):
         var pl = planet.instantiate()
         pl.button_down.connect(select_planet.bind(i))
@@ -132,6 +129,7 @@ func _draw() -> void:
 ### Background ###
 # Temporary randomization, maybe generate them in clusters?
 func generate_meteors(_seed: int):
+    meteorsTilemap.clear()
     var rng = RandomNumberGenerator.new()
     rng.seed = _seed 
     

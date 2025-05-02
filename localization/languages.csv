@@ -1,3 +1,8 @@
-key	en
-NEXT_TURN	Next turn
-CANCEL	Cancel
+key;en
+NEXT_TURN;Next turn
+CANCEL;Cancel
+FIGHT;Fight
+MINING;Extraction
+RANDOM;Random encounter
+SHOP;Shop
+
