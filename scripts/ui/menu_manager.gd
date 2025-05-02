@@ -19,10 +19,10 @@ func _ready() -> void:
 func regenerate_name():
     connectionMenu.get_node("name").text = NameGenerator.get_random_name()
 
-func player_connected(peer_id, player_info):
+func player_connected(_peer_id, _player_info):
     refresh_player_list()
     
-func player_disconnected(peer_id):
+func player_disconnected(_peer_id):
     refresh_player_list()
 
 func _on_host_pressed() -> void:
