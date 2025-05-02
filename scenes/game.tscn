@@ -75,16 +75,6 @@ script = ExtResource("4_lbhrr")
 [node name="builderBG" type="Node2D" parent="ship"]
 z_index = -10
 
-[node name="blank" type="TextureRect" parent="ship/builderBG"]
-visible = false
-self_modulate = Color(0.129412, 0.129412, 0.137255, 1)
-z_index = -2
-offset_left = -5120.0
-offset_top = -5120.0
-offset_right = 5120.0
-offset_bottom = 5120.0
-texture = ExtResource("20_5newe")
-
 [node name="CanvasLayer" type="CanvasLayer" parent="ship/builderBG"]
 layer = -1
 
@@ -127,7 +117,7 @@ offset_right = -15.0
 offset_bottom = -11.0
 grow_horizontal = 0
 grow_vertical = 0
-text = "Next Turn"
+text = "NEXT_TURN"
 
 [node name="ProgressBar" type="ProgressBar" parent="ship/UI/nextTurn"]
 z_index = -1
@@ -276,6 +266,8 @@ position = Vector2(8192, 0)
 [node name="enemyShip" type="Node2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget"]
 script = ExtResource("23_bt5mj")
 targetSelectionTex = ExtResource("24_e1j6l")
+
+[node name="ActionPicker" type="CanvasLayer" parent="."]
 
 [connection signal="button_up" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn_btn_up"]
 [connection signal="button_down" from="ship/UI/changeRenderingBtn" to="ship/UI/changeRenderingBtn" method="_on_button_down"]

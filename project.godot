@@ -62,6 +62,10 @@ down={
 ]
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://localization/languages.en.translation")
+
 [layer_names]
 
 2d_physics/layer_1="world"

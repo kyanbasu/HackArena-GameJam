@@ -13,6 +13,7 @@ class_name Builder
         active = new_val
         if BG:
             BG.visible = new_val
+            BG.get_node("CanvasLayer").visible = new_val
         if spaceGrid:
             spaceGrid.queue_redraw()
         if inventory:

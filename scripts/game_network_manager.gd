@@ -15,6 +15,17 @@ enum GameState {
 # Host dictates gameState
 var gameState : GameState = GameState.BUILDING
 
+enum Actions {
+    FIGHT,
+    MINING,
+    RANDOM,
+    SHOP
+}
+
+var currentAction : Actions
+
+var shopPlanet : int = 14
+
 var turn : int = 0
 
 var playersDead : int = 0
@@ -39,9 +50,9 @@ var isReady : bool = false:
         isReady = new_val
         if nextTurnBtn:
             if isReady:
-                nextTurnBtn.text = "Cancel"
+                nextTurnBtn.text = tr("CANCEL")
             else:
-                nextTurnBtn.text = "Next Turn"
+                nextTurnBtn.text = tr("NEXT_TURN")
 
 var fightTurn : int = 0
 
@@ -104,6 +115,7 @@ func player_ready(readiness: bool=true):
             
             elif gameState == GameState.ACTION:
                 var playersOnPlanet : Dictionary[int, Array] = {} # planetIndex: Array[peerUID]
+                var playersAndActions : Dictionary[int, Array] = {}
                 for p in Lobby.players.keys():
                     if !playersOnPlanet.has(Lobby.players[p].planet):
                         playersOnPlanet[Lobby.players[p].planet] = []
@@ -116,6 +128,12 @@ func player_ready(readiness: bool=true):
                         var p2 = arr.pop_back()
                         init_fight.rpc_id(p1, p2)
                         init_fight.rpc_id(p2, p1)
+                        playersAndActions[p1] = [Actions.FIGHT]
+                        playersAndActions[p2] = [Actions.FIGHT]
+                
+                for p in Lobby.players.keys():
+                    if !playersAndActions.has(p):
+                        playersAndActions[p] = [Actions.MINING, Actions.RANDOM]
                         
                 
             
@@ -157,6 +175,7 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
     if turn == 0:
         gameState = GameState.BUILDING
     turn += 1
+    print(gameState)
     match gameState:
         GameState.BUILDING:
             camera.change_param()
@@ -212,6 +231,10 @@ func send_enemy_ship(p: Array):
     for i in range(0, p.size(), 4):
         parts[Vector3i(p[i], p[i+1], p[i+2])] = p[i+3]
     enemyShip.generate_ship(parts)
+
+@rpc("authority", "call_local", "reliable")
+func send_available_actions(actions: Array[Actions]):
+    print(actions)
 
 @rpc("authority", "call_local", "reliable")
 func add_materials(amount: int):

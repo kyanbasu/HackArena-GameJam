@@ -8,8 +8,8 @@ var lastMousePos := Vector2.ZERO
 var smooth_zoom : float = 1
 var target_zoom : float
 
-var min_zoom : float = .5
-var max_zoom : float = 3
+var min_zoom : float = 1
+var max_zoom : float = 1
 
 var camera_bound := Vector2(600, 350)
 
@@ -24,7 +24,7 @@ func _ready() -> void:
     target_zoom = zoom.x
     change_param()
 
-func change_param(_camera_bound: Vector2=Vector2(600, 350), _min_zoom: float=.5, _max_zoom: float = 3):
+func change_param(_camera_bound: Vector2=Vector2(600, 350), _min_zoom: float=1, _max_zoom: float = 1):
     camera_bound = _camera_bound
     min_zoom = _min_zoom
     max_zoom = _max_zoom
