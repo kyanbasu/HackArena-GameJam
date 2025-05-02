@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6f8ru7gycbdv"
-path="res://.godot/imported/placement.png-b780a13126a35008ad3c257d82b36a26.ctex"
+uid="uid://87lgk0jhn4uo"
+path="res://.godot/imported/Floor_1x1.ase-246a17fe007ba7a32c50236c9d628e75.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/placement.png"
-dest_files=["res://.godot/imported/placement.png-b780a13126a35008ad3c257d82b36a26.ctex"]
+source_file="res://art/modules/Floor_1x1.ase"
+dest_files=["res://.godot/imported/Floor_1x1.ase-246a17fe007ba7a32c50236c9d628e75.ctex"]
 
 [params]
 
@@ -19,7 +19,7 @@ compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/normal_map=1
+compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false
 mipmaps/limit=-1

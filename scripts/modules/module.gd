@@ -2,6 +2,17 @@
 extends Node2D
 class_name ShipModule
 
+enum ModuleType {
+    EMPTY,
+    COCKPIT,
+    ENGINE,
+    SHIELD,
+    WEAPON,
+    GENERATOR
+}
+
+@export var moduleType: ModuleType = ModuleType.EMPTY
+
 @export var tiles : Array[Vector2i]:
     set(new_tiles):
         tiles = new_tiles.duplicate() #duplicate fixes unique array problem
@@ -51,7 +62,7 @@ func _draw():
 var health;
 
 # Total energy used by module
-@export var maxEnergy = 1;
+@export var maxEnergy = 0;
 var energy;
 
 func _ready() -> void:
@@ -61,16 +72,18 @@ func _ready() -> void:
 func rotate_left() -> void:
     if !isRotateable: return
     rotation -= PI/2
+    rotation_degrees = int(rotation_degrees) % 360
     for i in len(tiles):
         tiles[i] = Vector2i(tiles[i].y, -tiles[i].x)
 
 func rotate_right() -> void:
     if !isRotateable: return
     rotation += PI/2
+    rotation_degrees = int(rotation_degrees) % 360
     for i in len(tiles):
         tiles[i] = Vector2i(-tiles[i].y, tiles[i].x)
 
-func damage(amount: int) -> void:
+func deal_damage(amount: int) -> void:
     if health - amount < 0:
         health = 0
         return

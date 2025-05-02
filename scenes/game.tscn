@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://p71t6ovr8u2i" path="res://prefabs/modules/cockpit_A.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://bpw15hrocyjdr" path="res://prefabs/modules/hallway_L.tscn" id="4_iywne"]
 [ext_resource type="Script" uid="uid://bcq4ly521oa7u" path="res://scripts/placement_grid_draw.gd" id="4_lbhrr"]
-[ext_resource type="Texture2D" uid="uid://b6f8ru7gycbdv" path="res://art/placement.png" id="6_gee14"]
+[ext_resource type="Texture2D" uid="uid://b6f8ru7gycbdv" path="res://art/bg/placement.png" id="6_gee14"]
 [ext_resource type="Script" uid="uid://bnl012y507g0m" path="res://scripts/space_grid_draw.gd" id="6_kvpfn"]
 [ext_resource type="Shader" uid="uid://dpnvhbkp3ki8f" path="res://shaders/placement_shader.tres" id="6_u5sy4"]
 [ext_resource type="Script" uid="uid://bb423b538twto" path="res://scripts/inventory.gd" id="8_gee14"]
@@ -20,8 +20,8 @@
 [ext_resource type="PackedScene" uid="uid://xo66orsxga73" path="res://prefabs/ui/planet.tscn" id="14_ir15t"]
 [ext_resource type="Texture2D" uid="uid://fm2qsrbasrrv" path="res://icon.svg" id="14_trtic"]
 [ext_resource type="Script" uid="uid://bel37yc8d2nnm" path="res://scripts/sub_viewport.gd" id="16_1kice"]
-[ext_resource type="Texture2D" uid="uid://wufsx28acepy" path="res://art/nothing.png" id="20_5newe"]
-[ext_resource type="TileSet" uid="uid://c4bsjfct2oueo" path="res://art/Meteors_tileset.tres" id="20_37s47"]
+[ext_resource type="Texture2D" uid="uid://b0031q7p6yqqx" path="res://art/bg/nothing.png" id="20_5newe"]
+[ext_resource type="TileSet" uid="uid://dumtug50wm586" path="res://art/bg/Meteors_tileset.tres" id="20_37s47"]
 [ext_resource type="Script" uid="uid://8r307hxfrrj2" path="res://scripts/enemy_ship.gd" id="23_bt5mj"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
@@ -184,9 +184,10 @@ position = Vector2(64, 0)
 script = ExtResource("10_vtaks")
 subViewport = NodePath("../Fight/SubViewportContainer/SubViewport")
 
-[node name="Map" type="Node2D" parent="." node_paths=PackedStringArray("meteorsTilemap")]
+[node name="Map" type="Node2D" parent="." node_paths=PackedStringArray("gameNetworkManager", "meteorsTilemap")]
 script = ExtResource("13_kvuet")
 planet = ExtResource("14_ir15t")
+gameNetworkManager = NodePath("../GameNetworkManager")
 meteorsTilemap = NodePath("Meteors")
 
 [node name="BG" type="TextureRect" parent="Map"]
@@ -246,10 +247,6 @@ position = Vector2(8192, 0)
 
 [node name="enemyShip" type="Node2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget"]
 script = ExtResource("23_bt5mj")
-parts_list = Dictionary[Vector3i, PackedScene]({
-Vector3i(0, 0, 90): ExtResource("4_iywne"),
-Vector3i(32, 0, 0): ExtResource("3_lnu2h")
-})
 targetSelectionTex = ExtResource("14_trtic")
 
 [connection signal="button_up" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn_btn_up"]

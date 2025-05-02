@@ -17,8 +17,10 @@ const MAX_CONNECTIONS = 20
 
 var isInGame := false
 
-# This will contain player info for every player,
-# with the keys being each player's unique IDs.
+# Contains information of every player
+# key: peer UID
+# planet: int - current planet index
+# name: String - player name
 var players : Dictionary[int, Dictionary] = {}
 
 # This is the local player info. This should be modified locally

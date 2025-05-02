@@ -18,6 +18,8 @@ var planetCount = 30
 #contains clickable planets node references
 var planetNodes : Dictionary[int, Button] = {}
 
+@export var gameNetworkManager : GameNetworkManager
+
 @export var meteorsTilemap : TileMapLayer
 
 # data contains every planet position, orbit, icon and (?)name
@@ -53,8 +55,9 @@ func init():
         pl.button_down.connect(select_planet.bind(i))
         planetNodes[i] = pl
         add_child(pl)
-    nextPlayerPlanet = randi_range(0, planetCount-1)
+    nextPlayerPlanet = 2#randi_range(0, planetCount-1)
     playerPlanet = nextPlayerPlanet
+    gameNetworkManager.flew_to_planet.rpc_id(1, playerPlanet)
     if multiplayer.is_server():
         init_server()
 
@@ -64,6 +67,8 @@ func select_planet(index: int):
         planetNodes[nextPlayerPlanet].grab_focus()
         return
     nextPlayerPlanet = index
+    gameNetworkManager.flew_to_planet.rpc_id(1, index)
+    
 
 func init_server():
     for i in range(planetCount):
@@ -126,9 +131,9 @@ func _draw() -> void:
 
 ### Background ###
 # Temporary randomization, maybe generate them in clusters?
-func generate_meteors(seed: int):
+func generate_meteors(_seed: int):
     var rng = RandomNumberGenerator.new()
-    rng.seed = seed 
+    rng.seed = _seed 
     
     var tilesAmount = meteorsTilemap.tile_set.get_source(0).get_tiles_count()
     print()

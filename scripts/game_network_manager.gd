@@ -1,4 +1,5 @@
 extends Node2D
+class_name GameNetworkManager
 
 ### CONTROL HOST ONLY, but client have access to read ###
 @export var playersReady : int = 0
@@ -30,6 +31,7 @@ var startingMaterials : int = 100
 
 # Fighting
 @export var fightUI : CanvasLayer
+@export var playerFighting : int = 0 # UID of peer that you are fighting, 0 if not fighting
 
 var isReady : bool = false:
     set(new_val):
@@ -92,6 +94,8 @@ func player_ready(readiness: bool=true):
             if gameState == GameState.MAP:
                 map.host_position_planets()
                 map.sync_planets.rpc(map.planets)
+                
+            
             # End loading
             host_called_next_turn.rpc(gameState)
 
@@ -133,8 +137,9 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             
         GameState.ACTION:
             #pick random encounter - call host to give it, so its fair
-            fightUI.visible = true
-            fightUI.process_mode = Node.PROCESS_MODE_INHERIT
+            if playerFighting:
+                fightUI.visible = true
+                fightUI.process_mode = Node.PROCESS_MODE_INHERIT
             
         
         GameState.MAP:
@@ -146,7 +151,21 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             map.visible = true
     
     nextTurnBtn.disabled = false
-        
+
+### Host
+
+@rpc("any_peer", "call_local", "reliable")
+func flew_to_planet(index: int):
+    Lobby.players[multiplayer.get_remote_sender_id()].planet = index
+
+
+
+### Host and client
+
+@rpc("any_peer", "call_local", "reliable")
+func init_fight(enemy_id):
+    playerFighting = enemy_id
+
 @rpc("authority", "call_local", "reliable")
 func add_materials(amount: int):
     inventory.materials += amount 

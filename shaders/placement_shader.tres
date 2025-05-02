@@ -122,7 +122,7 @@ void fragment() {
 "
 mode = 1
 flags/light_only = false
-preview_params/Texture2D = "Resource(\"res://art/placement.png\")"
+preview_params/Texture2D = "Resource(\"res://art/bg/placement.png\")"
 preview_params/Scale = "2.0"
 nodes/fragment/0/position = Vector2(640, 160)
 nodes/fragment/3/node = SubResource("VisualShaderNodeTexture_73n1q")

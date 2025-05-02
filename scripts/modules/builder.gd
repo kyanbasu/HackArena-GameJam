@@ -37,7 +37,10 @@ func _draw() -> void:
 var selectedModule : ShipModule
 var isHoldingModule := false
 
+var ship : Ship
+
 func _ready() -> void:
+    ship = get_parent()
     placementGrid.builder = self
     spaceGrid.builder = self
     if inventory: inventory.builder = self
@@ -127,6 +130,7 @@ func pickup_part(part: ShipModule):
         var new_pos = Vector2(lastPartPositionRotation.x, lastPartPositionRotation.y)
         place_part(part, new_pos, lastPartPositionRotation.z)
         return
+    ship.changed_ship_module(part, false)
     isHoldingModule = true
 
 const FOUR_SIDES : Array[Vector2i] = [Vector2i(-1,0), Vector2i(1,0), Vector2i(0,-1), Vector2i(0,1)]
@@ -172,4 +176,5 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
     for t in part.tiles:
         var v = t + Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5))
         occupiedSpace[v] = part
+    ship.changed_ship_module(part, true)
     inventory.add_module(part, -1)
