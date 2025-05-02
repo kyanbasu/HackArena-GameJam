@@ -1,6 +1,7 @@
 extends SubViewport
 
 @export var target : Node2D
+@export var enemyShip : EnemyShip
 
 @export var extensionIndicator : TextureRect
 
@@ -48,6 +49,11 @@ func _ready() -> void:
 func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
     if event is InputEventMouseButton:
         match event.button_index:
+            MOUSE_BUTTON_LEFT:
+                if event.pressed:
+                    var selectedPos = Vector2i(floor(enemyShip.get_local_mouse_position()/G.TILE_SIZE+Vector2(.5,.5))*G.TILE_SIZE)
+                    enemyShip.targets = [selectedPos]
+            # Camera
             MOUSE_BUTTON_WHEEL_DOWN:
                 targetZoom -= 0.1
             MOUSE_BUTTON_WHEEL_UP:
@@ -74,8 +80,8 @@ func _process(delta):
     if smoothSize != targetSize:
         size = Vector2i(smoothSize)
         subViewportContainer.size = size
-        extensionIndicator.position = Vector2(smoothSize.x, smoothSize.y/2) - extensionIndicator.size/2
-        #subViewportContainer.position.x = 640 - smoothSize.x
+        extensionIndicator.position = Vector2(0, smoothSize.y/2) - extensionIndicator.size/2
+        subViewportContainer.position.x = 640 - smoothSize.x
     
         
     

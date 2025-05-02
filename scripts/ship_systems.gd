@@ -8,7 +8,7 @@ var max_health : int
 var total_damage : int #is just negative health, real health is max_health-damage
 
 var max_energy : int
-var energy : int
+var used_energy : int
 
 # distributing energy to modules
 var max_shield : int

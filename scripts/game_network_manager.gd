@@ -43,6 +43,8 @@ var isReady : bool = false:
 var fightTurn : int = 0
 
 func _ready():
+    if !Array(OS.get_cmdline_args()).has("editor"):
+        Input.mouse_mode = Input.MOUSE_MODE_CONFINED
     builder.gameNetworkManager = self
     map.process_mode = Node.PROCESS_MODE_DISABLED
     map.visible = false
