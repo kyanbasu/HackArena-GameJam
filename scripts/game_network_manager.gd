@@ -119,8 +119,6 @@ func player_ready(readiness: bool=true):
                 for i in Lobby.players.keys():
                     # Starting Planet
                     var planet = randi_range(0, map.planetCount-1)
-                    if i == 1:
-                        planet = shopPlanet
                     host_called_end_turn.rpc_id(i, gameState, {"planet": planet})
                     Lobby.players[i].planet = planet
             else:
@@ -240,14 +238,49 @@ func process_and_send_action(action: Action):
         match action:
             Action.SHOP:
                 _data.items = {}
+                for i in range(randi_range(4,7)):
+                    var item = tableShop.pick_random().resource_path
+                    if !_data.items.has(item):
+                        _data.items[item] = 1
+                    else:
+                        _data.items[item] += 1
             
             Action.MINING:
                 _data.material = randi_range(20, 60)
             
             Action.RANDOM:
-                pass # some random action
+                _data = get_random_event_data()
         
         send_action_data.rpc_id(peer_id, _data)
+
+func get_random_event_data() -> Dictionary:
+    var _data = {"random": true}
+    var encounter = [
+        "pirate", "asteroid", "solar_flare", # negative
+        "abandoned_ship", "abandoned_station", "quarry", "ship_in_need" # positive
+    ].pick_random()
+    
+    encounter = "pirate"
+    
+    _data.name = encounter
+    match encounter:
+        "pirate":
+            _data.request = randi_range(30, 100) # requested material count
+        "asteroid":
+            _data.material = -randi_range(20, 40)
+        
+        "abandoned_ship":
+            _data.material = randi_range(10, 50)
+        "abandoned_station":
+            _data.material = randi_range(30, 80)
+            _data.reward = tableAbandonedStation.pick_random().resource_path
+        "quarry":
+            _data.material = randi_range(10, 40)
+        "ship_in_need":
+            _data.request = randi_range(20, 50)
+            _data.reward = tableShipInNeed.pick_random().resource_path
+    
+    return _data
 
 ### Host and client
 
@@ -278,32 +311,74 @@ func send_enemy_ship(p: Array):
 # additional _data parameter for small information about certain actions
 @rpc("authority", "call_local", "reliable")
 func send_available_actions(actions: Array, _data: Dictionary={}):
-    for c in actionPicker.get_child(0).get_child(0).get_children():
+    for c in actionPicker.get_node("ActionsPanel").get_child(0).get_children():
         c.queue_free()
     print(actions)
+    actionPicker.get_node("TitlePanel/title").text = tr("ACTIONS")
     for a in actions:
         var act = actionControl.instantiate() as Button
         act.get_node("title").text = tr(Action.keys()[a])
         act.get_node("desc").text = tr(Action.keys()[a] + "_DESC")
         act.get_node("icon").texture = actionIcons[a]
-        actionPicker.get_child(0).get_child(0).add_child(act)
+        actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
         act.button_down.connect(pick_action.bind(a))
 
 func pick_action(action: Action):
-    for c in actionPicker.get_child(0).get_child(0).get_children():
+    for c in actionPicker.get_node("ActionsPanel").get_child(0).get_children():
         c.queue_free()
     process_and_send_action.rpc_id(1, action)
 
 # More precise information about picked action, like items in the shop
 @rpc("authority", "call_local", "reliable")
 func send_action_data(_data: Dictionary):
-    canNextTurn = true
     print(_data)
+    # Random encounters
+    if _data.has("random"):
+        actionPicker.get_node("TitlePanel/title").text = tr("RANDOM." + _data.name.to_upper())
+        
+        match _data.name:
+            "pirate":
+                # Accept request
+                var act = actionControl.instantiate() as Button
+                act.get_node("title").text = tr("ACCEPT")
+                #act.get_node("desc").text = tr("_DESC")
+                #act.get_node("icon").texture = actionIcons[a]
+                actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
+                act.button_down.connect(add_materials.bind(-_data.request))
+                act.button_down.connect(pirate_after_decision)
+                
+                # Decline
+                act = actionControl.instantiate() as Button
+                act.get_node("title").text = tr("DECLINE")
+                #act.get_node("desc").text = tr("_DESC")
+                #act.get_node("icon").texture = actionIcons[a]
+                actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
+                act.button_down.connect(damage_random_part)
+                act.button_down.connect(pirate_after_decision)
+            "asteroid":
+                damage_random_part()
+            "solar_flare":
+                damage_random_part()
+        
+        if _data.name != "pirate":
+            canNextTurn = true
+    # Other actions
+    else:
+        canNextTurn = true
+   
     if _data.has("material"):
         inventory.materials += _data.material
     if playerFighting:
         fightUI.visible = true
         fightUI.process_mode = Node.PROCESS_MODE_INHERIT
+
+func pirate_after_decision():
+    canNextTurn = true
+    for c in actionPicker.get_node("ActionsPanel").get_child(0).get_children():
+        c.queue_free()
+
+func damage_random_part():
+    pass
 
 @rpc("authority", "call_local", "reliable")
 func add_materials(amount: int):
@@ -312,3 +387,11 @@ func add_materials(amount: int):
 @rpc("authority", "call_local", "reliable")
 func generate_meteors_bg(_seed: int):
     map.generate_meteors(_seed)
+
+
+
+### Loot tables etc.
+
+@export var tableShop : Array[PackedScene]
+@export var tableShipInNeed : Array[PackedScene]
+@export var tableAbandonedStation : Array[PackedScene]

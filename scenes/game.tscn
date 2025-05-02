@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=32 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -38,6 +38,8 @@ shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [sub_resource type="LabelSettings" id="LabelSettings_gee14"]
 
+[sub_resource type="LabelSettings" id="LabelSettings_bhx41"]
+
 [node name="Node2D" type="Node2D"]
 
 [node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "enemyShip", "builder", "map", "camera", "inventory", "actionPicker", "fightUI")]
@@ -59,6 +61,9 @@ actionIcons = Dictionary[int, Texture2D]({
 3: ExtResource("14_trtic")
 })
 fightUI = NodePath("../Fight")
+tableShop = Array[PackedScene]([ExtResource("14_1kice"), ExtResource("13_264po"), ExtResource("12_rysoc")])
+tableShipInNeed = Array[PackedScene]([ExtResource("13_264po")])
+tableAbandonedStation = Array[PackedScene]([ExtResource("12_rysoc")])
 
 [node name="players" type="Node2D" parent="."]
 
@@ -281,9 +286,8 @@ script = ExtResource("23_bt5mj")
 targetSelectionTex = ExtResource("24_e1j6l")
 
 [node name="ActionPicker" type="CanvasLayer" parent="."]
-visible = false
 
-[node name="Panel" type="Panel" parent="ActionPicker"]
+[node name="ActionsPanel" type="Panel" parent="ActionPicker"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -294,13 +298,35 @@ offset_bottom = -72.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Container" type="VBoxContainer" parent="ActionPicker/Panel"]
+[node name="Container" type="VBoxContainer" parent="ActionPicker/ActionsPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="TitlePanel" type="Panel" parent="ActionPicker"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 32.0
+offset_right = -160.0
+offset_bottom = -296.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="title" type="Label" parent="ActionPicker/TitlePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+label_settings = SubResource("LabelSettings_bhx41")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

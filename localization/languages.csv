@@ -1,8 +1,17 @@
 key;en
 NEXT_TURN;Next turn
 CANCEL;Cancel
+ACCEPT;Accept
+DECLINE;Decline
+ACTIONS;Available actions
 FIGHT;Fight
 MINING;Extraction
-RANDOM;Random encounter
 SHOP;Shop
+RANDOM;Random encounter
+RANDOM.PIRATE;Pirate
+RANDOM.ASTEROID;Asteroid
+RANDOM.ABANDONED_SHIP;Abandoned Ship
+RANDOM.ABANDONED_STATION;Abandoned Station
+RANDOM.QUARRY;Space Quarry
+RANDOM.SHIP_IN_NEED;Ship in need
 
