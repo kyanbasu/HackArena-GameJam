@@ -43,9 +43,6 @@ func _ready() -> void:
     multiplayer.connected_to_server.connect(_on_connected_ok)
     multiplayer.connection_failed.connect(_on_connected_fail)
     multiplayer.server_disconnected.connect(_on_server_disconnected)
-    
-    if Array(OS.get_cmdline_args()).has("editor"):
-        create_game()
 
 @rpc("call_local", "reliable")
 func _load_scene(scene: String) -> void:

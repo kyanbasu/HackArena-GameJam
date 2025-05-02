@@ -33,9 +33,17 @@ func damage(amount: int, _position: Vector2i):
 func changed_ship_module(part: ShipModule, added: bool):
     var mult = 1 # adds or removes from max systems
     if added:
-        modules[Vector3i(part.global_position.x, part.global_position.y, part.rotation_degrees)] = part
+        modules[Vector3i(
+            int(part.global_position.x),
+            int(part.global_position.y),
+            int(part.rotation_degrees)
+            )] = part
     else:
-        modules.erase(Vector3i(part.global_position.x, part.global_position.y, part.rotation_degrees))
+        modules.erase(Vector3i(
+                int(part.global_position.x),
+                int(part.global_position.y),
+                int(part.rotation_degrees)
+                ))
         mult = -1
     
     max_health += part.maxHealth * mult

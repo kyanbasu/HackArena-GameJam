@@ -36,8 +36,6 @@ func _ready() -> void:
     camera = $Camera
     subViewportContainer = get_parent()
     world_2d = get_tree().root.world_2d
-    size = Vector2i(subViewportContainer.size)
-    subViewportContainer.size = size
     camera.position = target.position
     lastCameraPos = camera.position
     targetZoom = camera.zoom.x
