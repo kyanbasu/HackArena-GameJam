@@ -1,7 +1,7 @@
 [remap]
 
-importer="aseprite_wizard.plugin.static-texture"
-type="PortableCompressedTexture2D"
+importer="texture_atlas"
+type="Texture2D"
 uid="uid://cn50j0gkqaio3"
 path="res://.godot/imported/GAME.ase-bd03ee800d605af30fdcb614f3c547c2.res"
 
@@ -12,8 +12,7 @@ dest_files=["res://.godot/imported/GAME.ase-bd03ee800d605af30fdcb614f3c547c2.res
 
 [params]
 
-layer/exclude_layers_pattern=""
-layer/only_visible_layers=false
-first_frame_only=true
-sheet/sheet_type="columns"
-sheet/sheet_columns=12
+atlas_file=""
+import_mode=0
+crop_to_region=false
+trim_alpha_border_from_region=true

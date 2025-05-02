@@ -15,6 +15,10 @@ run/main_scene="uid://vm08dmxa78b"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[aseprite_importers]
+
+aseprite_executable_path="D:/Wszystko/aseprite/aseprite.exe"
+
 [autoload]
 
 G="*res://scripts/Global.gd"
@@ -33,7 +37,7 @@ run/main_run_args="editor"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
+enabled=PackedStringArray("res://addons/nklbdev.aseprite_importers/plugin.cfg")
 
 [input]
 
@@ -67,4 +71,3 @@ down={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-environment/defaults/default_clear_color=Color(0.404511, 0.404511, 0.404511, 1)

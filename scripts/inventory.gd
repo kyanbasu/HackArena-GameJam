@@ -4,6 +4,8 @@ class_name Inventory
 
 var builder: Builder
 
+var materials : int = 0 #same as money, scrap
+
 @export var uiModulesContainer : Container
 @export var uiModule : PackedScene
 

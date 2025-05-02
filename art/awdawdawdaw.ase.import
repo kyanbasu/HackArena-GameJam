@@ -1,7 +1,7 @@
 [remap]
 
-importer="aseprite_wizard.plugin.static-texture"
-type="PortableCompressedTexture2D"
+importer="texture_atlas"
+type="Texture2D"
 uid="uid://dnhl633gblrro"
 path="res://.godot/imported/awdawdawdaw.ase-e64a755e26812eaf2cd50e93698f51a6.res"
 
@@ -12,8 +12,7 @@ dest_files=["res://.godot/imported/awdawdawdaw.ase-e64a755e26812eaf2cd50e93698f5
 
 [params]
 
-layer/exclude_layers_pattern=""
-layer/only_visible_layers=false
-first_frame_only=true
-sheet/sheet_type="packed"
-sheet/sheet_columns=12
+atlas_file=""
+import_mode=0
+crop_to_region=false
+trim_alpha_border_from_region=true

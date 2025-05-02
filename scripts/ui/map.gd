@@ -18,6 +18,8 @@ var planetCount = 30
 #contains clickable planets node references
 var planetNodes : Dictionary[int, Button] = {}
 
+@export var meteorsTilemap : TileMapLayer
+
 # data contains every planet position, orbit, icon and (?)name
 func host_position_planets() -> void:
     if planets.size() == 0:
@@ -42,6 +44,9 @@ func init():
     for p in planetNodes.values():
         p.queue_free()
     planetNodes = {}
+    
+    meteorsTilemap.clear()
+    generate_meteors(randi_range(-1000,1000))
     
     for i in range(planetCount):
         var pl = planet.instantiate()
@@ -116,3 +121,21 @@ func _draw() -> void:
     # Selected planet and fly range
     draw_circle(planetNodes[playerPlanet].position + planetNodes[playerPlanet].size/2, 30, Color(0, 1, 0, .8), false, 6)
     draw_circle(planetNodes[playerPlanet].position + planetNodes[playerPlanet].size/2, playerRange + playerPlanet*10, Color(.5, .5, .5, .8), false, 4)
+
+
+
+### Background ###
+# Temporary randomization, maybe generate them in clusters?
+func generate_meteors(seed: int):
+    var rng = RandomNumberGenerator.new()
+    rng.seed = seed 
+    
+    var tilesAmount = meteorsTilemap.tile_set.get_source(0).get_tiles_count()
+    print()
+    
+    for x in range(-100,100):
+        for y in range(-90,90):
+            var rTileIndex = rng.randi_range(0, tilesAmount*8)
+            if rTileIndex >= tilesAmount: continue
+            var tilePos = meteorsTilemap.tile_set.get_source(0).get_tile_id(rTileIndex)
+            meteorsTilemap.set_cell(Vector2i(x,y), 0, tilePos)

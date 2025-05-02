@@ -67,8 +67,13 @@ func _host_start_game() -> void:
 func refresh_player_list():
     $playerList.text = "Player List\n"
     var names : Array[String]
-    for p in Lobby.players.values():
-        names.append(p.name)
+    for i in Lobby.players.keys():
+        var prefix = "%s"
+        if i == 1:
+            prefix = "[Host] " + prefix
+        if i == multiplayer.multiplayer_peer.get_unique_id():
+            prefix = "# " + prefix
+        names.append(prefix % Lobby.players[i].name)
     names.sort()
     for n in names:
         $playerList.text += "%s\n" % n

@@ -16,12 +16,17 @@ var gameState : GameState = GameState.BUILDING
 
 var turn : int = 0
 
+var playersDead : int = 0
+
+var startingMaterials : int = 100
+
 ### Client and host ###
 @export var nextTurnBtn : Button
 @export var ship : Ship
 @export var builder : Builder
 @export var map: Map
 @export var camera : Camera
+@export var inventory : Inventory
 
 # Fighting
 @export var fightUI : CanvasLayer
@@ -41,8 +46,12 @@ func _ready():
     builder.gameNetworkManager = self
     map.process_mode = Node.PROCESS_MODE_DISABLED
     map.visible = false
+    fightUI.visible = false
+    builder.active = false
     if Lobby.players.size() == 0:
         Lobby.players[0] = {"name": "Player"}
+    
+    player_ready.rpc_id(1, true)
 
 func _process(delta: float) -> void:
     if nextTurnBtn.button_pressed and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
@@ -62,24 +71,26 @@ func next_turn_btn_up():
 # Invoked when player presses next turn button, everyone must be ready
 func next_turn():
     isReady = !isReady
-    player_ready.rpc(1, isReady)
+    player_ready.rpc_id(1, isReady)
 
 @rpc("any_peer", "call_local", "reliable")
-func player_ready(_id, readiness: bool=true):
+func player_ready(readiness: bool=true):
     if multiplayer.is_server():
         if readiness:
             playersReady += 1
         else:
             playersReady -= 1
         
-        if playersReady == Lobby.players.size(): #all players are ready
+        if playersReady + playersDead == Lobby.players.size(): #all players are ready
+            if turn == 0:
+                add_materials.rpc(startingMaterials)
             host_called_end_turn.rpc(gameState) #does cleanup and increments gameState
             playersReady = 0
             # Loading screen or something
             if gameState == GameState.MAP:
                 map.host_position_planets()
                 map.sync_planets.rpc(map.planets)
-                
+            # End loading
             host_called_next_turn.rpc(gameState)
 
 @rpc("any_peer", "call_local", "reliable")
@@ -110,6 +121,9 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
 
 @rpc("any_peer", "call_local", "reliable")
 func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
+    if turn == 0:
+        gameState = GameState.BUILDING
+    turn += 1
     match gameState:
         GameState.BUILDING:
             camera.change_param()
@@ -122,8 +136,8 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             
         
         GameState.MAP:
-            camera.change_param(Vector2(1000, 1400), .2, 1)
             camera.position = map.planetNodes[map.playerPlanet].position
+            camera.change_param(Vector2(1400, 1800), .2, 1)
             ship.process_mode = Node.PROCESS_MODE_DISABLED
             ship.visible = false
             map.process_mode = Node.PROCESS_MODE_INHERIT
@@ -131,4 +145,6 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
     
     nextTurnBtn.disabled = false
         
-        
+@rpc("authority", "call_local", "reliable")
+func add_materials(amount: int):
+    inventory.materials += amount 
