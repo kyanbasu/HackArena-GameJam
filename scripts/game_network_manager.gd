@@ -156,7 +156,8 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
 
 @rpc("any_peer", "call_local", "reliable")
 func flew_to_planet(index: int):
-    Lobby.players[multiplayer.get_remote_sender_id()].planet = index
+    if multiplayer.is_server():
+        Lobby.players[multiplayer.get_remote_sender_id()].planet = index
 
 
 

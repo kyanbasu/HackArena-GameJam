@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://xo66orsxga73"]
 
-[ext_resource type="Texture2D" uid="uid://ds0rjwmcxele3" path="res://art/planet.tres" id="1_gngwi"]
+[ext_resource type="Texture2D" uid="uid://fm2qsrbasrrv" path="res://icon.svg" id="1_gngwi"]
 
 [node name="planet" type="Button"]
 anchors_preset = 8
@@ -23,3 +23,4 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_gngwi")
+expand_mode = 1

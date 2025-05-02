@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://p71t6ovr8u2i"]
 
 [ext_resource type="Script" uid="uid://ke8ye0hy0elu" path="res://scripts/modules/cockpit.gd" id="1_luea0"]
-[ext_resource type="TileSet" uid="uid://cdmnbpapgc32" path="res://art/tileset.tres" id="2_4kpxk"]
+[ext_resource type="TileSet" uid="uid://diie40j2tx4sd" path="res://art/tileset.tres" id="2_g5khm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ttrqs"]
 size = Vector2(32, 32)
@@ -19,7 +19,7 @@ maxHealth = 500
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 position = Vector2(-16, -16)
 tile_map_data = PackedByteArray(0, 0, 1, 0, 0, 0, 0, 0, 7, 0, 4, 0, 0, 80, 0, 0, 0, 0, 0, 0, 7, 0, 5, 0, 0, 80)
-tile_set = ExtResource("2_4kpxk")
+tile_set = ExtResource("2_g5khm")
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
 collision_layer = 128
