@@ -32,7 +32,7 @@ shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [node name="Node2D" type="Node2D"]
 
-[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "builder", "map", "camera")]
+[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "builder", "map", "camera", "fightUI")]
 process_mode = 3
 script = ExtResource("1_uwrxv")
 nextTurnBtn = NodePath("../ship/UI/nextTurn")
@@ -40,6 +40,7 @@ ship = NodePath("../ship")
 builder = NodePath("../ship/modules")
 map = NodePath("../Map")
 camera = NodePath("../Camera2D")
+fightUI = NodePath("../Fight")
 
 [node name="players" type="Node2D" parent="."]
 
@@ -67,6 +68,7 @@ material = SubResource("ShaderMaterial_u5sy4")
 script = ExtResource("6_kvpfn")
 
 [node name="UI" type="CanvasLayer" parent="ship"]
+layer = 2
 
 [node name="info" type="Label" parent="ship/UI"]
 visible = false
@@ -119,6 +121,7 @@ text = "canvas_items"
 script = ExtResource("12_ca42v")
 
 [node name="inventory" type="CanvasLayer" parent="ship/UI" node_paths=PackedStringArray("uiModulesContainer")]
+layer = 3
 script = ExtResource("8_gee14")
 uiModulesContainer = NodePath("Panel/ScrollContainer/VBoxContainer")
 uiModule = ExtResource("9_0tnpc")
@@ -171,32 +174,10 @@ grow_vertical = 2
 text = "Inventory"
 label_settings = SubResource("LabelSettings_gee14")
 
-[node name="Fight" type="CanvasLayer" parent="ship/UI"]
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="ship/UI/Fight"]
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_right = 100.0
-grow_vertical = 2
-mouse_filter = 0
-
-[node name="SubViewport" type="SubViewport" parent="ship/UI/Fight/SubViewportContainer" node_paths=PackedStringArray("target")]
-disable_3d = true
-size = Vector2i(100, 100)
-script = ExtResource("16_1kice")
-target = NodePath("../../../../Icon")
-
-[node name="Camera" type="Camera2D" parent="ship/UI/Fight/SubViewportContainer/SubViewport"]
-
-[node name="Icon" type="Sprite2D" parent="ship"]
-position = Vector2(-304, 2168.25)
-scale = Vector2(2.125, 2.03516)
-texture = ExtResource("14_trtic")
-
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("subViewport")]
 position = Vector2(64, 0)
 script = ExtResource("10_vtaks")
-subViewport = NodePath("../ship/UI/Fight/SubViewportContainer/SubViewport")
+subViewport = NodePath("../Fight/SubViewportContainer/SubViewport")
 
 [node name="Map" type="Node2D" parent="."]
 visible = false
@@ -210,10 +191,51 @@ position = Vector2(-311, -347)
 scale = Vector2(99.4063, 86.7031)
 texture = ExtResource("14_trtic")
 
+[node name="Fight" type="CanvasLayer" parent="."]
+process_mode = 4
+visible = false
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Fight"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 20.0
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="Control" type="Control" parent="Fight/SubViewportContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="Fight/SubViewportContainer/Control"]
+offset_left = 15.0
+offset_top = 163.0
+offset_right = 38.0
+offset_bottom = 337.0
+texture = ExtResource("14_trtic")
+expand_mode = 1
+
+[node name="SubViewport" type="SubViewport" parent="Fight/SubViewportContainer" node_paths=PackedStringArray("target", "extensionIndicator")]
+disable_3d = true
+handle_input_locally = false
+size = Vector2i(20, 360)
+render_target_update_mode = 0
+script = ExtResource("16_1kice")
+target = NodePath("SubViewport")
+extensionIndicator = NodePath("../Control/TextureRect")
+
+[node name="Camera" type="Camera2D" parent="Fight/SubViewportContainer/SubViewport"]
+
+[node name="SubViewport" type="Node2D" parent="Fight/SubViewportContainer/SubViewport"]
+position = Vector2(8192, 0)
+
+[node name="Icon" type="Sprite2D" parent="Fight/SubViewportContainer/SubViewport/SubViewport"]
+scale = Vector2(2.125, 2.03516)
+texture = ExtResource("14_trtic")
+
 [connection signal="button_up" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn_btn_up"]
 [connection signal="button_down" from="ship/UI/changeRenderingBtn" to="ship/UI/changeRenderingBtn" method="_on_button_down"]
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_exited"]
-[connection signal="gui_input" from="ship/UI/Fight/SubViewportContainer" to="ship/UI/Fight/SubViewportContainer/SubViewport" method="_on_sub_viewport_container_gui_input"]
-[connection signal="mouse_entered" from="ship/UI/Fight/SubViewportContainer" to="ship/UI/Fight/SubViewportContainer/SubViewport" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="ship/UI/Fight/SubViewportContainer" to="ship/UI/Fight/SubViewportContainer/SubViewport" method="_on_mouse_exited"]
+[connection signal="gui_input" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_sub_viewport_container_gui_input"]
+[connection signal="mouse_entered" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_mouse_exited"]

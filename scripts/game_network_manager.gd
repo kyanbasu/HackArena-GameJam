@@ -23,6 +23,9 @@ var turn : int = 0
 @export var map: Map
 @export var camera : Camera
 
+# Fighting
+@export var fightUI : CanvasLayer
+
 var isReady : bool = false:
     set(new_val):
         isReady = new_val
@@ -90,10 +93,12 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
         GameState.BUILDING:
             builder.active = false
             # set gameState to ACTION if planet is picked by random or to MAP if player can to pick starting planet
-            gameState = GameState.MAP
+            gameState = GameState.ACTION
         
         GameState.ACTION:
-            pass
+            fightUI.visible = false
+            fightUI.process_mode = Node.PROCESS_MODE_DISABLED
+            gameState = GameState.MAP
         
         GameState.MAP:
             ship.process_mode = Node.PROCESS_MODE_INHERIT
@@ -112,7 +117,9 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             
         GameState.ACTION:
             #pick random encounter - call host to give it, so its fair
-            pass
+            fightUI.visible = true
+            fightUI.process_mode = Node.PROCESS_MODE_INHERIT
+            
         
         GameState.MAP:
             camera.change_param(Vector2(1000, 1400), .2, 1)
