@@ -14,7 +14,7 @@ var targets : Array[Vector2i]:
 func _draw() -> void:
     for t in targets:
         draw_texture_rect(targetSelectionTex, 
-                        Rect2(t - Vector2i(G.TILE_SIZE,G.TILE_SIZE)/2, Vector2i(G.TILE_SIZE,G.TILE_SIZE)),
+                        Rect2(t, Vector2i(G.TILE_SIZE,G.TILE_SIZE)),
                         false
         )
 
@@ -26,9 +26,14 @@ func _draw() -> void:
         #part.position = Vector2(v.x, v.y)
         #part.rotation_degrees = v.z
 
-func generate_ship(parts : Dictionary[Vector3i, PackedScene]):
+func clear_children():
+    for c in get_children():
+        c.queue_free()
+
+func generate_ship(parts : Dictionary[Vector3i, String]):
+    clear_children()
     for v in parts:
-        var part = parts[v].instantiate() as ShipModule
+        var part = load(parts[v]).instantiate() as ShipModule
         add_child(part)
         part.z_index = -10
         part.position = Vector2(v.x, v.y)

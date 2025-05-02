@@ -24,6 +24,7 @@ var startingMaterials : int = 100
 ### Client and host ###
 @export var nextTurnBtn : Button
 @export var ship : Ship
+@export var enemyShip : EnemyShip
 @export var builder : Builder
 @export var map: Map
 @export var camera : Camera
@@ -88,12 +89,34 @@ func player_ready(readiness: bool=true):
         if playersReady + playersDead == Lobby.players.size(): #all players are ready
             if turn == 0:
                 add_materials.rpc(startingMaterials)
-            host_called_end_turn.rpc(gameState) #does cleanup and increments gameState
+                for i in Lobby.players.keys():
+                    var planet = 2
+                    host_called_end_turn.rpc_id(i, gameState, {"planet": planet})
+                    Lobby.players[i].planet = planet
+            else:
+                host_called_end_turn.rpc(gameState) #does cleanup and increments gameState
             playersReady = 0
+            ### Host only logic between turns
             # Loading screen or something
             if gameState == GameState.MAP:
                 map.host_position_planets()
                 map.sync_planets.rpc(map.planets)
+            
+            elif gameState == GameState.ACTION:
+                var playersOnPlanet : Dictionary[int, Array] = {} # planetIndex: Array[peerUID]
+                for p in Lobby.players.keys():
+                    if !playersOnPlanet.has(Lobby.players[p].planet):
+                        playersOnPlanet[Lobby.players[p].planet] = []
+                    playersOnPlanet[Lobby.players[p].planet].push_back(p)
+                
+                for arr in playersOnPlanet.values():
+                    arr.shuffle()
+                    while arr.size() >= 2: # while, because there is rare chance that there are >=4 players on the same planet
+                        var p1 = arr.pop_back()
+                        var p2 = arr.pop_back()
+                        init_fight.rpc_id(p1, p2)
+                        init_fight.rpc_id(p2, p1)
+                        
                 
             
             # End loading
@@ -105,6 +128,10 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
     nextTurnBtn.disabled = true
     gameState = _gameState
     camera.position = Vector2.ZERO
+    if turn == 0:
+        gameState = GameState.MAP
+        map.nextPlayerPlanet = _data.planet
+
     # Previous gamestate ends
     match gameState:
         GameState.BUILDING:
@@ -163,9 +190,28 @@ func flew_to_planet(index: int):
 
 ### Host and client
 
-@rpc("any_peer", "call_local", "reliable")
+@rpc("authority", "call_local", "reliable")
 func init_fight(enemy_id):
     playerFighting = enemy_id
+    
+    # Sending ship to enemy
+    #var parts: Dictionary[Vector3i, PackedScene] = {}
+    var parts : Array = []
+    for p in ship.modules.keys():
+        #parts[p] = ship.modules[p].get_meta("packed_scene") #hopefully there isn't any bug
+        parts.push_back(p.x)
+        parts.push_back(p.y)
+        parts.push_back(p.z)
+        parts.push_back(ship.modules[p].get_meta("packed_scene").resource_path)
+        
+    send_enemy_ship.rpc_id(playerFighting, parts)
+
+@rpc("any_peer", "call_remote", "reliable")
+func send_enemy_ship(p: Array):
+    var parts: Dictionary[Vector3i, String] = {}
+    for i in range(0, p.size(), 4):
+        parts[Vector3i(p[i], p[i+1], p[i+2])] = p[i+3]
+    enemyShip.generate_ship(parts)
 
 @rpc("authority", "call_local", "reliable")
 func add_materials(amount: int):

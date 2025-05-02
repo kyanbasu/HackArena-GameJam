@@ -49,7 +49,7 @@ func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
         match event.button_index:
             MOUSE_BUTTON_LEFT:
                 if event.pressed:
-                    var selectedPos = Vector2i(floor(enemyShip.get_local_mouse_position()/G.TILE_SIZE+Vector2(.5,.5))*G.TILE_SIZE)
+                    var selectedPos = Vector2i(floor(enemyShip.get_local_mouse_position()/G.TILE_SIZE)*G.TILE_SIZE)
                     enemyShip.targets = [selectedPos]
             # Camera
             MOUSE_BUTTON_WHEEL_DOWN:

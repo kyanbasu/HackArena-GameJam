@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=30 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -20,9 +20,11 @@
 [ext_resource type="PackedScene" uid="uid://xo66orsxga73" path="res://prefabs/ui/planet.tscn" id="14_ir15t"]
 [ext_resource type="Texture2D" uid="uid://fm2qsrbasrrv" path="res://icon.svg" id="14_trtic"]
 [ext_resource type="Script" uid="uid://bel37yc8d2nnm" path="res://scripts/sub_viewport.gd" id="16_1kice"]
+[ext_resource type="Texture2D" uid="uid://djgrey5wbtioe" path="res://art/Build menu/Background.ase" id="16_pl11u"]
 [ext_resource type="Texture2D" uid="uid://b0031q7p6yqqx" path="res://art/bg/nothing.png" id="20_5newe"]
 [ext_resource type="TileSet" uid="uid://dumtug50wm586" path="res://art/bg/Meteors_tileset.tres" id="20_37s47"]
 [ext_resource type="Script" uid="uid://8r307hxfrrj2" path="res://scripts/enemy_ship.gd" id="23_bt5mj"]
+[ext_resource type="Texture2D" uid="uid://buxps1k61ys32" path="res://art/ui/Attack_Icon.ase" id="24_e1j6l"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
@@ -31,15 +33,18 @@ shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [sub_resource type="LabelSettings" id="LabelSettings_vtaks"]
 
+[sub_resource type="Theme" id="Theme_sww3w"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_gee14"]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "builder", "map", "camera", "inventory", "fightUI")]
+[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "enemyShip", "builder", "map", "camera", "inventory", "fightUI")]
 process_mode = 3
 script = ExtResource("1_uwrxv")
 nextTurnBtn = NodePath("../ship/UI/nextTurn")
 ship = NodePath("../ship")
+enemyShip = NodePath("../Fight/SubViewportContainer/SubViewport/SubViewportTarget/enemyShip")
 builder = NodePath("../ship/modules")
 map = NodePath("../Map")
 camera = NodePath("../Camera2D")
@@ -52,12 +57,13 @@ fightUI = NodePath("../Fight")
 script = ExtResource("2_dinhu")
 builder = NodePath("modules")
 
-[node name="modules" type="Node2D" parent="ship" node_paths=PackedStringArray("inventory", "placementGrid", "spaceGrid")]
+[node name="modules" type="Node2D" parent="ship" node_paths=PackedStringArray("inventory", "placementGrid", "spaceGrid", "BG")]
 z_index = 10
 script = ExtResource("2_yqjtg")
 inventory = NodePath("../UI/inventory")
 placementGrid = NodePath("../placementGridDraw")
 spaceGrid = NodePath("../spaceGridDraw")
+BG = NodePath("../builderBG")
 active = true
 debugOccupied = true
 
@@ -65,6 +71,30 @@ debugOccupied = true
 z_index = 11
 material = SubResource("ShaderMaterial_u5sy4")
 script = ExtResource("4_lbhrr")
+
+[node name="builderBG" type="Node2D" parent="ship"]
+z_index = -10
+
+[node name="blank" type="TextureRect" parent="ship/builderBG"]
+visible = false
+self_modulate = Color(0.129412, 0.129412, 0.137255, 1)
+z_index = -2
+offset_left = -5120.0
+offset_top = -5120.0
+offset_right = 5120.0
+offset_bottom = 5120.0
+texture = ExtResource("20_5newe")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="ship/builderBG"]
+layer = -1
+
+[node name="TextureRect" type="TextureRect" parent="ship/builderBG/CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("16_pl11u")
 
 [node name="spaceGridDraw" type="Node2D" parent="ship"]
 z_index = 9
@@ -158,6 +188,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_sww3w")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ship/UI/inventory/Panel/ScrollContainer"]
 layout_mode = 2
@@ -185,6 +216,7 @@ script = ExtResource("10_vtaks")
 subViewport = NodePath("../Fight/SubViewportContainer/SubViewport")
 
 [node name="Map" type="Node2D" parent="." node_paths=PackedStringArray("gameNetworkManager", "meteorsTilemap")]
+visible = false
 script = ExtResource("13_kvuet")
 planet = ExtResource("14_ir15t")
 gameNetworkManager = NodePath("../GameNetworkManager")
@@ -193,10 +225,10 @@ meteorsTilemap = NodePath("Meteors")
 [node name="BG" type="TextureRect" parent="Map"]
 self_modulate = Color(0.129412, 0.129412, 0.137255, 1)
 z_index = -10
-offset_left = -5120.0
-offset_top = -5120.0
-offset_right = 5120.0
-offset_bottom = 5120.0
+offset_left = -5114.0
+offset_top = -5105.0
+offset_right = 5126.0
+offset_bottom = 5135.0
 texture = ExtResource("20_5newe")
 
 [node name="Meteors" type="TileMapLayer" parent="Map"]
@@ -205,6 +237,7 @@ tile_set = ExtResource("20_37s47")
 
 [node name="Fight" type="CanvasLayer" parent="."]
 process_mode = 4
+visible = false
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Fight"]
 offset_right = 20.0
@@ -229,7 +262,7 @@ disable_3d = true
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
 size = Vector2i(20, 360)
-render_target_update_mode = 4
+render_target_update_mode = 0
 script = ExtResource("16_1kice")
 target = NodePath("SubViewportTarget")
 enemyShip = NodePath("SubViewportTarget/enemyShip")
@@ -242,7 +275,7 @@ position = Vector2(8192, 0)
 
 [node name="enemyShip" type="Node2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget"]
 script = ExtResource("23_bt5mj")
-targetSelectionTex = ExtResource("14_trtic")
+targetSelectionTex = ExtResource("24_e1j6l")
 
 [connection signal="button_up" from="ship/UI/nextTurn" to="GameNetworkManager" method="next_turn_btn_up"]
 [connection signal="button_down" from="ship/UI/changeRenderingBtn" to="ship/UI/changeRenderingBtn" method="_on_button_down"]
