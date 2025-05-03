@@ -6,7 +6,7 @@ class_name Builder
 
 @export var placementGrid : Node2D
 @export var spaceGrid : Node2D
-@export var BG : TextureRect
+@export var BG : Node2D
 
 @export var active := false:
     set(new_val):

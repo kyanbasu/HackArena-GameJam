@@ -87,3 +87,11 @@ func _on_mouse_entered() -> void:
 
 func _on_mouse_exited() -> void:
     isMouseOver = false
+
+
+func _on_scroll_container_gui_input(event: InputEvent) -> void:
+    var sb = get_node("Panel/ScrollContainer").get_v_scroll_bar() as VScrollBar
+    var scroll_val = sb.value/(sb.max_value - get_node("Panel/ScrollContainer").size.y)
+    
+    get_node("Panel/slider/bar").position.y = (get_node("Panel/slider").size.y-18) * scroll_val - 12
+    

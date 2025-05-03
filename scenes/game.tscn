@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=35 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -21,6 +21,8 @@
 [ext_resource type="Texture2D" uid="uid://fm2qsrbasrrv" path="res://icon.svg" id="14_trtic"]
 [ext_resource type="Script" uid="uid://bel37yc8d2nnm" path="res://scripts/sub_viewport.gd" id="16_1kice"]
 [ext_resource type="Texture2D" uid="uid://djgrey5wbtioe" path="res://art/Build menu/Background.ase" id="16_pl11u"]
+[ext_resource type="Texture2D" uid="uid://mfv0sbbv4gps" path="res://art/Build menu/Slider.ase" id="18_qnb83"]
+[ext_resource type="Texture2D" uid="uid://dfvogehqgqhac" path="res://art/Build menu/Slider_bar.ase" id="19_sww3w"]
 [ext_resource type="Texture2D" uid="uid://b0031q7p6yqqx" path="res://art/bg/nothing.png" id="20_5newe"]
 [ext_resource type="TileSet" uid="uid://dumtug50wm586" path="res://art/bg/Meteors_tileset.tres" id="20_37s47"]
 [ext_resource type="Script" uid="uid://8r307hxfrrj2" path="res://scripts/enemy_ship.gd" id="23_bt5mj"]
@@ -34,7 +36,14 @@ shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [sub_resource type="LabelSettings" id="LabelSettings_vtaks"]
 
-[sub_resource type="Theme" id="Theme_sww3w"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bhx41"]
+
+[sub_resource type="Theme" id="Theme_qnb83"]
+VScrollBar/styles/grabber = SubResource("StyleBoxEmpty_bhx41")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxEmpty_bhx41")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxEmpty_bhx41")
+VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_bhx41")
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_bhx41")
 
 [sub_resource type="LabelSettings" id="LabelSettings_gee14"]
 
@@ -77,7 +86,7 @@ script = ExtResource("2_yqjtg")
 inventory = NodePath("../UI/inventory")
 placementGrid = NodePath("../placementGridDraw")
 spaceGrid = NodePath("../spaceGridDraw")
-BG = NodePath("../../Camera2D/builderBG")
+BG = NodePath("../../Camera2D/Parallax2D")
 active = true
 debugOccupied = true
 
@@ -164,9 +173,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -150.0
+offset_left = -171.0
 offset_top = -100.0
-offset_right = -10.0
+offset_right = -31.0
 offset_bottom = 100.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -178,12 +187,36 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_sww3w")
+theme = SubResource("Theme_qnb83")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ship/UI/inventory/Panel/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
+
+[node name="slider" type="TextureRect" parent="ship/UI/inventory/Panel"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_right = 34.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("18_qnb83")
+expand_mode = 1
+
+[node name="bar" type="TextureRect" parent="ship/UI/inventory/Panel/slider"]
+z_index = 1
+texture_filter = 1
+layout_mode = 0
+offset_left = -6.0
+offset_top = -12.0
+offset_right = 34.0
+offset_bottom = 28.0
+texture = ExtResource("19_sww3w")
 
 [node name="Label" type="Label" parent="ship/UI/inventory"]
 anchors_preset = 6
@@ -221,20 +254,29 @@ position = Vector2(64, 0)
 script = ExtResource("10_vtaks")
 subViewport = NodePath("../Fight/SubViewportContainer/SubViewport")
 
-[node name="builderBG" type="TextureRect" parent="Camera2D"]
-visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -180.0
-offset_right = 320.0
-offset_bottom = 180.0
+[node name="Parallax2D" type="Parallax2D" parent="Camera2D"]
+scroll_scale = Vector2(1.1, 1.1)
+
+[node name="builderBG" type="TextureRect" parent="Camera2D/Parallax2D"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -384.0
+offset_top = -244.0
+offset_right = 384.0
+offset_bottom = 244.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("16_pl11u")
+
+[node name="BG" type="TextureRect" parent="Camera2D/Parallax2D"]
+self_modulate = Color(0.129412, 0.129412, 0.137255, 1)
+z_index = -1
+offset_left = -5498.0
+offset_top = -5349.0
+offset_right = 4742.0
+offset_bottom = 4891.0
+texture = ExtResource("20_5newe")
 
 [node name="Map" type="Node2D" parent="." node_paths=PackedStringArray("gameNetworkManager", "meteorsTilemap")]
 visible = false
@@ -334,6 +376,7 @@ vertical_alignment = 1
 [connection signal="button_down" from="ship/UI/changeRenderingBtn" to="ship/UI/changeRenderingBtn" method="_on_button_down"]
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_exited"]
+[connection signal="gui_input" from="ship/UI/inventory/Panel/ScrollContainer" to="ship/UI/inventory" method="_on_scroll_container_gui_input"]
 [connection signal="gui_input" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_sub_viewport_container_gui_input"]
 [connection signal="mouse_entered" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_mouse_exited"]
