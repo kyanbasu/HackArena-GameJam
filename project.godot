@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="HackArena GameJam"
-run/main_scene="uid://vm08dmxa78b"
+run/main_scene="uid://bf77y0m31uitl"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 

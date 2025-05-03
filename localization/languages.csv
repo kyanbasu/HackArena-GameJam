@@ -14,4 +14,6 @@ RANDOM.ABANDONED_SHIP;Abandoned Ship
 RANDOM.ABANDONED_STATION;Abandoned Station
 RANDOM.QUARRY;Space Quarry
 RANDOM.SHIP_IN_NEED;Ship in need
-
+REWARDS;Rewards
+GOT_MATERIAL;Got %s materials
+LOST_MATERIAL;Lost %s materials

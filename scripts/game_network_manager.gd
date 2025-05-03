@@ -344,8 +344,7 @@ func send_action_data(_data: Dictionary):
                 #act.get_node("desc").text = tr("_DESC")
                 #act.get_node("icon").texture = actionIcons[a]
                 actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
-                act.button_down.connect(add_materials.bind(-_data.request))
-                act.button_down.connect(pirate_after_decision)
+                act.button_down.connect(pirate_after_decision.bind(true, _data.request))
                 
                 # Decline
                 act = actionControl.instantiate() as Button
@@ -353,8 +352,7 @@ func send_action_data(_data: Dictionary):
                 #act.get_node("desc").text = tr("_DESC")
                 #act.get_node("icon").texture = actionIcons[a]
                 actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
-                act.button_down.connect(damage_random_part)
-                act.button_down.connect(pirate_after_decision)
+                act.button_down.connect(pirate_after_decision.bind(false))
             "asteroid":
                 damage_random_part()
             "solar_flare":
@@ -364,18 +362,38 @@ func send_action_data(_data: Dictionary):
             canNextTurn = true
     # Other actions
     else:
+        actionPicker.get_node("TitlePanel/title").text = tr("REWARDS")
         canNextTurn = true
-   
+
     if _data.has("material"):
         inventory.materials += _data.material
+        var act = actionControl.instantiate() as Button
+        if _data.material > 0:
+            act.get_node("title").text = tr("GOT_MATERIAL") % _data.material
+        else:
+            act.get_node("title").text = tr("LOST_MATERIAL") % -_data.material
+        #act.get_node("desc").text = tr("_DESC")
+        #act.get_node("icon").texture = actionIcons[a]
+        actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
     if playerFighting:
         fightUI.visible = true
         fightUI.process_mode = Node.PROCESS_MODE_INHERIT
 
-func pirate_after_decision():
+# called locally
+func pirate_after_decision(accepted: bool, reward=0):
     canNextTurn = true
     for c in actionPicker.get_node("ActionsPanel").get_child(0).get_children():
         c.queue_free()
+    
+    if accepted:
+        inventory.materials -= reward
+        var act = actionControl.instantiate() as Button
+        act.get_node("title").text = tr("LOST_MATERIAL") % reward
+        #act.get_node("desc").text = tr("_DESC")
+        #act.get_node("icon").texture = actionIcons[a]
+        actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
+    else:
+        damage_random_part()
 
 func damage_random_part():
     pass
