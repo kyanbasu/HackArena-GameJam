@@ -149,12 +149,13 @@ func pickup_part(part: ShipModule):
         var chk = t + Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5))
         if occupiedSpace.has(chk):
             occupiedSpace.erase(chk)
+    ship.changed_ship_module(part, false)
     inventory.add_module(part)
     if flood_occupied() != occupiedSpace.size():
         var new_pos = Vector2(lastPartPositionRotation.x, lastPartPositionRotation.y)
         place_part(part, new_pos, lastPartPositionRotation.z)
         return
-    ship.changed_ship_module(part, false)
+    
     isHoldingModule = true
 
 const FOUR_SIDES : Array[Vector2i] = [Vector2i(-1,0), Vector2i(1,0), Vector2i(0,-1), Vector2i(0,1)]
@@ -176,6 +177,8 @@ func flood_occupied() -> int:
 func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
     selectedModule.z_index = 0
     if inventory.isMouseOver:
+        ship.used_energy -= part.energy
+        ship.refresh_ui()
         part.queue_free()
         return
     if _rotation != -1:

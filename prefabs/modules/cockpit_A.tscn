@@ -14,7 +14,8 @@ script = ExtResource("1_luea0")
 moduleType = 1
 tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0)])
 isRotateable = false
-maxHealth = 500
+maxHealth = 50
+maxEnergy = -5
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 position = Vector2(-16, -16)

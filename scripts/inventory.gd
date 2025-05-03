@@ -4,7 +4,11 @@ class_name Inventory
 
 var builder: Builder
 
-var materials : int = 0 #same as money, scrap
+var materials : int = 0: #same as money, scrap
+    set(v):
+        materials = v
+        if G.currencyNEnergy:
+            G.currencyNEnergy.get_node("currency").text = str(materials)
 
 @export var uiModulesContainer : Container
 @export var uiModule : PackedScene
@@ -19,6 +23,10 @@ func _ready() -> void:
     builder.gameNetworkManager.camera.inventory = self # d-_-b cool
     for m in modules.keys():
         create_ui_module(m)
+    
+    G.currencyNEnergy = get_node("../currencyNEnergy")
+    G.currencyNEnergy.get_node("currency").text = str(materials)
+    builder.ship.refresh_ui()
 
 func create_ui_module(part: PackedScene):
     var ui_mod = uiModule.instantiate() as UIModule
@@ -107,7 +115,7 @@ func _on_mouse_exited() -> void:
     isMouseOver = false
 
 
-func _on_scroll_container_gui_input(event: InputEvent) -> void:
+func _on_scroll_container_gui_input(_event: InputEvent) -> void:
     var sb = get_node("Panel/ScrollContainer").get_v_scroll_bar() as VScrollBar
     var scroll_val = sb.value/(sb.max_value - get_node("Panel/ScrollContainer").size.y)
     

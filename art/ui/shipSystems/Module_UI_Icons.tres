@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://s1swnxfm2kd3"]
+
+[ext_resource type="Texture2D" uid="uid://be4v34b623fe2" path="res://art/ui/shipSystems/Module_UI_Icons.ase" id="1_kmvei"]
+
+[resource]
+atlas = ExtResource("1_kmvei")
+region = Rect2(0, 0, 16, 16)

@@ -8,7 +8,8 @@ enum ModuleType {
     ENGINE,
     SHIELD,
     WEAPON,
-    GENERATOR
+    GENERATOR,
+    OXYGEN
 }
 
 @export var moduleType: ModuleType = ModuleType.EMPTY
@@ -62,12 +63,11 @@ func _draw():
 var health;
 
 # Total energy used by module
-@export var maxEnergy = 0;
-var energy;
+@export var maxEnergy : int = 0;
+var energy : int = 0;
 
 func _ready() -> void:
     health = maxHealth;
-    energy = maxEnergy;
 
 func rotate_left() -> void:
     if !isRotateable: return

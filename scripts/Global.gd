@@ -2,6 +2,8 @@ extends Node
 
 const TILE_SIZE : int = 32
 
+var currencyNEnergy : Control
+
 func _ready() -> void:
     if Array(OS.get_cmdline_args()).has("editor"): return
     get_tree().root.mode = Window.MODE_MAXIMIZED

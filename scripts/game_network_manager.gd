@@ -310,7 +310,7 @@ func init_fight(enemy_id):
         parts.push_back(p.x)
         parts.push_back(p.y)
         parts.push_back(p.z)
-        parts.push_back(ship.modules[p].get_meta("packed_scene").resource_path)
+        parts.push_back(ship.modules[p].part.get_meta("packed_scene").resource_path)
         
     send_enemy_ship.rpc_id(playerFighting, parts)
 

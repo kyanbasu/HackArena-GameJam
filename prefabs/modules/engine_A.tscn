@@ -11,7 +11,7 @@ script = ExtResource("1_xcdbn")
 moduleType = 2
 tiles = Array[Vector2i]([Vector2i(0, 0)])
 isRotateable = false
-maxHealth = 500
+maxHealth = 5
 maxEnergy = 2
 
 [node name="Grid" type="Sprite2D" parent="."]
