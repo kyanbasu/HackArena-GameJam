@@ -53,13 +53,13 @@ var isMyFightingTurn : bool = false:
     set(new_val):
         isMyFightingTurn = new_val
         if nextTurnBtn:
-            nextTurnBtn.disabled = !isMyFightingTurn
+            toggle_next_turn_btn(isMyFightingTurn)
 
 var canNextTurn : bool = true:
     set(new_val):
         canNextTurn = new_val
         if nextTurnBtn:
-            nextTurnBtn.disabled = !canNextTurn
+            toggle_next_turn_btn(canNextTurn)
 
 # If is ready for next turn, input disabled when is ready
 var isReady : bool = false:
@@ -473,6 +473,9 @@ func generate_meteors_bg(_seed: int):
     map.generate_meteors(_seed)
 
 
+
+func toggle_next_turn_btn(enable: bool):
+    nextTurnBtn.disabled = !enable
 
 ### Loot tables etc.
 

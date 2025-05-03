@@ -230,6 +230,7 @@ texture = ExtResource("18_sww3w")
 
 [node name="nextTurn" type="Button" parent="ship/UI/UpperPanel"]
 process_mode = 1
+z_index = 2
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
