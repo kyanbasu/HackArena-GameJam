@@ -4,7 +4,13 @@ const TILE_SIZE : int = 32
 
 var currencyNEnergy : Control
 
+var defaultCursor : Texture2D
+var targetingCursor : Texture2D
+
 func _ready() -> void:
+    defaultCursor = load("res://art/ui/Cursor.ase")
+    targetingCursor = load("res://art/ui/Attack_Icon.ase")
+    
     if Array(OS.get_cmdline_args()).has("editor"): return
     get_tree().root.mode = Window.MODE_MAXIMIZED
 

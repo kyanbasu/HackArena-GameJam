@@ -2,6 +2,10 @@ extends SubViewport
 
 @export var target : Node2D
 @export var enemyShip : EnemyShip
+var ship : Ship
+
+# Contains reference to weapon
+var pickingTarget : ShipModule = null
 
 @export var extensionIndicator : TextureRect
 
@@ -48,9 +52,16 @@ func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
     if event is InputEventMouseButton:
         match event.button_index:
             MOUSE_BUTTON_LEFT:
-                if event.pressed:
+                if event.pressed and pickingTarget:
                     var selectedPos = Vector2i(floor(enemyShip.get_local_mouse_position()/G.TILE_SIZE)*G.TILE_SIZE)
-                    enemyShip.targets = [selectedPos]
+                    pickingTarget.target = selectedPos
+                    pickingTarget = null
+                    Input.set_custom_mouse_cursor(G.defaultCursor)
+                    enemyShip.targets = []
+                    for p in ship.modules.values():
+                        if p.part.moduleType == ShipModule.ModuleType.WEAPON and p.part.target != Vector2i.MAX:
+                            enemyShip.targets.append(p.part.target)
+                        
             # Camera
             MOUSE_BUTTON_WHEEL_DOWN:
                 targetZoom -= 0.1

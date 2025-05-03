@@ -5,6 +5,8 @@ class_name Ship
 @export var healthBar : ProgressBar
 @export var systemsPanel : Container
 
+@export var enemySubViewport : SubViewport
+
 # Stacks of healthbars
 var healthBarColors : Array = [
     Color("#212123"), #empty
@@ -32,7 +34,7 @@ var max_oxygen : int
 var oxygen : int
 
 var max_engines : int
-var thrusters : int
+var engines : int
 
 var max_weapons : int
 var weapons : int
@@ -42,9 +44,13 @@ var weapons : int
 
 @export var panelModule : PackedScene
 
+func _ready() -> void:
+    enemySubViewport.ship = self
+
 func damage(amount: int, _position: Vector2i):
+    _position = _position/G.TILE_SIZE
     if builder.occupiedSpace.has(_position): # don't damage anything if projectiles can't hit ship
-        builder.occupiedSpace[_position].damage(amount)
+        builder.occupiedSpace[_position].deal_damage(amount)
         total_damage += amount
         
         refresh_health_bar()
@@ -130,14 +136,32 @@ func get_part_with_the_same_part(type) -> Vector3i:
             return v
     return Vector3i.MAX
 
+var lastModulatedPart = null
+func modulate_part(part: ShipModule=null):
+    if lastModulatedPart:
+        lastModulatedPart.modulate = Color.WHITE
+    if part != null:
+        part.modulate = Color(.3,1,.3)
+    lastModulatedPart = part    
+
 func panel_module_input(event, v: Vector3i):
+    modulate_part(modules[v].part)
+    if !builder.gameNetworkManager.isMyFightingTurn: return
+    if modules[v].part.health <= 0: return
     if event is InputEventMouseButton and event.pressed:
         # increase used energy
         if event.button_index == MOUSE_BUTTON_LEFT and modules[v].part.energy < modules[v].part.maxEnergy and used_energy < max_energy:
+            if modules[v].part.moduleType == ShipModule.ModuleType.WEAPON:
+                if builder.gameNetworkManager.playerFighting == 0: return
+                enemySubViewport.pickingTarget = modules[v].part # Selecting target for weapon
+                Input.set_custom_mouse_cursor(G.targetingCursor)
             modules[v].part.energy += 1
             used_energy += 1
         # decrease used energy
         elif event.button_index == MOUSE_BUTTON_RIGHT and modules[v].part.energy > 0:
+            if modules[v].part.moduleType == ShipModule.ModuleType.WEAPON:
+                enemySubViewport.pickingTarget = null
+                Input.set_custom_mouse_cursor(G.defaultCursor)
             modules[v].part.energy -= 1
             used_energy -= 1
         

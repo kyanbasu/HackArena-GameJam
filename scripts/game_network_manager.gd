@@ -49,6 +49,8 @@ var fightingPlayers : Dictionary = {}
 # Fighting
 @export var fightUI : CanvasLayer
 @export var playerFighting : int = 0 # UID of peer that you are fighting, 0 if not fighting
+
+
 var isMyFightingTurn : bool = false:
     set(new_val):
         isMyFightingTurn = new_val
@@ -99,6 +101,7 @@ func _process(delta: float) -> void:
         if nextTurnCounter > nextTurnCounterFire:
             nextTurnCounter = 0
             next_turn()
+            ship.modulate_part() # idk some solution to permanent coloring
 
 var nextTurnCounter : float = 0
 const nextTurnCounterFire : float = .5 #time in seconds after which skipping turn is confirmed
@@ -111,7 +114,13 @@ func next_turn_btn_up():
 # Changes fight turn if is fighting
 func next_turn():
     if playerFighting != 0:
-        send_data_to_enemy.rpc_id(playerFighting, {"hell": "yeah"})
+        var _data = {}
+        var damages = {}
+        for w in ship.modules.values():
+            if w.part.moduleType == ShipModule.ModuleType.WEAPON and w.part.target != Vector2i.MAX:
+                damages[w.part.target] = w.part.damage * w.part.energy
+        _data.damages = damages
+        send_data_to_enemy.rpc_id(playerFighting, _data)
         isMyFightingTurn = false
     else:
         isReady = !isReady
@@ -353,6 +362,10 @@ func send_data_to_enemy(_data: Dictionary):
     if multiplayer.get_remote_sender_id() == 1 and _data.has("starting"):
         isMyFightingTurn = _data.starting
         return
+    
+    if _data.has("damages"):
+        for d in _data.damages.keys():
+            ship.damage(_data.damages[d], d)
     
     # Enemy ended their turn so its mine now
     isMyFightingTurn = true

@@ -96,11 +96,12 @@ tableAbandonedStation = Array[PackedScene]([ExtResource("12_rysoc")])
 
 [node name="players" type="Node2D" parent="."]
 
-[node name="ship" type="Node2D" parent="." node_paths=PackedStringArray("builder", "healthBar", "systemsPanel")]
+[node name="ship" type="Node2D" parent="." node_paths=PackedStringArray("builder", "healthBar", "systemsPanel", "enemySubViewport")]
 script = ExtResource("2_dinhu")
 builder = NodePath("modules")
 healthBar = NodePath("UI/UpperPanel/healthBar")
 systemsPanel = NodePath("UI/SystemsPanel")
+enemySubViewport = NodePath("../Fight/SubViewportContainer/SubViewport")
 panelModule = ExtResource("21_sgl2t")
 
 [node name="modules" type="Node2D" parent="ship" node_paths=PackedStringArray("inventory", "placementGrid", "spaceGrid", "BG")]

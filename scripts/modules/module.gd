@@ -72,7 +72,6 @@ func _ready() -> void:
     #Randomize floor tiles
     if has_node("floor"):
         var tex = get_node("floor").get("texture").duplicate()
-        print(tex.region.size)
         tex.region = Rect2(Vector2(tex.region.size.x * randi_range(0,4), 0), tex.region.size)
         get_node("floor").set("texture", tex)
 

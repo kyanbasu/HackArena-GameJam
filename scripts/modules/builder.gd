@@ -59,10 +59,10 @@ func _ready() -> void:
     place_part(p, Vector2(0,0))
     p = _load_part("res://prefabs/modules/hallway_A.tscn")
     place_part(p, Vector2(32,64))
-    p = _load_part("res://prefabs/modules/hallway_A.tscn")
-    place_part(p, Vector2(32,-32))
     p = _load_part("res://prefabs/modules/engine_A.tscn")
     place_part(p, Vector2(-64,0))
+    p = _load_part("res://prefabs/modules/weapon_A.tscn")
+    place_part(p, Vector2(64,-32))
     selectedModule = null
 
 func _load_part(path: String) -> ShipModule:
