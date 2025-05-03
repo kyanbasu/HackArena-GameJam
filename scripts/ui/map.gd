@@ -48,9 +48,18 @@ func init():
         p.queue_free()
     planetNodes = {}
     
+    var sun = planet.instantiate()
+    var tex = sun.get_node("texture").get("texture").duplicate()
+    tex.region = Rect2(0,32,128,128)
+    sun.get_node("texture").set("texture", tex)
+    add_child(sun)
+    
     for i in range(planetCount):
         var pl = planet.instantiate()
         pl.button_down.connect(select_planet.bind(i))
+        tex = pl.get_node("texture").get("texture").duplicate()
+        tex.region = Rect2(32*randi_range(0,3),0,32,32)
+        pl.get_node("texture").set("texture", tex)
         planetNodes[i] = pl
         add_child(pl)
     nextPlayerPlanet = 2#randi_range(0, planetCount-1)
@@ -117,11 +126,8 @@ func _draw() -> void:
         #draw_circle(p.planet.position, 10, Color.RED)
         i += 1
     
-    # Sun
-    draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-    draw_circle(Vector2.ZERO, 100, Color(1, 1, 0, 1))
-    
     # Selected planet and fly range
+    draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
     draw_circle(planetNodes[playerPlanet].position + planetNodes[playerPlanet].size/2, 30, Color(0, 1, 0, .8), false, 6)
     draw_circle(planetNodes[playerPlanet].position + planetNodes[playerPlanet].size/2, playerRange + playerPlanet*10, Color(.5, .5, .5, .8), false, 4)
 
@@ -135,7 +141,6 @@ func generate_meteors(_seed: int):
     rng.seed = _seed 
     
     var tilesAmount = meteorsTilemap.tile_set.get_source(0).get_tiles_count()
-    print()
     
     for x in range(-100,100):
         for y in range(-90,90):
