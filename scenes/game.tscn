@@ -221,7 +221,7 @@ offset_right = -28.0
 offset_bottom = -93.0
 grow_horizontal = 0
 grow_vertical = 2
-text = "Inventory"
+text = "INVENTORY"
 label_settings = SubResource("LabelSettings_gee14")
 
 [node name="globalBG" type="Node2D" parent="."]
@@ -246,6 +246,7 @@ script = ExtResource("10_vtaks")
 subViewport = NodePath("../Fight/SubViewportContainer/SubViewport")
 
 [node name="Parallax2D" type="Parallax2D" parent="Camera2D"]
+visible = false
 scroll_scale = Vector2(1.1, 1.1)
 
 [node name="builderBG" type="TextureRect" parent="Camera2D/Parallax2D"]

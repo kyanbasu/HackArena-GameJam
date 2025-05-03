@@ -51,6 +51,27 @@ func _ready() -> void:
     for x in range(-5,6):
         for y in range(-4,5):
             buildableSpace[Vector2i(x,y)] = true
+    
+    #Starting ship
+    var p = _load_part("res://prefabs/modules/cockpit_a.tscn")
+    place_part(p, Vector2(64,0))
+    p = _load_part("res://prefabs/modules/hallway_I.tscn")
+    place_part(p, Vector2(0,0))
+    p = _load_part("res://prefabs/modules/hallway_A.tscn")
+    place_part(p, Vector2(0,64))
+    p = _load_part("res://prefabs/modules/hallway_A.tscn")
+    place_part(p, Vector2(0,-32))
+    p = _load_part("res://prefabs/modules/engine_A.tscn")
+    place_part(p, Vector2(-64,0))
+    selectedModule = null
+
+func _load_part(path: String) -> ShipModule:
+    var sc = load(path)
+    var ins = sc.instantiate() as ShipModule
+    ins.set_meta("packed_scene", sc)
+    add_child(ins)
+    selectedModule = ins
+    return ins
 
 func _input(event: InputEvent) -> void:
     if !active or gameNetworkManager.isReady: return
