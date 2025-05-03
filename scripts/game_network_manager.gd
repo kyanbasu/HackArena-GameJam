@@ -260,7 +260,7 @@ func get_random_event_data() -> Dictionary:
         "abandoned_ship", "abandoned_station", "quarry", "ship_in_need" # positive
     ].pick_random()
     
-    encounter = "pirate"
+    encounter = "abandoned_station"
     
     _data.name = encounter
     match encounter:
@@ -275,7 +275,7 @@ func get_random_event_data() -> Dictionary:
             _data.material = randi_range(30, 80)
             _data.reward = tableAbandonedStation.pick_random().resource_path
         "quarry":
-            _data.material = randi_range(10, 40)
+            _data.material = randi_range(40, 80)
         "ship_in_need":
             _data.request = randi_range(20, 50)
             _data.reward = tableShipInNeed.pick_random().resource_path
@@ -375,6 +375,15 @@ func send_action_data(_data: Dictionary):
         #act.get_node("desc").text = tr("_DESC")
         #act.get_node("icon").texture = actionIcons[a]
         actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
+    if _data.has("reward"):
+        inventory.add_module_from_path(_data.reward)
+        var act = actionControl.instantiate() as Button
+        
+        act.get_node("title").text = tr("GOT_MODULE") % _data.reward
+
+        #act.get_node("desc").text = tr("_DESC")
+        #act.get_node("icon").texture = actionIcons[a]
+        actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
     if playerFighting:
         fightUI.visible = true
         fightUI.process_mode = Node.PROCESS_MODE_INHERIT
@@ -396,7 +405,12 @@ func pirate_after_decision(accepted: bool, reward=0):
         damage_random_part()
 
 func damage_random_part():
-    pass
+    var modules = "none" #todo damaging parts
+    var act = actionControl.instantiate() as Button
+    act.get_node("title").text = tr("PART_DAMAGED") % modules
+    #act.get_node("desc").text = tr("_DESC")
+    #act.get_node("icon").texture = actionIcons[a]
+    actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
 
 @rpc("authority", "call_local", "reliable")
 func add_materials(amount: int):

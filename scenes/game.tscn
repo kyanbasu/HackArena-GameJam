@@ -1,10 +1,8 @@
-[gd_scene load_steps=35 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=33 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
 [ext_resource type="Script" uid="uid://w204yqawbut1" path="res://scripts/modules/builder.gd" id="2_yqjtg"]
-[ext_resource type="PackedScene" uid="uid://p71t6ovr8u2i" path="res://prefabs/modules/cockpit_A.tscn" id="3_lnu2h"]
-[ext_resource type="PackedScene" uid="uid://bpw15hrocyjdr" path="res://prefabs/modules/hallway_L.tscn" id="4_iywne"]
 [ext_resource type="Script" uid="uid://bcq4ly521oa7u" path="res://scripts/placement_grid_draw.gd" id="4_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://b6f8ru7gycbdv" path="res://art/bg/placement.png" id="6_gee14"]
 [ext_resource type="Script" uid="uid://bnl012y507g0m" path="res://scripts/space_grid_draw.gd" id="6_kvpfn"]
@@ -159,13 +157,6 @@ layer = 3
 script = ExtResource("8_gee14")
 uiModulesContainer = NodePath("Panel/ScrollContainer/VBoxContainer")
 uiModule = ExtResource("9_0tnpc")
-modules = Dictionary[PackedScene, int]({
-ExtResource("3_lnu2h"): 3,
-ExtResource("4_iywne"): 5,
-ExtResource("12_rysoc"): 2,
-ExtResource("13_264po"): 2,
-ExtResource("14_1kice"): 3
-})
 
 [node name="Panel" type="Panel" parent="ship/UI/inventory"]
 anchors_preset = 6

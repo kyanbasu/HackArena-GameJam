@@ -35,8 +35,13 @@ static func get_name_from_file(scene: PackedScene):
 
 func update_ui_module(part: PackedScene):
     if ui_modules.has(part):
+        if modules[part] == 0:
+            ui_modules[part].queue_free()
+            ui_modules.erase(part)
+            return
         ui_modules[part].module_amount = modules[part]
     else:
+        if modules[part] == 0: return
         create_ui_module(part)
         
 func add_module(part: ShipModule, amount: int=1) -> bool:
@@ -50,6 +55,19 @@ func add_module(part: ShipModule, amount: int=1) -> bool:
             modules[s] = amount
         
         update_ui_module(s)
+    return true
+
+func add_module_from_path(path: String, amount: int=1) -> bool:
+    var part = load(path) as PackedScene
+    print(part)
+    if modules.has(part):
+        if modules[part] + amount < 0: return false
+        modules[part] += amount
+    else:
+        if amount <= 0: return false
+        modules[part] = amount
+    
+    update_ui_module(part)
     return true
 
 #takes ShipModule with meta packed_scene as argument

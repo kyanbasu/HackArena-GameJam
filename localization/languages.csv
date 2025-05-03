@@ -10,6 +10,7 @@ SHOP;Shop
 RANDOM;Random encounter
 RANDOM.PIRATE;Pirate
 RANDOM.ASTEROID;Asteroid
+RANDOM.SOLAR_FLARE;Solar flare
 RANDOM.ABANDONED_SHIP;Abandoned Ship
 RANDOM.ABANDONED_STATION;Abandoned Station
 RANDOM.QUARRY;Space Quarry
@@ -17,3 +18,5 @@ RANDOM.SHIP_IN_NEED;Ship in need
 REWARDS;Rewards
 GOT_MATERIAL;Got %s materials
 LOST_MATERIAL;Lost %s materials
+GOT_MODULE;Rewarded module: %s
+PART_DAMAGED;Following modules have been damaged: %s
