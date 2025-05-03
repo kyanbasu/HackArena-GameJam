@@ -52,23 +52,21 @@ func damage(amount: int, _position: Vector2i):
     if builder.occupiedSpace.has(_position): # don't damage anything if projectiles can't hit ship
         builder.occupiedSpace[_position].deal_damage(amount)
         total_damage += amount
+        var vec = Vector3i(
+            int(builder.occupiedSpace[_position].global_position.x),
+            int(builder.occupiedSpace[_position].global_position.y),
+            int(builder.occupiedSpace[_position].rotation_degrees)
+            )
+        if modules[vec].has("ui"):
+            modules[vec].ui.get_node("bar").value = float(modules[vec].part.health) / modules[vec].part.maxHealth
         
-        refresh_health_bar()
+        if modules[vec].part.health <= 0 and modules[vec].part.energy > 0:
+            used_energy -= modules[vec].part.energy
+            modules[vec].part.energy = 0
+        
+        refresh_ui()
 
-func refresh_health_bar():
-    var currHealth = max_health - total_damage
-    @warning_ignore("integer_division")
-    var barIndex = floor(currHealth / 50)
-    
-    currHealth = currHealth % 50
-    
-    if barIndex + 2 > healthBarColors.size():
-        barIndex = healthBarColors.size()-2
-        currHealth = 50
-    
-    healthBar.value = currHealth/50.0
-    healthBar.get("theme_override_styles/fill").bg_color = healthBarColors[barIndex+1]
-    healthBar.get_child(0).self_modulate = healthBarColors[barIndex]
+
 
 func changed_ship_module(part: ShipModule, added: bool):
     var mult = 1 # adds or removes from max systems
@@ -81,6 +79,7 @@ func changed_ship_module(part: ShipModule, added: bool):
         if !modules.has(vec):
             modules[vec] = {}
         modules[vec].part = part
+        part.update_icons()
         if part.moduleType != ShipModule.ModuleType.EMPTY:
             create_panel_module(vec)
     else:
@@ -101,8 +100,14 @@ func changed_ship_module(part: ShipModule, added: bool):
             if modules[v].part.energy > 0:
                 modules[v].part.energy -= 1
                 used_energy -= 1
-    refresh_health_bar()
     refresh_ui()
+
+func reset_weapons():
+    for v in modules.keys():
+        if modules[v].part.moduleType == ShipModule.ModuleType.WEAPON and modules[v].part.energy > 0:
+            used_energy -= modules[v].part.energy
+            modules[v].part.energy = 0
+            modules[v].part.target = Vector2i.MAX
 
 func create_panel_module(vec: Vector3i):
     var ins = panelModule.instantiate() as Control
@@ -171,3 +176,17 @@ func panel_module_input(event, v: Vector3i):
 func refresh_ui():
     if G.currencyNEnergy:
         G.currencyNEnergy.get_node("energy").text = str(max_energy - used_energy)
+
+    var currHealth = max_health - total_damage
+    @warning_ignore("integer_division")
+    var barIndex = floor(currHealth / 50)
+    
+    currHealth = currHealth % 50
+    
+    if barIndex + 2 > healthBarColors.size():
+        barIndex = healthBarColors.size()-2
+        currHealth = 50
+    
+    healthBar.value = currHealth/50.0
+    healthBar.get("theme_override_styles/fill").bg_color = healthBarColors[barIndex+1]
+    healthBar.get_child(0).self_modulate = healthBarColors[barIndex]

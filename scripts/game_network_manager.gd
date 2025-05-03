@@ -82,6 +82,7 @@ func _ready():
         var err = Lobby.create_game()
         if err != OK:
             printerr("IF IN EDITOR- RUN ONLY ONE INSTANCE (or connect via main menu)")
+    Lobby.player_disconnected.connect(player_disconnected_during_game)
     builder.gameNetworkManager = self
     map.process_mode = Node.PROCESS_MODE_DISABLED
     map.visible = false
@@ -93,6 +94,15 @@ func _ready():
         Lobby.players[0] = {"name": "Player"}
     
     player_ready.rpc_id(1, true)
+
+func player_disconnected_during_game(peer_id):
+    if !multiplayer.is_server(): return
+    playersDead += 1
+    if Lobby.players.has(peer_id):
+        Lobby.players.erase(peer_id)
+    if fightingPlayers.has(peer_id):
+        send_data_to_enemy.rpc_id(fightingPlayers[peer_id], {"force_end": true})
+        fightingPlayers.erase(peer_id)
 
 func _process(delta: float) -> void:
     if nextTurnBtn.button_pressed and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
@@ -359,13 +369,20 @@ func send_fight_data_to_host(_data: Dictionary):
 func send_data_to_enemy(_data: Dictionary):
     print(multiplayer.get_remote_sender_id())
     print(_data)
-    if multiplayer.get_remote_sender_id() == 1 and _data.has("starting"):
-        isMyFightingTurn = _data.starting
-        return
+    if multiplayer.get_remote_sender_id() == 1:
+        if _data.has("starting"):
+            isMyFightingTurn = _data.starting
+            return
+        if _data.has("force_end"):
+            playerFighting = 0
+            toggle_next_turn_btn(true)
+            return
     
     if _data.has("damages"):
         for d in _data.damages.keys():
             ship.damage(_data.damages[d], d)
+    
+    ship.reset_weapons()
     
     # Enemy ended their turn so its mine now
     isMyFightingTurn = true

@@ -66,6 +66,8 @@ var health;
 @export var maxEnergy : int = 0;
 var energy : int = 0;
 
+@export var batteryOffset : Vector2i = Vector2i(1,0)
+
 func _ready() -> void:
     health = maxHealth;
     
@@ -102,3 +104,52 @@ func _mouse_entered():
 func _mouse_exited():
     if !get_parent().isHoldingModule and get_parent().selectedModule == self:
         get_parent().selectedModule = null
+
+
+var icon : Node2D = null
+var battery : Node2D = null
+
+func update_icons():
+    if moduleType == ModuleType.EMPTY: return
+    if !icon:
+        icon = load("res://prefabs/ui/module_icon.tscn").instantiate()
+        add_child(icon)
+        var off : Vector2
+        match moduleType:
+            ModuleType.COCKPIT:
+                off = Vector2(0,0)
+            ModuleType.SHIELD:
+                off = Vector2(32,0)
+            ModuleType.OXYGEN:
+                off = Vector2(64,0)
+            ModuleType.WEAPON:
+                off = Vector2(96,0)
+            ModuleType.ENGINE:
+                off = Vector2(128,0)
+            ModuleType.GENERATOR:
+                off = Vector2(160,0)
+        
+        var tex = icon.get("texture").duplicate()
+        tex.region = Rect2(off, Vector2(32,32))
+        icon.set("texture", tex)
+        
+    if !battery and maxEnergy > 0 and maxEnergy <= 5:
+        battery = load("res://prefabs/ui/battery_icon.tscn").instantiate()
+        add_child(battery)
+        var off : Vector2
+        match maxEnergy:
+            1:
+                off = Vector2(0,0)
+            2:
+                off = Vector2(32,0)
+            3:
+                off = Vector2(0,32)
+            4:
+                off = Vector2(32,32)
+            5:
+                off = Vector2(0,64)
+        
+        var tex = battery.get("texture").duplicate()
+        tex.region = Rect2(off, Vector2(32,32))
+        battery.set("texture", tex)
+        battery.position = batteryOffset * G.TILE_SIZE

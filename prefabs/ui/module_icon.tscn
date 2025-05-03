@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://n0c6f6em12lo"]
+
+[ext_resource type="Texture2D" uid="uid://cfscgcrefvc8u" path="res://art/godot_tres/modules_ui/module_icons.tres" id="1_8bwk4"]
+
+[node name="module_icon" type="Sprite2D"]
+texture = ExtResource("1_8bwk4")

@@ -18,6 +18,7 @@ moduleType = 4
 tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(-1, 0)])
 maxHealth = 4
 maxEnergy = 2
+batteryOffset = Vector2i(-1, 0)
 
 [node name="floor" type="Sprite2D" parent="."]
 z_index = -1

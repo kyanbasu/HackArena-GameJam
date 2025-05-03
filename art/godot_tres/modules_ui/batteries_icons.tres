@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://c83bvy08bem1m"]
+
+[ext_resource type="Texture2D" uid="uid://i0mljua3yfu0" path="res://art/ui/shipSystems/Ship_batteries_icons.ase" id="1_qlsn5"]
+
+[resource]
+atlas = ExtResource("1_qlsn5")
+region = Rect2(0, 0, 32, 32)

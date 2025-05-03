@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://7g4cnk70k4ma"]
+
+[ext_resource type="Texture2D" uid="uid://c83bvy08bem1m" path="res://art/godot_tres/modules_ui/batteries_icons.tres" id="1_3kbbk"]
+
+[node name="battery_icon" type="Sprite2D"]
+texture = ExtResource("1_3kbbk")
