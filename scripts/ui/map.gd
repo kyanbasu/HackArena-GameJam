@@ -21,6 +21,7 @@ var planetNodes : Dictionary[int, Button] = {}
 @export var gameNetworkManager : GameNetworkManager
 
 @export var meteorsTilemap : TileMapLayer
+@export var enemyMeteorsTilemap : TileMapLayer
 
 # data contains every planet position, orbit, icon and (?)name
 func host_position_planets() -> void:
@@ -142,3 +143,4 @@ func generate_meteors(_seed: int):
             if rTileIndex >= tilesAmount: continue
             var tilePos = meteorsTilemap.tile_set.get_source(0).get_tile_id(rTileIndex)
             meteorsTilemap.set_cell(Vector2i(x,y), 0, tilePos)
+            enemyMeteorsTilemap.set_cell(Vector2i(x,y), 0, tilePos)

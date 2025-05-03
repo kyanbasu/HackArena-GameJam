@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=37 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://cy1h7dfvyrqbx" path="res://prefabs/modules/engine_A.tscn" id="12_rysoc"]
 [ext_resource type="PackedScene" uid="uid://yqkvwn43lux7" path="res://prefabs/modules/hallway_A.tscn" id="13_264po"]
 [ext_resource type="Script" uid="uid://cth3fv6wnsr2" path="res://scripts/ui/map.gd" id="13_kvuet"]
+[ext_resource type="Texture2D" uid="uid://df8tsqqk83604" path="res://art/ui/Submit_Turn_button.ase" id="13_qnb83"]
 [ext_resource type="PackedScene" uid="uid://lcatv4qen6b" path="res://prefabs/modules/hallway_I.tscn" id="14_1kice"]
 [ext_resource type="PackedScene" uid="uid://xo66orsxga73" path="res://prefabs/ui/planet.tscn" id="14_ir15t"]
 [ext_resource type="Texture2D" uid="uid://fm2qsrbasrrv" path="res://icon.svg" id="14_trtic"]
@@ -33,6 +34,14 @@ shader_parameter/Scale = 5.0
 shader_parameter/Texture2D = ExtResource("6_gee14")
 
 [sub_resource type="LabelSettings" id="LabelSettings_vtaks"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sww3w"]
+texture = ExtResource("13_qnb83")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qnb83"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qnb83"]
+bg_color = Color(1, 1, 1, 0.321569)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bhx41"]
 
@@ -118,28 +127,47 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -101.0
-offset_top = -42.0
-offset_right = -15.0
-offset_bottom = -11.0
+offset_left = -169.0
+offset_top = -78.0
+offset_right = -29.0
+offset_bottom = -4.0
 grow_horizontal = 0
 grow_vertical = 0
+theme_override_font_sizes/font_size = 14
+theme_override_styles/focus = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/hover = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/normal = SubResource("StyleBoxTexture_sww3w")
 text = "NEXT_TURN"
 
 [node name="ProgressBar" type="ProgressBar" parent="ship/UI/nextTurn"]
-z_index = -1
+z_index = 1
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 25.0
+offset_right = -16.0
+offset_bottom = -22.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_qnb83")
+theme_override_styles/fill = SubResource("StyleBoxFlat_qnb83")
 max_value = 1.0
 show_percentage = false
 
 [node name="changeRenderingBtn" type="Button" parent="ship/UI"]
 process_mode = 3
+visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -224,21 +252,13 @@ grow_vertical = 2
 text = "INVENTORY"
 label_settings = SubResource("LabelSettings_gee14")
 
-[node name="globalBG" type="Node2D" parent="."]
+[node name="globalBG" type="Parallax2D" parent="."]
 z_index = -100
+scroll_scale = Vector2(0.8, 0.8)
 
 [node name="Meteors" type="TileMapLayer" parent="globalBG"]
 z_index = -9
 tile_set = ExtResource("20_37s47")
-
-[node name="BG" type="TextureRect" parent="globalBG"]
-self_modulate = Color(0.129412, 0.129412, 0.137255, 1)
-z_index = -10
-offset_left = -5114.0
-offset_top = -5105.0
-offset_right = 5126.0
-offset_bottom = 5135.0
-texture = ExtResource("20_5newe")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("subViewport")]
 position = Vector2(64, 0)
@@ -270,12 +290,13 @@ offset_right = 4742.0
 offset_bottom = 4891.0
 texture = ExtResource("20_5newe")
 
-[node name="Map" type="Node2D" parent="." node_paths=PackedStringArray("gameNetworkManager", "meteorsTilemap")]
+[node name="Map" type="Node2D" parent="." node_paths=PackedStringArray("gameNetworkManager", "meteorsTilemap", "enemyMeteorsTilemap")]
 visible = false
 script = ExtResource("13_kvuet")
 planet = ExtResource("14_ir15t")
 gameNetworkManager = NodePath("../GameNetworkManager")
 meteorsTilemap = NodePath("../globalBG/Meteors")
+enemyMeteorsTilemap = NodePath("../Fight/SubViewportContainer/SubViewport/SubViewportTarget/globalBG/Meteors")
 
 [node name="Fight" type="CanvasLayer" parent="."]
 process_mode = 4
@@ -318,6 +339,14 @@ position = Vector2(8192, 0)
 [node name="enemyShip" type="Node2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget"]
 script = ExtResource("23_bt5mj")
 targetSelectionTex = ExtResource("24_e1j6l")
+
+[node name="globalBG" type="Parallax2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget"]
+z_index = -100
+scroll_scale = Vector2(0.8, 0.8)
+
+[node name="Meteors" type="TileMapLayer" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget/globalBG"]
+z_index = -9
+tile_set = ExtResource("20_37s47")
 
 [node name="ActionPicker" type="CanvasLayer" parent="."]
 

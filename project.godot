@@ -30,6 +30,7 @@ NameGenerator="*res://scripts/ui/name_generator.gd"
 window/size/viewport_width=640
 window/size/viewport_height=360
 window/stretch/mode="canvas_items"
+mouse_cursor/custom_image="uid://b4o5yk448grgx"
 
 [editor]
 
@@ -75,3 +76,4 @@ locale/translations=PackedStringArray("res://localization/languages.en.translati
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0.129412, 0.129412, 0.137255, 1)

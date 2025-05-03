@@ -32,6 +32,8 @@ var playersDead : int = 0
 
 var startingMaterials : int = 100
 
+var fightingPlayers : Dictionary = {}
+
 ### Client and host ###
 @export var nextTurnBtn : Button
 @export var ship : Ship
@@ -47,6 +49,11 @@ var startingMaterials : int = 100
 # Fighting
 @export var fightUI : CanvasLayer
 @export var playerFighting : int = 0 # UID of peer that you are fighting, 0 if not fighting
+var isMyFightingTurn : bool = false:
+    set(new_val):
+        isMyFightingTurn = new_val
+        if nextTurnBtn:
+            nextTurnBtn.disabled = !isMyFightingTurn
 
 var canNextTurn : bool = true:
     set(new_val):
@@ -54,6 +61,7 @@ var canNextTurn : bool = true:
         if nextTurnBtn:
             nextTurnBtn.disabled = !canNextTurn
 
+# If is ready for next turn, input disabled when is ready
 var isReady : bool = false:
     set(new_val):
         isReady = new_val
@@ -100,9 +108,14 @@ func next_turn_btn_up():
     nextTurnBtn.get_node("ProgressBar").value = nextTurnCounter
 
 # Invoked when player presses next turn button, everyone must be ready
+# Changes fight turn if is fighting
 func next_turn():
-    isReady = !isReady
-    player_ready.rpc_id(1, isReady)
+    if playerFighting != 0:
+        send_data_to_enemy.rpc_id(playerFighting, {"hell": "yeah"})
+        isMyFightingTurn = false
+    else:
+        isReady = !isReady
+        player_ready.rpc_id(1, isReady)
 
 @rpc("any_peer", "call_local", "reliable")
 func player_ready(readiness: bool=true):
@@ -118,7 +131,8 @@ func player_ready(readiness: bool=true):
                 generate_meteors_bg.rpc(randi_range(-1000,1000))
                 for i in Lobby.players.keys():
                     # Starting Planet
-                    var planet = randi_range(0, map.planetCount-1)
+                    #var planet = randi_range(0, map.planetCount-1)
+                    var planet = 2
                     host_called_end_turn.rpc_id(i, gameState, {"planet": planet})
                     Lobby.players[i].planet = planet
             else:
@@ -131,6 +145,7 @@ func player_ready(readiness: bool=true):
                 map.sync_planets.rpc(map.planets)
             
             elif gameState == GameState.ACTION:
+                fightingPlayers = {}
                 var playersOnPlanet : Dictionary[int, Array] = {} # planetIndex: Array[peerUID]
                 var playersAndActions : Dictionary[int, Array] = {}
                 for p in Lobby.players.keys():
@@ -201,7 +216,6 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
     if turn == 0:
         gameState = GameState.BUILDING
     turn += 1
-    print("GAME STATE> ", gameState)
     match gameState:
         GameState.BUILDING:
             camera.change_param()
@@ -306,6 +320,43 @@ func send_enemy_ship(p: Array):
     for i in range(0, p.size(), 4):
         parts[Vector3i(p[i], p[i+1], p[i+2])] = p[i+3]
     enemyShip.generate_ship(parts)
+    
+    # send systems data to let host decide who will start turn
+    send_fight_data_to_host.rpc_id(1, {"max_energy": ship.max_energy, "enemy": playerFighting})
+
+@rpc("any_peer", "call_local", "reliable")
+func send_fight_data_to_host(_data: Dictionary):
+    fightingPlayers[multiplayer.get_remote_sender_id()] = {}
+    if _data.has("max_energy"):
+        fightingPlayers[multiplayer.get_remote_sender_id()].max_energy = _data.max_energy
+        #fightingPlayers[multiplayer.get_remote_sender_id()].enemy = _data.enemy
+        
+        if fightingPlayers.has(multiplayer.get_remote_sender_id()) and fightingPlayers.has(_data.enemy):
+            var e1 = fightingPlayers[multiplayer.get_remote_sender_id()].max_energy
+            var e2 = fightingPlayers[_data.enemy].max_energy
+            if e1 > e2:
+                send_data_to_enemy.rpc_id(multiplayer.get_remote_sender_id(), {"starting": true})
+                send_data_to_enemy.rpc_id(_data.enemy, {"starting": false})
+            elif e1 < e2:
+                send_data_to_enemy.rpc_id(multiplayer.get_remote_sender_id(), {"starting": false})
+                send_data_to_enemy.rpc_id(_data.enemy, {"starting": true})
+            else:
+                var r = randi() % 2 == 0
+                send_data_to_enemy.rpc_id(multiplayer.get_remote_sender_id(), {"starting": r})
+                send_data_to_enemy.rpc_id(_data.enemy, {"starting": !r})
+        
+
+@rpc("any_peer", "call_local", "reliable")
+func send_data_to_enemy(_data: Dictionary):
+    print(multiplayer.get_remote_sender_id())
+    print(_data)
+    if multiplayer.get_remote_sender_id() == 1 and _data.has("starting"):
+        isMyFightingTurn = _data.starting
+        return
+    
+    # Enemy ended their turn so its mine now
+    isMyFightingTurn = true
+    fightTurn += 1
 
 # Send available actions to pick, client specific
 # additional _data parameter for small information about certain actions
@@ -313,7 +364,6 @@ func send_enemy_ship(p: Array):
 func send_available_actions(actions: Array, _data: Dictionary={}):
     for c in actionPicker.get_node("ActionsPanel").get_child(0).get_children():
         c.queue_free()
-    print(actions)
     actionPicker.get_node("TitlePanel/title").text = tr("ACTIONS")
     for a in actions:
         var act = actionControl.instantiate() as Button
@@ -331,7 +381,7 @@ func pick_action(action: Action):
 # More precise information about picked action, like items in the shop
 @rpc("authority", "call_local", "reliable")
 func send_action_data(_data: Dictionary):
-    print(_data)
+    #print(_data)
     # Random encounters
     if _data.has("random"):
         actionPicker.get_node("TitlePanel/title").text = tr("RANDOM." + _data.name.to_upper())
@@ -362,6 +412,11 @@ func send_action_data(_data: Dictionary):
             canNextTurn = true
     # Other actions
     else:
+        if playerFighting:
+            fightUI.visible = true
+            fightUI.process_mode = Node.PROCESS_MODE_INHERIT
+            actionPicker.visible = false
+            return
         actionPicker.get_node("TitlePanel/title").text = tr("REWARDS")
         canNextTurn = true
 
@@ -384,9 +439,6 @@ func send_action_data(_data: Dictionary):
         #act.get_node("desc").text = tr("_DESC")
         #act.get_node("icon").texture = actionIcons[a]
         actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
-    if playerFighting:
-        fightUI.visible = true
-        fightUI.process_mode = Node.PROCESS_MODE_INHERIT
 
 # called locally
 func pirate_after_decision(accepted: bool, reward=0):

@@ -57,6 +57,8 @@ func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
             MOUSE_BUTTON_WHEEL_UP:
                 targetZoom += 0.1
             MOUSE_BUTTON_MIDDLE:
+                if event.double_click:
+                    camera.position = target.position
                 if event.pressed:
                     lastCameraPos = camera.position
                     lastMousePos = subViewportContainer.get_local_mouse_position()

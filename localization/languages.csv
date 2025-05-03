@@ -21,3 +21,4 @@ GOT_MATERIAL;Got %s materials
 LOST_MATERIAL;Lost %s materials
 GOT_MODULE;Rewarded module: %s
 PART_DAMAGED;Following modules have been damaged: %s
+FORFEIT;Forfeit

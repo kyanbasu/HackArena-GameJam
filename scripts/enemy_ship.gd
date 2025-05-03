@@ -1,6 +1,8 @@
 extends Node2D
 class_name EnemyShip
 
+var max_energy : int
+
 # Key: x,y - position, z - rotation
 # Value: PackedScene of ShipModule
 #@export var parts_list : Dictionary[Vector3i, PackedScene]
