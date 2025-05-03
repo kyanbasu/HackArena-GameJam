@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://yqkvwn43lux7"]
 
 [ext_resource type="Script" uid="uid://chf6gf16v432" path="res://scripts/modules/module.gd" id="1_4hni7"]
-[ext_resource type="Texture2D" uid="uid://jhuap7ms6vwu" path="res://art/grid.tres" id="2_b6ejq"]
+[ext_resource type="Texture2D" uid="uid://b2ewkuq67okdx" path="res://art/godot_tres/modules/Floor_2x2.tres" id="2_4hni7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4hni7"]
 size = Vector2(32, 32)
@@ -20,56 +20,9 @@ script = ExtResource("1_4hni7")
 tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(-1, -1)])
 maxHealth = 6
 
-[node name="Grid" type="Sprite2D" parent="."]
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_b6ejq")
-
-[node name="Label" type="Label" parent="Grid"]
-z_index = 1
-offset_left = -13.0
-offset_top = -53.0
-offset_right = 59.0
-offset_bottom = -30.0
-text = "hallway L"
-
-[node name="Grid2" type="Sprite2D" parent="."]
-position = Vector2(-32, 0)
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_b6ejq")
-
-[node name="Label" type="Label" parent="Grid2"]
-z_index = 1
-offset_left = -13.0
-offset_top = -53.0
-offset_right = 59.0
-offset_bottom = -30.0
-text = "hallway L"
-
-[node name="Grid3" type="Sprite2D" parent="."]
-position = Vector2(0, -32)
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_b6ejq")
-
-[node name="Label" type="Label" parent="Grid3"]
-z_index = 1
-offset_left = -13.0
-offset_top = -53.0
-offset_right = 59.0
-offset_bottom = -30.0
-text = "hallway L"
-
-[node name="Grid4" type="Sprite2D" parent="."]
-position = Vector2(-32, -32)
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_b6ejq")
-
-[node name="Label" type="Label" parent="Grid4"]
-z_index = 1
-offset_left = -13.0
-offset_top = -53.0
-offset_right = 59.0
-offset_bottom = -30.0
-text = "hallway L"
+[node name="floor" type="Sprite2D" parent="."]
+position = Vector2(-16, -16)
+texture = ExtResource("2_4hni7")
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
 collision_layer = 128

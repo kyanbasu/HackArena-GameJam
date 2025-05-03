@@ -1,26 +1,39 @@
-[gd_scene load_steps=5 format=3 uid="uid://p71t6ovr8u2i"]
+[gd_scene load_steps=7 format=3 uid="uid://p71t6ovr8u2i"]
 
 [ext_resource type="Script" uid="uid://ke8ye0hy0elu" path="res://scripts/modules/cockpit.gd" id="1_luea0"]
-[ext_resource type="TileSet" uid="uid://diie40j2tx4sd" path="res://art/tileset.tres" id="2_g5khm"]
+[ext_resource type="Texture2D" uid="uid://7tgn8e0a0dg5" path="res://art/modules/Cockpit_1x2_Back.ase" id="2_uxqxd"]
+[ext_resource type="Texture2D" uid="uid://bbs48n78k4gp1" path="res://art/godot_tres/modules/Floor_1x2.tres" id="3_afajr"]
+[ext_resource type="Texture2D" uid="uid://bb7obsf0e7m76" path="res://art/modules/Cockpit_1x2_Inside.ase" id="4_o4l04"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ttrqs"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uxqxd"]
 size = Vector2(32, 32)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ux3ip"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_afajr"]
 size = Vector2(32, 32)
 
 [node name="cockpit" type="Node2D"]
 script = ExtResource("1_luea0")
 moduleType = 1
-tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0)])
+tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1)])
 isRotateable = false
 maxHealth = 50
 maxEnergy = -5
 
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
-position = Vector2(-16, -16)
-tile_map_data = PackedByteArray(0, 0, 1, 0, 0, 0, 0, 0, 7, 0, 4, 0, 0, 80, 0, 0, 0, 0, 0, 0, 7, 0, 5, 0, 0, 80)
-tile_set = ExtResource("2_g5khm")
+[node name="Cockpit1x2Back" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(0, 16)
+rotation = 1.5708
+texture = ExtResource("2_uxqxd")
+
+[node name="floor" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(0, 16)
+texture = ExtResource("3_afajr")
+
+[node name="Cockpit1x2Inside" type="Sprite2D" parent="."]
+position = Vector2(0, 16)
+rotation = 1.5708
+texture = ExtResource("4_o4l04")
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
 collision_layer = 128
@@ -28,11 +41,11 @@ collision_mask = 128
 input_pickable = true
 
 [node name="0,0" type="CollisionShape2D" parent="boundingBox"]
-shape = SubResource("RectangleShape2D_ttrqs")
+shape = SubResource("RectangleShape2D_uxqxd")
 
-[node name="1,0" type="CollisionShape2D" parent="boundingBox"]
-position = Vector2(32, 0)
-shape = SubResource("RectangleShape2D_ux3ip")
+[node name="0,1" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(0, 32)
+shape = SubResource("RectangleShape2D_afajr")
 
 [connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]
 [connection signal="mouse_exited" from="boundingBox" to="." method="_mouse_exited"]

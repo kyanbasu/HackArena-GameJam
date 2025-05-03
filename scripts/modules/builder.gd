@@ -58,9 +58,9 @@ func _ready() -> void:
     p = _load_part("res://prefabs/modules/hallway_I.tscn")
     place_part(p, Vector2(0,0))
     p = _load_part("res://prefabs/modules/hallway_A.tscn")
-    place_part(p, Vector2(0,64))
+    place_part(p, Vector2(32,64))
     p = _load_part("res://prefabs/modules/hallway_A.tscn")
-    place_part(p, Vector2(0,-32))
+    place_part(p, Vector2(32,-32))
     p = _load_part("res://prefabs/modules/engine_A.tscn")
     place_part(p, Vector2(-64,0))
     selectedModule = null
