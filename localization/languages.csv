@@ -1,29 +1,29 @@
-key;en
-INVENTORY;Inventory
-NEXT_TURN;Next turn
-CANCEL;Cancel
-ACCEPT;Accept
-DECLINE;Decline
-ACTIONS;Available actions
-FIGHT;Fight
-MINING;Extraction
-SHOP;Shop
-FIGHT_DESC;Fight other player
-MINING_DESC;Use asteroids to gather some materials.
-RANDOM_DESC;Go for the unknown
-SHOP_DESC;Go shoppin
-RANDOM;Random encounter
-RANDOM.PIRATE;Pirate
-RANDOM.ASTEROID;Asteroid
-RANDOM.SOLAR_FLARE;Solar flare
-RANDOM.ABANDONED_SHIP;Abandoned Ship
-RANDOM.ABANDONED_STATION;Abandoned Station
-RANDOM.QUARRY;Space Quarry
-RANDOM.SHIP_IN_NEED;Ship in need
-REWARDS;Rewards
-GOT_MATERIAL;Got %s materials
-LOST_MATERIAL;Lost %s materials
-GOT_MODULE;Rewarded module: %s
-PART_DAMAGED;Following modules have been damaged: %s
-PART_DAMAGED_DODGED;You have dodged damages
-FORFEIT;Forfeit
+key;en;pl;ru
+INVENTORY;Inventory;Ekwipunek;Оборудование
+NEXT_TURN;Next turn;Następna tura;Следующий раунд
+CANCEL;Cancel;Cofnij;Отмени
+ACCEPT;Accept;Potwierdź;Подтверди
+DECLINE;Decline;Odrzuć;Отклоняй
+ACTIONS;Available actions;Akcje;Акции
+FIGHT;Fight;Walcz;Дратьсяй
+MINING;Extraction;Kopanie;Копание
+SHOP;Shop;Sklep;Магазин
+FIGHT_DESC;Fight other player;Walcz z innym graczem;Драка с другим игроком
+MINING_DESC;Use asteroids to gather some materials.;Kop asteroidy, aby zyskać zasoby;Добывайте ресурсы на астероидах
+RANDOM_DESC;Go for the unknown;Idź po nieznane;Отправляйтесь в неизвестность
+SHOP_DESC;Go shoppin;Zakupy;Покупки
+RANDOM;Random encounter;Losowe zdarzenie;Случайное событие
+RANDOM.PIRATE;Pirate;Piraci;Пираты
+RANDOM.ASTEROID;Asteroid;Asteroida;Астероид
+RANDOM.SOLAR_FLARE;Solar flare;Rozbłysk słoneczny;Солнечная вспышка
+RANDOM.ABANDONED_SHIP;Abandoned Ship;Opuszony statek;Заброшенный корабль
+RANDOM.ABANDONED_STATION;Abandoned Station;Opuszczona stacja;Заброшенная станция
+RANDOM.QUARRY;Space Quarry;Kosmiczna kopalnia;Космическая мина
+RANDOM.SHIP_IN_NEED;Ship in need;Statek w potrzebie;Корабль в нужде
+REWARDS;Rewards;Nagrody;Награды
+GOT_MATERIAL;Got %s materials;Otrzymałeś %s komponentów;Вы получили %s компонентов
+LOST_MATERIAL;Lost %s materials;Straciłeś %s komponentów;Вы потеряли %s компонентов
+GOT_MODULE;Rewarded module: %s;Zdobyłeś moduł: %s;Вы получили модуль: %s
+PART_DAMAGED;Following modules have been damaged: %s;Te moduły zostały uszkodzone: %s;Эти модули были повреждены: %s
+PART_DAMAGED_DODGED;You have dodged damages;Uniknąłeś obrażeń;Вы избежали травм
+FORFEIT;Forfeit;Poddaj się;Сдаться
