@@ -8,6 +8,10 @@ ACTIONS;Available actions
 FIGHT;Fight
 MINING;Extraction
 SHOP;Shop
+FIGHT_DESC;Fight other player
+MINING_DESC;Use asteroids to gather some materials.
+RANDOM_DESC;Go for the unknown
+SHOP_DESC;Go shoppin
 RANDOM;Random encounter
 RANDOM.PIRATE;Pirate
 RANDOM.ASTEROID;Asteroid

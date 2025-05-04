@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=44 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -37,8 +37,6 @@
 shader = ExtResource("6_u5sy4")
 shader_parameter/Scale = 5.0
 shader_parameter/Texture2D = ExtResource("6_gee14")
-
-[sub_resource type="LabelSettings" id="LabelSettings_vtaks"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bhx41"]
 
@@ -127,14 +125,13 @@ script = ExtResource("6_kvpfn")
 layer = 2
 
 [node name="info" type="Label" parent="ship/UI"]
-visible = false
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 299.0
-offset_bottom = 53.0
-text = "a/d obracanie, kokpit ma je wylaczone
-drag n drop budowanie"
-label_settings = SubResource("LabelSettings_vtaks")
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -240.0
+offset_bottom = 39.0
+grow_horizontal = 0
+horizontal_alignment = 2
 
 [node name="changeRenderingBtn" type="Button" parent="ship/UI"]
 process_mode = 3
@@ -454,10 +451,10 @@ visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 128.0
+offset_left = 64.0
 offset_top = 95.0
-offset_right = -160.0
-offset_bottom = -65.0
+offset_right = -96.0
+offset_bottom = -72.0
 grow_horizontal = 2
 grow_vertical = 2
 

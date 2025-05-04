@@ -233,7 +233,12 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
 func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
     if turn == 0:
         gameState = GameState.BUILDING
+    else:
+        if ship.max_health - ship.total_damage <= 0 and !isDead:
+            dead.rpc()
+            isDead = true
     turn += 1
+    
     match gameState:
         GameState.BUILDING:
             camera.change_param()
@@ -291,6 +296,9 @@ func get_random_event_data() -> Dictionary:
         "pirate", "asteroid", "solar_flare", # negative
         "abandoned_ship", "abandoned_station", "quarry", "ship_in_need" # positive
     ].pick_random()
+    
+    #todo remove
+    encounter = "pirate"
     
     _data.name = encounter
     match encounter:
@@ -483,7 +491,7 @@ func send_action_data(_data: Dictionary):
         inventory.add_module_from_path(_data.reward)
         var act = actionControl.instantiate() as Button
         
-        act.get_node("title").text = tr("GOT_MODULE") % _data.reward
+        act.get_node("title").text = tr("GOT_MODULE") % _data.reward.get_file().trim_suffix('.tscn').replace("_", " ")
 
         #act.get_node("desc").text = tr("_DESC")
         #act.get_node("icon").texture = actionIcons[a]
@@ -506,7 +514,9 @@ func pirate_after_decision(accepted: bool, reward=0):
         damage_random_part()
 
 func damage_random_part():
-    var modules = "none" #todo damaging parts
+    var m = ship.modules.values().pick_random().part as ShipModule
+    ship.damage(randi_range(3,10), Vector2i(m.global_position-Vector2(16,16)))
+    var modules = inventory.get_name_from_file(m.get_meta("packed_scene"))
     var act = actionControl.instantiate() as Button
     act.get_node("title").text = tr("PART_DAMAGED") % modules
     #act.get_node("desc").text = tr("_DESC")
