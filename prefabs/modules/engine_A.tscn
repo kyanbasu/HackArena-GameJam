@@ -1,13 +1,13 @@
 [gd_scene load_steps=10 format=3 uid="uid://cy1h7dfvyrqbx"]
 
 [ext_resource type="Script" uid="uid://yb71drptt4ua" path="res://scripts/modules/engine.gd" id="1_xcdbn"]
-[ext_resource type="Texture2D" uid="uid://btvs7eo6wneqm" path="res://art/modules/Engines_2x2_Back.ase" id="2_dd6il"]
+[ext_resource type="SpriteFrames" uid="uid://btvs7eo6wneqm" path="res://art/modules/Engines_2x2_Back.ase" id="2_dd6il"]
 [ext_resource type="Texture2D" uid="uid://cvv7d4h8rbowc" path="res://art/modules/Engines_2x2_Inside.ase" id="2_qg0q7"]
 [ext_resource type="Texture2D" uid="uid://vo6ohbj7iyjw" path="res://art/modules/Floor_2x2.ase" id="3_dd6il"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_wl2m5"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_dd6il"]
 atlas = ExtResource("3_dd6il")
-region = Rect2(64, 0, 64, 64)
+region = Rect2(128, 0, 64, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dd6il"]
 size = Vector2(32, 32)
@@ -30,15 +30,18 @@ maxHealth = 5
 maxEnergy = 3
 batteryOffset = Vector2i(0, 1)
 
-[node name="Engines2x2Back" type="Sprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 z_index = -2
 position = Vector2(-16, 16)
-texture = ExtResource("2_dd6il")
+sprite_frames = ExtResource("2_dd6il")
+autoplay = "default"
+frame = 10
+frame_progress = 0.572522
 
 [node name="floor" type="Sprite2D" parent="."]
 z_index = -1
 position = Vector2(16, 16)
-texture = SubResource("AtlasTexture_wl2m5")
+texture = SubResource("AtlasTexture_dd6il")
 
 [node name="Engines2x2Inside" type="Sprite2D" parent="."]
 position = Vector2(16, 16)

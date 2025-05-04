@@ -60,7 +60,11 @@ func _draw():
 
 # Total health of module
 @export var maxHealth = 2;
-var health;
+var health:
+    set(nv):
+        health = nv
+        if health <= 0 and floor_tex:
+            floor_tex.region = Rect2(base_floor_tex_pos + Vector2(0, floor_tex.region.size.y), floor_tex.region.size)
 
 # Total energy used by module
 @export var maxEnergy : int = 0;
@@ -72,14 +76,18 @@ var energy : int = 0:
 
 @export var batteryOffset : Vector2i = Vector2i(1,0)
 
+var floor_tex = null
+var base_floor_tex_pos : Vector2
+
 func _ready() -> void:
     health = maxHealth;
     
     #Randomize floor tiles
     if has_node("floor"):
-        var tex = get_node("floor").get("texture").duplicate()
-        tex.region = Rect2(Vector2(tex.region.size.x * randi_range(0,4), 0), tex.region.size)
-        get_node("floor").set("texture", tex)
+        floor_tex = get_node("floor").get("texture").duplicate()
+        floor_tex.region = Rect2(Vector2(floor_tex.region.size.x * randi_range(0,4), 0), floor_tex.region.size)
+        get_node("floor").set("texture", floor_tex)
+        base_floor_tex_pos = floor_tex.region.position
 
 func rotate_left() -> void:
     if !isRotateable: return

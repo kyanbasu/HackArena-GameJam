@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=3 uid="uid://ciwbv7hannw5p"]
+
+[ext_resource type="Script" uid="uid://chf6gf16v432" path="res://scripts/modules/module.gd" id="1_lnuvx"]
+[ext_resource type="Texture2D" uid="uid://kiyjkj5v3se5" path="res://art/modules/Batteries_x2x3_Back.ase" id="2_570wu"]
+[ext_resource type="Texture2D" uid="uid://bk0d5oqk5hb7g" path="res://art/modules/Batteries_x2x3_Inside.ase" id="3_1a7t3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1k264"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f0ilp"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yfhq4"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w8yml"]
+size = Vector2(32, 32)
+
+[node name="batteries_A" type="Node2D"]
+script = ExtResource("1_lnuvx")
+moduleType = 5
+tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)])
+maxHealth = 6
+maxEnergy = -3
+
+[node name="BatteriesX2x3Back" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(0, 16)
+texture = ExtResource("2_570wu")
+
+[node name="BatteriesX2x3Inside" type="Sprite2D" parent="."]
+position = Vector2(0, 16)
+texture = ExtResource("3_1a7t3")
+
+[node name="boundingBox" type="StaticBody2D" parent="."]
+collision_layer = 128
+collision_mask = 128
+input_pickable = true
+
+[node name="0,0" type="CollisionShape2D" parent="boundingBox"]
+shape = SubResource("RectangleShape2D_1k264")
+
+[node name="1,0" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(32, 0)
+shape = SubResource("RectangleShape2D_f0ilp")
+
+[node name="-1,0" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(-32, 0)
+shape = SubResource("RectangleShape2D_yfhq4")
+
+[node name="0,1" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(0, 32)
+shape = SubResource("RectangleShape2D_w8yml")
+
+[connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]
+[connection signal="mouse_exited" from="boundingBox" to="." method="_mouse_exited"]

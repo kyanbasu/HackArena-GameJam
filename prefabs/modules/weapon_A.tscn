@@ -5,9 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://drca3v8tcne20" path="res://art/modules/Weapon_1x2_Back.ase" id="3_fw55f"]
 [ext_resource type="Texture2D" uid="uid://2a6vi6gkhkc8" path="res://art/modules/Weapon_1x2_Inside.ase" id="4_5e27v"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_5e27v"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_fw55f"]
 atlas = ExtResource("2_fw55f")
-region = Rect2(32, 0, 32, 64)
+region = Rect2(0, 0, 32, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d3yfw"]
 size = Vector2(32, 32)
@@ -20,6 +20,7 @@ script = ExtResource("1_olytr")
 damage = 7
 moduleType = 4
 tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(-1, 0)])
+isRotateable = false
 maxHealth = 4
 maxEnergy = 2
 batteryOffset = Vector2i(-1, 0)
@@ -28,7 +29,7 @@ batteryOffset = Vector2i(-1, 0)
 z_index = -1
 position = Vector2(-16, 0)
 rotation = 1.5708
-texture = SubResource("AtlasTexture_5e27v")
+texture = SubResource("AtlasTexture_fw55f")
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
 collision_layer = 128

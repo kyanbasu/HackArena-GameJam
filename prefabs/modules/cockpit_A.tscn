@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dq1fwmojgjaiv" path="res://art/modules/Floor_1x2.ase" id="3_uxqxd"]
 [ext_resource type="Texture2D" uid="uid://bb7obsf0e7m76" path="res://art/modules/Cockpit_1x2_Inside.ase" id="4_o4l04"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_afajr"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_54brs"]
 atlas = ExtResource("3_uxqxd")
 region = Rect2(64, 0, 32, 64)
 
@@ -32,7 +32,7 @@ texture = ExtResource("2_uxqxd")
 [node name="floor" type="Sprite2D" parent="."]
 z_index = -1
 position = Vector2(0, 16)
-texture = SubResource("AtlasTexture_afajr")
+texture = SubResource("AtlasTexture_54brs")
 
 [node name="Cockpit1x2Inside" type="Sprite2D" parent="."]
 position = Vector2(0, 16)

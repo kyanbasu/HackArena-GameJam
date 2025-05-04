@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bf77y0m31uitl"]
+[gd_scene load_steps=4 format=3 uid="uid://bf77y0m31uitl"]
 
 [ext_resource type="Script" uid="uid://bthsyk4xdf6xl" path="res://scripts/ui/menu_manager.gd" id="1_yqeox"]
 [ext_resource type="PackedScene" uid="uid://vm08dmxa78b" path="res://scenes/game.tscn" id="2_vjb58"]
+[ext_resource type="Texture2D" uid="uid://tu26lhp8r3rb" path="res://art/Mainmenu.ase" id="3_con2f"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -32,10 +33,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -232.0
-offset_top = -91.0
-offset_right = -32.0
-offset_bottom = -51.0
+offset_left = -50.0
+offset_top = 45.0
+offset_right = 210.0
+offset_bottom = 85.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "Player name"
@@ -48,10 +49,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -232.0
-offset_top = -20.0
-offset_right = -32.0
-offset_bottom = 20.0
+offset_left = -20.0
+offset_top = 116.0
+offset_right = 180.0
+offset_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "IP address"
@@ -65,10 +66,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -18.0
-offset_top = -20.0
-offset_right = 82.0
-offset_bottom = 20.0
+offset_left = 194.0
+offset_top = 116.0
+offset_right = 294.0
+offset_bottom = 156.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "port"
@@ -81,10 +82,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 124.0
-offset_top = -89.0
-offset_right = 168.0
-offset_bottom = -58.0
+offset_left = -23.0
+offset_top = -1.0
+offset_right = 30.0
+offset_bottom = 30.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Host"
@@ -95,10 +96,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -249.0
-offset_top = -127.0
-offset_right = -205.0
-offset_bottom = -96.0
+offset_left = 216.0
+offset_top = 50.0
+offset_right = 269.0
+offset_bottom = 81.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "roll"
@@ -117,6 +118,34 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Connect"
 
+[node name="menuHost" type="Button" parent="ConnectionMenu"]
+offset_left = 64.0
+offset_top = 64.0
+offset_right = 192.0
+offset_bottom = 94.0
+flat = true
+
+[node name="menuJoin" type="Button" parent="ConnectionMenu"]
+offset_left = 64.0
+offset_top = 129.0
+offset_right = 192.0
+offset_bottom = 159.0
+flat = true
+
+[node name="menuOptions" type="Button" parent="ConnectionMenu"]
+offset_left = 64.0
+offset_top = 225.0
+offset_right = 192.0
+offset_bottom = 255.0
+flat = true
+
+[node name="menuQuit" type="Button" parent="ConnectionMenu"]
+offset_left = 64.0
+offset_top = 289.0
+offset_right = 192.0
+offset_bottom = 319.0
+flat = true
+
 [node name="Lobby" type="CanvasLayer" parent="."]
 visible = false
 
@@ -133,6 +162,14 @@ offset_bottom = 95.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Start game"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -10
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_con2f")
 
 [connection signal="button_down" from="ConnectionMenu/host" to="MenuManager" method="_on_host_pressed"]
 [connection signal="button_down" from="ConnectionMenu/genName" to="MenuManager" method="regenerate_name"]

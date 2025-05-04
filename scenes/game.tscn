@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=57 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -8,14 +8,16 @@
 [ext_resource type="Texture2D" uid="uid://b6f8ru7gycbdv" path="res://art/bg/placement.png" id="6_gee14"]
 [ext_resource type="Script" uid="uid://bnl012y507g0m" path="res://scripts/space_grid_draw.gd" id="6_kvpfn"]
 [ext_resource type="Shader" uid="uid://dpnvhbkp3ki8f" path="res://shaders/placement_shader.tres" id="6_u5sy4"]
+[ext_resource type="PackedScene" uid="uid://ciwbv7hannw5p" path="res://prefabs/modules/batteries_A.tscn" id="8_05nbr"]
 [ext_resource type="Script" uid="uid://bb423b538twto" path="res://scripts/inventory.gd" id="8_gee14"]
+[ext_resource type="PackedScene" uid="uid://dynw7cc5rwn6c" path="res://prefabs/modules/weapon_B.tscn" id="9_0sl42"]
 [ext_resource type="PackedScene" uid="uid://d2aglbvarsf3x" path="res://prefabs/ui/ui_module.tscn" id="9_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://bpw15hrocyjdr" path="res://prefabs/modules/hallway_L.tscn" id="10_oaba0"]
 [ext_resource type="Script" uid="uid://bqb4vgkqpjdtp" path="res://scripts/camera.gd" id="10_vtaks"]
 [ext_resource type="Script" uid="uid://uwvudelkoifu" path="res://scripts/button.gd" id="12_ca42v"]
 [ext_resource type="PackedScene" uid="uid://cy1h7dfvyrqbx" path="res://prefabs/modules/engine_A.tscn" id="12_rysoc"]
 [ext_resource type="PackedScene" uid="uid://yqkvwn43lux7" path="res://prefabs/modules/hallway_A.tscn" id="13_264po"]
 [ext_resource type="Script" uid="uid://cth3fv6wnsr2" path="res://scripts/ui/map.gd" id="13_kvuet"]
-[ext_resource type="Texture2D" uid="uid://df8tsqqk83604" path="res://art/ui/Submit_Turn_button.ase" id="13_qnb83"]
 [ext_resource type="PackedScene" uid="uid://lcatv4qen6b" path="res://prefabs/modules/hallway_I.tscn" id="14_1kice"]
 [ext_resource type="PackedScene" uid="uid://xo66orsxga73" path="res://prefabs/ui/planet.tscn" id="14_ir15t"]
 [ext_resource type="Texture2D" uid="uid://fm2qsrbasrrv" path="res://icon.svg" id="14_trtic"]
@@ -37,12 +39,18 @@
 [ext_resource type="Script" uid="uid://bt1afsbp1i8pd" path="res://scripts/shop.gd" id="33_js0lu"]
 [ext_resource type="Texture2D" uid="uid://h4dco15es7ag" path="res://art/Shop/Back.ase" id="33_v2yb1"]
 [ext_resource type="PackedScene" uid="uid://ch577snv1wxjr" path="res://prefabs/ui/shop_item.tscn" id="35_twgab"]
+[ext_resource type="Texture2D" uid="uid://b5m5dndrt57k" path="res://art/Shop/Inventory_Icon.ase" id="37_m4url"]
+[ext_resource type="Texture2D" uid="uid://cdm4tt6kf83m8" path="res://art/Shop/Shop_Icon.ase" id="38_8ool0"]
 [ext_resource type="Script" uid="uid://cp0kvrnssxu30" path="res://scripts/tutorial.gd" id="38_nepv3"]
+[ext_resource type="Texture2D" uid="uid://hsr4wj2e4rru" path="res://art/Shop/Reapair.ase" id="39_pr1ej"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
 shader_parameter/Scale = 5.0
 shader_parameter/Texture2D = ExtResource("6_gee14")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_js0lu"]
+texture = ExtResource("33_v2yb1")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bhx41"]
 
@@ -56,9 +64,16 @@ VScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_bhx41")
 [sub_resource type="LabelSettings" id="LabelSettings_gee14"]
 font_size = 18
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_02fa5"]
+load_path = "res://.godot/imported/Submit_Turn_button.png-2b7f3835bac56126493e1409a9def13d.ctex"
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sww3w"]
-texture = ExtResource("13_qnb83")
-texture_margin_top = 4.0
+texture = SubResource("CompressedTexture2D_02fa5")
+region_rect = Rect2(0, 0, 54, 21)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7025r"]
+texture = SubResource("CompressedTexture2D_02fa5")
+region_rect = Rect2(54, 0, 54, 21)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qnb83"]
 
@@ -70,8 +85,8 @@ font_size = 10
 
 [sub_resource type="LabelSettings" id="LabelSettings_bhx41"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_js0lu"]
-texture = ExtResource("33_v2yb1")
+[sub_resource type="LabelSettings" id="LabelSettings_05nbr"]
+font_size = 10
 
 [node name="Node2D" type="Node2D"]
 
@@ -99,7 +114,10 @@ tableShop = Dictionary[PackedScene, int]({
 ExtResource("4_gxtfn"): 100,
 ExtResource("14_1kice"): 40,
 ExtResource("13_264po"): 50,
-ExtResource("12_rysoc"): 80
+ExtResource("12_rysoc"): 80,
+ExtResource("8_05nbr"): 100,
+ExtResource("9_0sl42"): 200,
+ExtResource("10_oaba0"): 50
 })
 tableShipInNeed = Array[PackedScene]([ExtResource("13_264po")])
 tableAbandonedStation = Array[PackedScene]([ExtResource("12_rysoc")])
@@ -167,23 +185,23 @@ uiModulesContainer = NodePath("Panel/ScrollContainer/VBoxContainer")
 uiModule = ExtResource("9_0tnpc")
 
 [node name="Panel" type="Panel" parent="ship/UI/inventory"]
-anchors_preset = 6
+anchors_preset = 1
 anchor_left = 1.0
-anchor_top = 0.5
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -171.0
-offset_top = -100.0
-offset_right = -31.0
-offset_bottom = 100.0
+offset_left = -256.0
+offset_bottom = 384.0
 grow_horizontal = 0
-grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_js0lu")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ship/UI/inventory/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 70.0
+offset_right = -42.0
+offset_bottom = -31.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_qnb83")
@@ -200,8 +218,10 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 2.0
-offset_right = 34.0
+offset_left = -34.0
+offset_top = 66.0
+offset_right = -2.0
+offset_bottom = -26.0
 grow_horizontal = 0
 grow_vertical = 2
 texture = ExtResource("18_qnb83")
@@ -218,17 +238,10 @@ offset_bottom = 28.0
 texture = ExtResource("19_sww3w")
 
 [node name="Label" type="Label" parent="ship/UI/inventory"]
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -165.0
-offset_top = -122.0
-offset_right = -52.0
-offset_bottom = -103.0
-grow_horizontal = 0
-grow_vertical = 2
+offset_left = 404.0
+offset_top = 42.0
+offset_right = 517.0
+offset_bottom = 61.0
 text = "INVENTORY"
 label_settings = SubResource("LabelSettings_gee14")
 
@@ -247,24 +260,25 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -96.0
-offset_top = -32.0
-offset_right = -32.0
+offset_left = -91.0
+offset_top = -24.0
+offset_right = -37.0
+offset_bottom = -3.0
 grow_horizontal = 0
 grow_vertical = 2
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 7
 theme_override_styles/focus = SubResource("StyleBoxTexture_sww3w")
-theme_override_styles/disabled_mirrored = SubResource("StyleBoxTexture_sww3w")
-theme_override_styles/disabled = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxTexture_7025r")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_7025r")
 theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxTexture_sww3w")
 theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_sww3w")
 theme_override_styles/hover_mirrored = SubResource("StyleBoxTexture_sww3w")
 theme_override_styles/hover = SubResource("StyleBoxTexture_sww3w")
-theme_override_styles/pressed_mirrored = SubResource("StyleBoxTexture_sww3w")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_sww3w")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxTexture_7025r")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_7025r")
 theme_override_styles/normal_mirrored = SubResource("StyleBoxTexture_sww3w")
 theme_override_styles/normal = SubResource("StyleBoxTexture_sww3w")
-text = "NEXT_TURN"
+action_mode = 0
 
 [node name="ProgressBar" type="ProgressBar" parent="ship/UI/UpperPanel/nextTurn"]
 z_index = 1
@@ -272,10 +286,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 7.0
-offset_top = 11.0
-offset_right = -7.0
-offset_bottom = -10.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -7.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -503,12 +517,13 @@ label_settings = SubResource("LabelSettings_bhx41")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Shop" type="CanvasLayer" parent="." node_paths=PackedStringArray("inventory", "container")]
+[node name="Shop" type="CanvasLayer" parent="." node_paths=PackedStringArray("inventory", "container", "repairPriceLabel")]
 visible = false
 script = ExtResource("33_js0lu")
 inventory = NodePath("../ship/UI/inventory")
 container = NodePath("Panel/ScrollContainer/VBoxContainer")
 shopItem = ExtResource("35_twgab")
+repairPriceLabel = NodePath("Panel/repairBtn/price")
 
 [node name="Panel" type="Panel" parent="Shop"]
 anchors_preset = 6
@@ -528,12 +543,62 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 63.0
+offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Shop/Panel/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+
+[node name="inventoryBtn" type="Button" parent="Shop/Panel"]
+z_index = -10
+layout_mode = 0
+offset_left = -36.0
+offset_top = 254.0
+offset_right = 4.0
+offset_bottom = 294.0
+icon = ExtResource("37_m4url")
+flat = true
+
+[node name="shopBtn" type="Button" parent="Shop/Panel"]
+z_index = -10
+layout_mode = 0
+offset_left = -36.0
+offset_top = 194.0
+offset_right = 4.0
+offset_bottom = 234.0
+icon = ExtResource("38_8ool0")
+flat = true
+
+[node name="repairBtn" type="Button" parent="Shop/Panel"]
+z_index = 10
+layout_mode = 0
+offset_left = 11.0
+offset_right = 83.0
+offset_bottom = 40.0
+icon = ExtResource("39_pr1ej")
+flat = true
+
+[node name="price" type="Label" parent="Shop/Panel/repairBtn"]
+layout_mode = 0
+offset_left = 41.0
+offset_top = 15.0
+offset_right = 63.0
+offset_bottom = 25.0
+text = "0"
+label_settings = SubResource("LabelSettings_05nbr")
+horizontal_alignment = 2
+
+[node name="Label" type="Label" parent="Shop/Panel"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 42.0
+offset_right = 133.0
+offset_bottom = 61.0
+text = "SHOP"
+label_settings = SubResource("LabelSettings_gee14")
 
 [node name="tutorial" type="CanvasLayer" parent="."]
 visible = false
@@ -547,3 +612,6 @@ script = ExtResource("38_nepv3")
 [connection signal="gui_input" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_sub_viewport_container_gui_input"]
 [connection signal="mouse_entered" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Fight/SubViewportContainer" to="Fight/SubViewportContainer/SubViewport" method="_on_mouse_exited"]
+[connection signal="button_down" from="Shop/Panel/inventoryBtn" to="Shop" method="_on_inventory_btn_button_down"]
+[connection signal="button_down" from="Shop/Panel/shopBtn" to="Shop" method="_on_shop_btn_button_down"]
+[connection signal="button_down" from="Shop/Panel/repairBtn" to="Shop" method="_on_repair_btn_button_down"]

@@ -40,19 +40,19 @@ var weapons : int
 func _ready() -> void:
     enemySubViewport.ship = self
 
-func damage(amount: int, _position: Vector2i):
+func damage(amount: int, _position: Vector2i) -> bool:
     _position = _position/G.TILE_SIZE
     if builder.occupiedSpace.has(_position): # don't damage anything if projectiles can't hit ship
         # Shield absorbing, doesnt do any damage if shield absorbs all
         if shields * 4 > amount:
-            return
+            return false
         amount -= shields*4
         
         # Chance for dodging
         var chance = log(engines+1) / log(100)
         #print("change to dodge ", chance)
         if chance > randf():
-            return
+            return false
         
         builder.occupiedSpace[_position].deal_damage(amount)
         total_damage += amount
@@ -70,6 +70,8 @@ func damage(amount: int, _position: Vector2i):
             modules[vec].part.energy = 0
         
         refresh_ui()
+        return true
+    return false
 
 
 
@@ -97,6 +99,8 @@ func changed_ship_module(part: ShipModule, added: bool):
     
     match part.moduleType:
         part.ModuleType.COCKPIT: #cockpit increases max_energy (generates energy)
+            max_energy -= part.maxEnergy * mult
+        part.ModuleType.GENERATOR:
             max_energy -= part.maxEnergy * mult
     
     if max_energy < 0: return #what
@@ -181,6 +185,18 @@ func modulate_part(part: ShipModule=null):
 
 func panel_module_mouse_exited(v: Vector3i):
     modules[v].part.modulate = Color.WHITE
+
+func get_repair_price() -> int:
+    var p : int = 0
+    for v in modules.keys():
+        p += (modules[v].part.maxHealth - modules[v].part.health) * 10
+    return p
+
+func repair():
+    for v in modules.keys():
+        if builder.inventory.materials >= (modules[v].part.maxHealth - modules[v].part.health) * 10:
+            builder.inventory.materials -= (modules[v].part.maxHealth - modules[v].part.health) * 10
+            modules[v].part.health = modules[v].part.maxHealth
 
 func panel_module_input(event, v: Vector3i):
     modules[v].part.modulate = Color(.3,1,.3)

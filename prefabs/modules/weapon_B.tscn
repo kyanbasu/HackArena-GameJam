@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://dynw7cc5rwn6c"]
+
+[ext_resource type="Script" uid="uid://dpxf7jlldgvka" path="res://scripts/modules/weapon.gd" id="1_ef1ws"]
+[ext_resource type="Texture2D" uid="uid://c3wth8cdute71" path="res://art/modules/Weapon_1x3_Back.ase" id="2_ef1ws"]
+[ext_resource type="Texture2D" uid="uid://dhj7qp5l7d67u" path="res://art/godot_tres/modules/Floor_1x3.tres" id="3_1l1cy"]
+[ext_resource type="Texture2D" uid="uid://c7pj66lep8ovt" path="res://art/modules/Weapon_1x3_Inside.ase" id="4_oacum"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d3yfw"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s2rl6"]
+size = Vector2(32, 32)
+
+[node name="weapon_B" type="Node2D"]
+script = ExtResource("1_ef1ws")
+damage = 15
+moduleType = 4
+tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(-1, 0)])
+isRotateable = false
+maxHealth = 8
+maxEnergy = 3
+batteryOffset = Vector2i(-1, 0)
+
+[node name="Weapon1x3Back" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(16, 0)
+texture = ExtResource("2_ef1ws")
+
+[node name="floor" type="Sprite2D" parent="."]
+z_index = -1
+texture = ExtResource("3_1l1cy")
+
+[node name="Weapon1x3Inside" type="Sprite2D" parent="."]
+texture = ExtResource("4_oacum")
+
+[node name="boundingBox" type="StaticBody2D" parent="."]
+collision_layer = 128
+collision_mask = 128
+input_pickable = true
+
+[node name="0,0" type="CollisionShape2D" parent="boundingBox"]
+shape = SubResource("RectangleShape2D_d3yfw")
+
+[node name="-1,0" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(-32, 0)
+shape = SubResource("RectangleShape2D_s2rl6")
+
+[connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]
+[connection signal="mouse_exited" from="boundingBox" to="." method="_mouse_exited"]

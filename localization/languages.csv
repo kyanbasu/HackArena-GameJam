@@ -25,4 +25,5 @@ GOT_MATERIAL;Got %s materials
 LOST_MATERIAL;Lost %s materials
 GOT_MODULE;Rewarded module: %s
 PART_DAMAGED;Following modules have been damaged: %s
+PART_DAMAGED_DODGED;You have dodged damages
 FORFEIT;Forfeit

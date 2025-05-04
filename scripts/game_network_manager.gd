@@ -68,17 +68,15 @@ var canNextTurn : bool = true:
 var isReady : bool = false:
     set(new_val):
         isReady = new_val
-        if nextTurnBtn:
-            if isReady:
-                nextTurnBtn.text = tr("CANCEL")
-            else:
-                nextTurnBtn.text = tr("NEXT_TURN")
 
 var fightTurn : int = 0
 
 var isDead := false
 
+var origNextTurnBtnPos : Vector2
+
 func _ready():
+    origNextTurnBtnPos = nextTurnBtn.position
     if !Array(OS.get_cmdline_args()).has("editor"):
         Input.mouse_mode = Input.MOUSE_MODE_CONFINED
     elif multiplayer.get_peers().size() == 0:
@@ -107,6 +105,8 @@ func player_disconnected_during_game(peer_id):
 
 func _process(delta: float) -> void:
     if nextTurnBtn.button_pressed and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+        nextTurnBtn.get("theme_override_styles/normal").region_rect = Rect2(54, 0, 54, 21)
+        nextTurnBtn.position = origNextTurnBtnPos + Vector2(0,3)
         nextTurnCounter += delta
         nextTurnBtn.get_node("ProgressBar").value = nextTurnCounter / nextTurnCounterFire
         if nextTurnCounter > nextTurnCounterFire:
@@ -118,6 +118,8 @@ const nextTurnCounterFire : float = .5 #time in seconds after which skipping tur
 
 func next_turn_btn_up():
     nextTurnCounter = 0
+    nextTurnBtn.get("theme_override_styles/normal").region_rect = Rect2(0, 0, 54, 21)
+    nextTurnBtn.position = origNextTurnBtnPos
     nextTurnBtn.get_node("ProgressBar").value = nextTurnCounter
 
 # Invoked when player presses next turn button, everyone must be ready
@@ -217,6 +219,7 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
         
         GameState.ACTION:
             shop.visible = false
+            inventory.visible = false
             shop.process_mode = Node.PROCESS_MODE_DISABLED
             fightUI.visible = false
             fightUI.process_mode = Node.PROCESS_MODE_DISABLED
@@ -245,6 +248,7 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
     
     match gameState:
         GameState.BUILDING:
+            camera.position = Vector2(G.TILE_SIZE*4, 0)
             camera.change_param()
             builder.active = true
             canNextTurn = true
@@ -257,8 +261,9 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
         
         GameState.MAP:
             G.target_bg_pitch = .8
-            camera.position = map.planetNodes[map.playerPlanet].position
             camera.change_param(Vector2(1400, 1800), .2, 1)
+            camera.position = map.planetNodes[map.playerPlanet].position
+            camera.target_zoom = .5
             ship.process_mode = Node.PROCESS_MODE_DISABLED
             ship.visible = false
             map.process_mode = Node.PROCESS_MODE_INHERIT
@@ -279,6 +284,7 @@ func process_and_send_action(action: Action):
         var _data = {}
         match action:
             Action.SHOP:
+                camera.position = Vector2(G.TILE_SIZE*4, 0)
                 _data.shop_items = {}
                 for i in range(randi_range(4,8)):
                     var item = tableShop.keys().pick_random()
@@ -428,7 +434,7 @@ func send_available_actions(actions: Array, _data: Dictionary={}):
     for a in actions:
         var act = actionControl.instantiate() as Button
         act.get_node("title").text = tr(Action.keys()[a])
-        act.get_node("desc").text = tr(Action.keys()[a] + "_DESC")
+        #act.get_node("desc").text = tr(Action.keys()[a] + "_DESC")
         act.get_node("icon").texture = actionIcons[a]
         actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
         act.button_down.connect(pick_action.bind(a))
@@ -526,10 +532,13 @@ func pirate_after_decision(accepted: bool, reward=0):
 
 func damage_random_part():
     var m = ship.modules.values().pick_random().part as ShipModule
-    ship.damage(randi_range(3,10), Vector2i(m.global_position-Vector2(16,16)))
+    var did_damage_part = ship.damage(randi_range(3,10), Vector2i(m.global_position-Vector2(16,16)))
     var modules = Inventory.get_name_from_file(m.get_meta("packed_scene"))
     var act = actionControl.instantiate() as Button
-    act.get_node("title").text = tr("PART_DAMAGED") % modules
+    if did_damage_part:
+        act.get_node("title").text = tr("PART_DAMAGED") % modules
+    else:
+        act.get_node("title").text = tr("PART_DAMAGED_DODGED")
     #act.get_node("desc").text = tr("_DESC")
     #act.get_node("icon").texture = actionIcons[a]
     actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
