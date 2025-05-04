@@ -1,0 +1,17 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://35bqs2tncpcx"]
+
+[ext_resource type="Texture2D" uid="uid://cwmlkm1kcx0ey" path="res://art/bg/Stars_tileset.ase" id="1_koi4h"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a4l50"]
+texture = ExtResource("1_koi4h")
+texture_region_size = Vector2i(32, 32)
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+
+[resource]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_a4l50")

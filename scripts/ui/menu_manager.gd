@@ -2,7 +2,6 @@ extends Node
 
 @export var gameScene : PackedScene
 
-
 func _ready() -> void:
     get_node("../connectionJoin").get_node("ip").text = Lobby.defaultIp
     get_node("../connectionCommon").get_node("port").text = str(Lobby.localPort)
@@ -42,7 +41,6 @@ func _on_join_pressed() -> void:
     Lobby.player_info.name = get_node("../connectionCommon").get_node("name").text
     var err = Lobby.join_game(get_node("../connectionJoin").get_node("ip").text, int(get_node("../connectionCommon").get_node("port").text))
     if err != OK:
-
         return
 
 
@@ -93,8 +91,32 @@ func _on_menu_join_button_down() -> void:
 
 
 func _on_menu_options_button_down() -> void:
-    pass # Replace with function body.
+    get_node("../mainMenu").visible = false
+    get_node("../options").visible = true
 
 
 func _on_menu_quit_button_down() -> void:
-    pass # Replace with function body.
+    get_tree().quit()
+
+
+func _on_back_button_down() -> void:
+    if multiplayer.has_multiplayer_peer():
+        multiplayer.multiplayer_peer.close()
+    get_node("../connectionHost").get_node("host").disabled = false
+    get_node("../connectionCommon").visible = false
+    get_node("../connectionJoin").visible = false
+    get_node("../connectionHost").visible = false
+    get_node("../lobby").visible = false
+    get_node("../options").visible = false
+    get_node("../mainMenu").visible = true
+    $playerList.text = ""
+
+
+func _on_language_item_selected(index: int) -> void:
+    match index:
+        0:
+            TranslationServer.set_locale("en")
+        1:
+            TranslationServer.set_locale("pl")
+        2:
+            TranslationServer.set_locale("ru")

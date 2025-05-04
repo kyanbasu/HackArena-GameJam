@@ -46,6 +46,8 @@ var fightingPlayers : Dictionary = {}
 @export var shop : CanvasLayer
 @export var actionControl : PackedScene # action instance to spawn
 @export var actionIcons : Dictionary[Action, Texture2D] = {}
+@export var turnCounter : Label
+@export var info : Label
 
 # Fighting
 @export var fightUI : CanvasLayer
@@ -98,13 +100,16 @@ func _ready():
     player_ready.rpc_id(1, true)
 
 func player_disconnected_during_game(peer_id):
+    print(peer_id)
     if !multiplayer.is_server(): return
+    if !Lobby.players.has(peer_id): return
     playersDead += 1
     if fightingPlayers.has(peer_id):
         send_data_to_enemy.rpc_id(fightingPlayers[peer_id], {"force_end": true})
         fightingPlayers.erase(peer_id)
 
 func _process(delta: float) -> void:
+    if isDead: info.text = "\n\n\nThe end. You're dead. GG"
     if nextTurnBtn.button_pressed and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
         nextTurnBtn.get("theme_override_styles/normal").region_rect = Rect2(54, 0, 54, 21)
         nextTurnBtn.position = origNextTurnBtnPos + Vector2(0,3)
@@ -138,9 +143,14 @@ func next_turn():
         _data.ship = {"shields": ship.shields, "health": ship.max_health - ship.total_damage}
         send_data_to_enemy.rpc_id(playerFighting, _data)
         isMyFightingTurn = false
+        info.text = "Waiting for enemy..."
     else:
         isReady = !isReady
         player_ready.rpc_id(1, isReady)
+        if isReady:
+            info.text = "Waiting for other players..."
+        else:
+            info.text = ""
 
 @rpc("any_peer", "call_local", "reliable")
 func player_ready(readiness: bool=true):
@@ -155,8 +165,8 @@ func player_ready(readiness: bool=true):
                 generate_bg.rpc(randi_range(-1000,1000))
                 for i in Lobby.players.keys():
                     # Starting Planet
-                    #var planet = randi_range(0, map.planetCount-1)
-                    var planet = shopPlanet
+                    var planet = randi_range(0, map.planetCount-1)
+                    #var planet = shopPlanet
                     host_called_end_turn.rpc_id(i, gameState, {"planet": planet})
                     Lobby.players[i].planet = planet
             else:
@@ -205,6 +215,7 @@ func player_ready(readiness: bool=true):
 
 @rpc("any_peer", "call_local", "reliable")
 func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
+    info.text = ""
     isReady = false
     canNextTurn = false
     gameState = _gameState
@@ -250,6 +261,13 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             isDead = true
     turn += 1
     
+    var counterTurn : int = (turn-1)/3
+    
+    if counterTurn < 10:
+        turnCounter.text = "0   " + str(counterTurn)
+    else:
+        turnCounter.text = str(counterTurn/10) + "   " + str(counterTurn%10)
+    
     match gameState:
         GameState.BUILDING:
             camera.position = Vector2(G.TILE_SIZE*4, 0)
@@ -264,6 +282,7 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             
         
         GameState.MAP:
+            info.text = "You might want to find the shop..."
             G.target_bg_pitch = .8
             camera.change_param(Vector2(1400, 1800), .2, 1)
             camera.position = map.planetNodes[map.playerPlanet].position
@@ -288,7 +307,6 @@ func process_and_send_action(action: Action):
         var _data = {}
         match action:
             Action.SHOP:
-                camera.position = Vector2(G.TILE_SIZE*4, 0)
                 _data.shop_items = {}
                 for i in range(randi_range(4,8)):
                     var item = tableShop.keys().pick_random()
@@ -356,6 +374,7 @@ func init_fight(enemy_id):
         parts.push_back(ship.modules[p].part.get_meta("packed_scene").resource_path)
         
     send_enemy_ship.rpc_id(playerFighting, parts)
+    send_data_to_enemy.rpc_id(playerFighting, {"ship": {"shields": ship.shields, "health": ship.max_health - ship.total_damage}})
 
 @rpc("any_peer", "call_remote", "reliable")
 func send_enemy_ship(p: Array):
@@ -408,11 +427,13 @@ func send_data_to_enemy(_data: Dictionary):
         playerFighting = 0
         ship.reset_all_energy()
         toggle_next_turn_btn(true)
+        info.text = "You've won battle. Click next turn."
         return
     
     if _data.has("damages"):
         for d in _data.damages.keys():
             ship.damage(_data.damages[d], d, "res://prefabs/world/bullet.tscn")
+        send_data_to_enemy.rpc_id(playerFighting, {"ship": {"shields": ship.shields, "health": ship.max_health - ship.total_damage}})
     
     if _data.has("ship"):
         enemyShip.health = _data.ship.health
@@ -426,11 +447,14 @@ func send_data_to_enemy(_data: Dictionary):
         playerFighting = 0
         dead.rpc()
         isDead = true
+        info.text = "The end. You're dead. GG"
+        G.death.play()
         return
     
     # Enemy ended their turn so its mine now
     isMyFightingTurn = true
     fightTurn += 1
+    info.text = "Your turn. Pick weapon on bottom left and aim for enemys ship on the right."
 
 # Send available actions to pick, client specific
 # additional _data parameter for small information about certain actions
@@ -451,6 +475,8 @@ func pick_action(action: Action):
     G.click.play()
     for c in actionPicker.get_node("ActionsPanel").get_child(0).get_children():
         c.queue_free()
+    if action == Action.SHOP:
+        camera.position = Vector2(G.TILE_SIZE*4, 0)
     process_and_send_action.rpc_id(1, action)
 
 # More precise information about picked action, like items in the shop
@@ -572,3 +598,9 @@ func toggle_next_turn_btn(enable: bool):
 @export var tableShop : Dictionary[PackedScene, int]
 @export var tableShipInNeed : Array[PackedScene]
 @export var tableAbandonedStation : Array[PackedScene]
+
+
+func _on_quit_button_down() -> void:
+    if multiplayer.has_multiplayer_peer():
+        multiplayer.multiplayer_peer.close()
+    get_tree().change_scene_to_file("res://scenes/menu.tscn")

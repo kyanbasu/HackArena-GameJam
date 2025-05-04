@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bf77y0m31uitl"]
+[gd_scene load_steps=11 format=3 uid="uid://bf77y0m31uitl"]
 
 [ext_resource type="Script" uid="uid://bthsyk4xdf6xl" path="res://scripts/ui/menu_manager.gd" id="1_yqeox"]
 [ext_resource type="PackedScene" uid="uid://vm08dmxa78b" path="res://scenes/game.tscn" id="2_vjb58"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://d3l1pg6fqksfx" path="res://art/Main menu/Join.ase" id="5_70i5f"]
 [ext_resource type="Texture2D" uid="uid://ci6wonqh0bavw" path="res://art/Main menu/Options.ase" id="6_mj5lg"]
 [ext_resource type="Texture2D" uid="uid://fcocfntsfunl" path="res://art/Main menu/Exit.ase" id="7_ufwb2"]
+[ext_resource type="Texture2D" uid="uid://h7o8t2diy7rg" path="res://art/Main menu/Back_button.ase" id="9_70i5f"]
 
 [node name="Node2D" type="Node2D"]
 
@@ -135,10 +136,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -104.0
-offset_top = -12.0
-offset_right = 156.0
-offset_bottom = 28.0
+offset_left = -152.0
+offset_top = -76.0
+offset_right = 108.0
+offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "Player name"
@@ -150,13 +151,24 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 165.0
-offset_top = -5.0
-offset_right = 183.0
-offset_bottom = 19.0
+offset_left = 117.0
+offset_top = -69.0
+offset_right = 135.0
+offset_bottom = -45.0
 grow_horizontal = 2
 grow_vertical = 2
 icon = ExtResource("3_i6lef")
+
+[node name="back" type="Button" parent="connectionCommon"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 168.0
+offset_top = -152.0
+offset_right = 208.0
+offset_bottom = -112.0
+grow_vertical = 0
+icon = ExtResource("9_70i5f")
 
 [node name="port" type="TextEdit" parent="connectionCommon"]
 custom_minimum_size = Vector2(100, 40)
@@ -165,24 +177,32 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 104.0
-offset_top = 36.0
-offset_right = 204.0
-offset_bottom = 76.0
+offset_left = 56.0
+offset_top = -28.0
+offset_right = 156.0
+offset_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "port"
 scroll_fit_content_height = true
 scroll_fit_content_width = true
 
+[node name="Panel" type="Panel" parent="connectionCommon"]
+z_index = -1
+offset_left = 152.0
+offset_top = 88.0
+offset_right = 504.0
+offset_bottom = 288.0
+mouse_filter = 2
+
 [node name="connectionHost" type="CanvasLayer" parent="."]
 visible = false
 
 [node name="host" type="Button" parent="connectionHost"]
-offset_left = 400.0
-offset_top = 272.0
-offset_right = 536.0
-offset_bottom = 312.0
+offset_left = 336.0
+offset_top = 216.0
+offset_right = 472.0
+offset_bottom = 256.0
 icon = ExtResource("3_13sgg")
 flat = true
 
@@ -206,10 +226,10 @@ stretch_mode = 3
 visible = false
 
 [node name="join" type="Button" parent="connectionJoin"]
-offset_left = 400.0
-offset_top = 272.0
-offset_right = 536.0
-offset_bottom = 312.0
+offset_left = 336.0
+offset_top = 216.0
+offset_right = 472.0
+offset_bottom = 256.0
 icon = ExtResource("3_13sgg")
 flat = true
 
@@ -236,15 +256,60 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -104.0
-offset_top = 36.0
-offset_right = 96.0
-offset_bottom = 76.0
+offset_left = -152.0
+offset_top = -28.0
+offset_right = 48.0
+offset_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "IP address"
 scroll_fit_content_height = true
 scroll_fit_content_width = true
+
+[node name="options" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Panel" type="Panel" parent="options"]
+offset_left = 128.0
+offset_top = 88.0
+offset_right = 512.0
+offset_bottom = 320.0
+mouse_filter = 2
+
+[node name="back" type="Button" parent="options/Panel"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = -24.0
+grow_vertical = 0
+icon = ExtResource("9_70i5f")
+
+[node name="MenuBar" type="OptionButton" parent="options/Panel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 24.0
+offset_right = 328.0
+offset_bottom = 56.0
+selected = 0
+item_count = 3
+popup/item_0/text = "English"
+popup/item_0/id = 0
+popup/item_1/text = "Polish"
+popup/item_1/id = 1
+popup/item_2/text = "Russian"
+popup/item_2/id = 2
+
+[node name="Label" type="Label" parent="options/Panel"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 8.0
+offset_right = 146.0
+offset_bottom = 25.0
+text = "Language"
 
 [node name="lobby" type="CanvasLayer" parent="."]
 visible = false
@@ -263,6 +328,17 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Start game"
 
+[node name="back" type="Button" parent="lobby"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 216.0
+offset_top = -88.0
+offset_right = 256.0
+offset_bottom = -48.0
+grow_vertical = 0
+icon = ExtResource("9_70i5f")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = -10
 
@@ -276,6 +352,10 @@ texture = ExtResource("3_con2f")
 [connection signal="button_down" from="mainMenu/menuOptions" to="MenuManager" method="_on_menu_options_button_down"]
 [connection signal="button_down" from="mainMenu/menuQuit" to="MenuManager" method="_on_menu_quit_button_down"]
 [connection signal="button_down" from="connectionCommon/genName" to="MenuManager" method="regenerate_name"]
+[connection signal="button_down" from="connectionCommon/back" to="MenuManager" method="_on_back_button_down"]
 [connection signal="button_down" from="connectionHost/host" to="MenuManager" method="_on_host_pressed"]
 [connection signal="button_down" from="connectionJoin/join" to="MenuManager" method="_on_join_pressed"]
+[connection signal="button_down" from="options/Panel/back" to="MenuManager" method="_on_back_button_down"]
+[connection signal="item_selected" from="options/Panel/MenuBar" to="MenuManager" method="_on_language_item_selected"]
 [connection signal="button_down" from="lobby/start" to="MenuManager" method="_host_start_game"]
+[connection signal="button_down" from="lobby/back" to="MenuManager" method="_on_back_button_down"]

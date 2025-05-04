@@ -1,4 +1,4 @@
-extends AnimatedSprite2D
+extends Node2D
 
 @export var explosion : PackedScene
 @export var speed : int = 1000
@@ -16,7 +16,7 @@ func init(_s: Vector2, _e: Vector2) -> void:
     time = G.distance(startPos, endPos) / speed
     z_index = 1000
 
-var exp : AnimatedSprite2D
+var _exp : AnimatedSprite2D
 
 func _process(delta: float) -> void:
     if time != 0:
@@ -29,13 +29,13 @@ func _process(delta: float) -> void:
                 await G.wait(10)
                 end()
                 return
-            exp = explosion.instantiate()
-            exp.global_position = endPos
-            get_tree().root.add_child(exp)
+            _exp = explosion.instantiate()
+            _exp.global_position = endPos
+            get_tree().root.add_child(_exp)
             G.explosion.play()
-            exp.z_index = 1000
-            exp.play()
-            exp.animation_finished.connect(end)
+            _exp.z_index = 1000
+            _exp.play()
+            _exp.animation_finished.connect(end)
             await G.wait(10)
             end()
             
@@ -44,7 +44,7 @@ func _process(delta: float) -> void:
             
 
 func end():
-    if exp:
-        exp.queue_free()
+    if _exp:
+        _exp.queue_free()
     queue_free()
         

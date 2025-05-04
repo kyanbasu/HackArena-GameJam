@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=71 format=4 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://d2aglbvarsf3x" path="res://prefabs/ui/ui_module.tscn" id="9_0tnpc"]
 [ext_resource type="PackedScene" uid="uid://bpw15hrocyjdr" path="res://prefabs/modules/hallway_L.tscn" id="10_oaba0"]
 [ext_resource type="Script" uid="uid://bqb4vgkqpjdtp" path="res://scripts/camera.gd" id="10_vtaks"]
+[ext_resource type="PackedScene" uid="uid://ykbnynlkyg4e" path="res://prefabs/modules/shields_A.tscn" id="11_rm0al"]
 [ext_resource type="Script" uid="uid://uwvudelkoifu" path="res://scripts/button.gd" id="12_ca42v"]
 [ext_resource type="PackedScene" uid="uid://cy1h7dfvyrqbx" path="res://prefabs/modules/engine_A.tscn" id="12_rysoc"]
 [ext_resource type="PackedScene" uid="uid://yqkvwn43lux7" path="res://prefabs/modules/hallway_A.tscn" id="13_264po"]
@@ -36,6 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://bsw0dysbarx6r" path="res://art/ui/Currency&Enerygy.ase" id="23_qouja"]
 [ext_resource type="Texture2D" uid="uid://buxps1k61ys32" path="res://art/ui/Attack_Icon.ase" id="24_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://bue4148u1i1d8" path="res://prefabs/ui/ui_action.tscn" id="26_bhx41"]
+[ext_resource type="FontFile" uid="uid://br34smjk34sss" path="res://art/Font/7SDFont.ttf" id="27_i4re6"]
 [ext_resource type="Script" uid="uid://cok2loaef32of" path="res://scripts/modules/shields_manager.gd" id="29_0sl42"]
 [ext_resource type="SpriteFrames" uid="uid://2gba66yi8fum" path="res://art/Shield1.ase" id="30_h3rex"]
 [ext_resource type="SpriteFrames" uid="uid://bv62dirulm831" path="res://art/Shield2.ase" id="31_fedci"]
@@ -43,12 +45,17 @@
 [ext_resource type="Script" uid="uid://bt1afsbp1i8pd" path="res://scripts/shop.gd" id="33_js0lu"]
 [ext_resource type="Texture2D" uid="uid://h4dco15es7ag" path="res://art/Shop/Back.ase" id="33_v2yb1"]
 [ext_resource type="PackedScene" uid="uid://ch577snv1wxjr" path="res://prefabs/ui/shop_item.tscn" id="35_twgab"]
+[ext_resource type="TileSet" uid="uid://35bqs2tncpcx" path="res://art/bg/Stars_tileset.tres" id="36_ms3bu"]
 [ext_resource type="Texture2D" uid="uid://b5m5dndrt57k" path="res://art/Shop/Inventory_Icon.ase" id="37_m4url"]
 [ext_resource type="Texture2D" uid="uid://cdm4tt6kf83m8" path="res://art/Shop/Shop_Icon.ase" id="38_8ool0"]
 [ext_resource type="Script" uid="uid://cp0kvrnssxu30" path="res://scripts/tutorial.gd" id="38_nepv3"]
 [ext_resource type="Texture2D" uid="uid://bon1wm5fqgkgp" path="res://art/ui/HP bar_enemy.ase" id="39_8qswn"]
 [ext_resource type="Texture2D" uid="uid://daystot1i02ay" path="res://art/ui/Viewarrow.ase" id="39_fedci"]
 [ext_resource type="Texture2D" uid="uid://hsr4wj2e4rru" path="res://art/Shop/Reapair.ase" id="39_pr1ej"]
+[ext_resource type="Texture2D" uid="uid://bsnmhgvivhymy" path="res://art/bg/Shop_planet.ase" id="41_q8j3a"]
+[ext_resource type="Script" uid="uid://bhdkiaqkrfx0b" path="res://scripts/ui/esc.gd" id="52_3hbvx"]
+[ext_resource type="Texture2D" uid="uid://cb8frygqqdv4f" path="res://art/Main menu/Button.ase" id="52_o8ni1"]
+[ext_resource type="Texture2D" uid="uid://fcocfntsfunl" path="res://art/Main menu/Exit.ase" id="53_3hbvx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
@@ -86,6 +93,11 @@ region_rect = Rect2(54, 0, 54, 21)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qnb83"]
 bg_color = Color(1, 1, 1, 0.321569)
 
+[sub_resource type="LabelSettings" id="LabelSettings_pf7vy"]
+font = ExtResource("27_i4re6")
+font_size = 8
+font_color = Color(0.760784, 0.827451, 0.407843, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_qouja"]
 font_size = 10
 
@@ -96,7 +108,7 @@ font_size = 10
 
 [node name="Node2D" type="Node2D"]
 
-[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "enemyShip", "builder", "map", "camera", "inventory", "actionPicker", "shop", "fightUI")]
+[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "enemyShip", "builder", "map", "camera", "inventory", "actionPicker", "shop", "turnCounter", "info", "fightUI")]
 process_mode = 3
 script = ExtResource("1_uwrxv")
 nextTurnBtn = NodePath("../ship/UI/UpperPanel/nextTurn")
@@ -115,6 +127,8 @@ actionIcons = Dictionary[int, Texture2D]({
 2: ExtResource("14_trtic"),
 3: ExtResource("14_trtic")
 })
+turnCounter = NodePath("../ship/UI/UpperPanel/turnCounter")
+info = NodePath("../ship/UI/CanvasLayer/info")
 fightUI = NodePath("../Fight")
 tableShop = Dictionary[PackedScene, int]({
 ExtResource("4_gxtfn"): 100,
@@ -123,7 +137,8 @@ ExtResource("13_264po"): 50,
 ExtResource("12_rysoc"): 80,
 ExtResource("8_05nbr"): 100,
 ExtResource("9_0sl42"): 200,
-ExtResource("10_oaba0"): 50
+ExtResource("10_oaba0"): 50,
+ExtResource("11_rm0al"): 150
 })
 tableShipInNeed = Array[PackedScene]([ExtResource("13_264po")])
 tableAbandonedStation = Array[PackedScene]([ExtResource("12_rysoc")])
@@ -160,14 +175,20 @@ script = ExtResource("6_kvpfn")
 [node name="UI" type="CanvasLayer" parent="ship"]
 layer = 2
 
-[node name="info" type="Label" parent="ship/UI"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -240.0
-offset_bottom = 39.0
-grow_horizontal = 0
-horizontal_alignment = 2
+[node name="CanvasLayer" type="CanvasLayer" parent="ship/UI"]
+layer = 10
+
+[node name="info" type="Label" parent="ship/UI/CanvasLayer"]
+z_index = 1000
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -194.0
+offset_top = 66.0
+offset_right = 195.0
+offset_bottom = 146.0
+grow_horizontal = 2
+horizontal_alignment = 1
 
 [node name="changeRenderingBtn" type="Button" parent="ship/UI"]
 process_mode = 3
@@ -245,10 +266,10 @@ offset_bottom = 28.0
 texture = ExtResource("19_sww3w")
 
 [node name="Label" type="Label" parent="ship/UI/inventory"]
-offset_left = 404.0
-offset_top = 42.0
-offset_right = 517.0
-offset_bottom = 61.0
+offset_left = 465.0
+offset_top = 2.0
+offset_right = 578.0
+offset_bottom = 21.0
 text = "INVENTORY"
 label_settings = SubResource("LabelSettings_gee14")
 
@@ -326,6 +347,15 @@ offset_bottom = 20.0
 texture = ExtResource("22_02fa5")
 stretch_mode = 2
 
+[node name="turnCounter" type="Label" parent="ship/UI/UpperPanel"]
+layout_mode = 0
+offset_left = 238.0
+offset_top = 7.0
+offset_right = 286.0
+offset_bottom = 24.0
+text = "00"
+label_settings = SubResource("LabelSettings_pf7vy")
+
 [node name="SystemsPanel" type="HBoxContainer" parent="ship/UI"]
 anchors_preset = 2
 anchor_top = 1.0
@@ -392,7 +422,7 @@ shields = [NodePath("1"), NodePath("2"), NodePath("3")]
 visible = false
 sprite_frames = ExtResource("30_h3rex")
 autoplay = "default"
-frame_progress = 0.828203
+frame_progress = 0.708851
 
 [node name="2" type="AnimatedSprite2D" parent="ship/shields"]
 visible = false
@@ -411,6 +441,11 @@ scroll_scale = Vector2(0.8, 0.8)
 [node name="Meteors" type="TileMapLayer" parent="globalBG"]
 z_index = -9
 tile_set = ExtResource("20_37s47")
+
+[node name="Stars" type="TileMapLayer" parent="globalBG"]
+z_index = -9
+tile_map_data = PackedByteArray("AAD0////AAABAAEAAAD3/wIAAAABAAEAAAD4/wMAAAABAAEAAAD6/wQAAAABAAEAAAD7/wQAAAABAAEAAAD8/wUAAAACAAEAAAAAAAcAAAABAAEAAAADAAkAAAABAAEAAAAKAAoAAAABAAEAAAATAAgAAAABAAEAAAAHAAEAAAABAAEAAAAGAAEAAAABAAEAAAD5//r/AAABAAEAAAD0//b/AAABAAEAAADx//T/AAABAAEAAADw//T/AAABAAEAAAD2//T/AAABAAEAAAD7//X/AAABAAEAAAD9//b/AAABAAEAAAD+//b/AAABAAEAAAD///b/AAABAAEAAAAHAPj/AAABAAEAAAASAPz/AAABAAEAAAAXAPj/AAABAAEAAAAOAPX/AAABAAEAAAAIAPP/AAABAAEAAAABAPL/AAABAAEAAAAAAPL/AAABAAEAAAD8//P/AAABAAEAAADl/wQAAAABAAEAAADw/woAAAABAAEAAAD7/w4AAAABAAIAAAD9/w8AAAABAAEAAAAAABAAAAABAAEAAAABABAAAAABAAEAAAAHABIAAAABAAEAAAAOABQAAAABAAEAAAARABYAAAABAAEAAAATABcAAAABAAEAAAAgABEAAAABAAAAAAAaAA8AAAABAAEAAAATAAsAAAABAAEAAAAQAAoAAAABAAEAAADy//j/AAABAAEAAADp//D/AAABAAEAAADo/+//AAABAAEAAADw/+r/AAABAAEAAADz/+v/AAABAAEAAAAAAPD/AAABAAEAAAABAPD/AAABAAEAAAAGAPL/AAABAAEAAAARAPX/AAABAAEAAAAXAPf/AAABAAEAAAAbAPn/AAABAAEAAAAfAPr/AAABAAEAAAAiAPv/AAABAAEAAAAkAPz/AAABAAEAAADf/wIAAAACAAEAAADl/wUAAAACAAEAAADm/wYAAAACAAEAAADp/wcAAAACAAEAAADw/wsAAAACAAEAAAD3/w8AAAACAAEAAAAAABMAAAACAAEAAAADABUAAAACAAEAAAD1/wAAAAACAAEAAAD8/wMAAAACAAEAAAAEAAcAAAACAAEAAAAFAAcAAAACAAEAAAAHAAgAAAACAAEAAAAPAAwAAAACAAEAAAD3//P/AAACAAEAAAD8//f/AAACAAEAAAADAPv/AAACAAEAAAAFAPz/AAACAAEAAAAIAP3/AAACAAEAAAAYAAQAAAACAAEAAAAZAAQAAAACAAEAAAAWAO//AAACAAEAAAATAO//AAACAAEAAAAQAPL/AAACAAEAAAAPAPP/AAACAAEAAAANAPb/AAACAAEAAAAMAPf/AAACAAEAAAAMAPj/AAACAAEAAAAIAPz/AAACAAEAAAD9/wQAAAACAAEAAAD6/wcAAAACAAEAAAD5/wcAAAACAAEAAAD3/wkAAAACAAEAAAAfAAMAAAACAAIAAAAbAAYAAAACAAIAAAATABQAAAACAAIAAADw//P/AAACAAIAAADy//b/AAACAAIAAADz//f/AAACAAIAAAD3//3/AAACAAIAAAAFAAwAAAACAAIAAAAIAA8AAAACAAIAAAANABIAAAACAAIAAAALAPf/AAACAAIAAAANAPn/AAACAAIAAAARAPz/AAACAAIAAADt//j/AAABAAEAAADy//7/AAABAAEAAAD2/wMAAAABAAEAAAABAA4AAAABAAEAAAD+/+//AAABAAEAAAADAPX/AAABAAEAAAAEAPb/AAABAAEAAAAPAAMAAAABAAEAAAARAAYAAAABAAEAAAARAAcAAAABAAEAAAAUAAoAAAABAAEAAAATAO7/AAABAAEAAAAdAPf/AAABAAEAAAAlAAMAAAABAAEAAAAmAAUAAAABAAEAAAAmAAYAAAABAAEAAAAmAAcAAAABAAEAAADY/wYAAAABAAAAAADZ/wcAAAABAAAAAADz/xcAAAABAAAAAAD4/xoAAAABAAAAAAACAB8AAAABAAAAAAAIACAAAAABAAAAAAAJACEAAAABAAAAAAALACEAAAABAAAAAAAOACMAAAABAAAAAADj//H/AAABAAAAAADm//P/AAABAAAAAADs//b/AAABAAAAAADu//f/AAABAAAAAADz//n/AAABAAAAAAD4//z/AAABAAAAAAD+////AAABAAAAAAADAAIAAAABAAAAAAAEAAMAAAABAAAAAAAMAAcAAAABAAAAAAAWAA0AAAABAAAAAAAfABEAAAABAAAAAAD2/+b/AAABAAAAAAAAAOn/AAABAAAAAAACAOr/AAABAAAAAAAKAO7/AAABAAAAAAAMAO//AAABAAAAAAAPAPD/AAABAAAAAAASAPH/AAABAAAAAAAcAPT/AAABAAAAAAAsAPv/AAABAAAAAAAzAP//AAABAAAAAAA0AP//AAABAAAAAAA6AAEAAAABAAAAAAA8AAIAAAABAAAAAADX//r/AAABAAIAAADd//7/AAABAAIAAADl/wMAAAABAAIAAADr/wYAAAABAAIAAADw/wgAAAABAAIAAADx/wkAAAABAAIAAAAFABMAAAABAAIAAAAGABMAAAABAAIAAAARABgAAAABAAIAAAAVABgAAAABAAIAAADo/+r/AAABAAIAAADq/+v/AAABAAIAAADr/+3/AAABAAIAAADy//P/AAABAAIAAADz//P/AAABAAIAAAD1//X/AAABAAIAAAD6//j/AAABAAIAAAD7//n/AAABAAIAAAD///z/AAABAAIAAAACAP7/AAABAAIAAAANAAYAAAABAAIAAAAQAAcAAAABAAIAAAAaAA4AAAABAAIAAAAcAA8AAAABAAIAAAAYAPL/AAABAAIAAAAdAPj/AAABAAIAAAAiAPz/AAABAAIAAAAlAP//AAABAAIAAAA=")
+tile_set = ExtResource("36_ms3bu")
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("subViewport")]
 position = Vector2(64, 0)
@@ -449,6 +484,7 @@ planet = ExtResource("14_ir15t")
 gameNetworkManager = NodePath("../GameNetworkManager")
 meteorsTilemap = NodePath("../globalBG/Meteors")
 enemyMeteorsTilemap = NodePath("../Fight/SubViewportContainer/SubViewport/SubViewportTarget/globalBG/Meteors")
+shopPlanetTex = ExtResource("41_q8j3a")
 
 [node name="Fight" type="CanvasLayer" parent="."]
 process_mode = 4
@@ -488,8 +524,9 @@ extensionIndicator = NodePath("../Control/TextureRect")
 [node name="SubViewportTarget" type="Node2D" parent="Fight/SubViewportContainer/SubViewport"]
 position = Vector2(8192, 0)
 
-[node name="enemyShip" type="Node2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget"]
+[node name="enemyShip" type="Node2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget" node_paths=PackedStringArray("healthBar")]
 script = ExtResource("23_bt5mj")
+healthBar = NodePath("../../../../enemyHealthBar/healthBarEnemy/healthBar")
 targetSelectionTex = ExtResource("24_e1j6l")
 
 [node name="shields" type="Node2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget" node_paths=PackedStringArray("shields")]
@@ -536,6 +573,7 @@ texture = ExtResource("39_8qswn")
 
 [node name="healthBar" type="TextureProgressBar" parent="Fight/enemyHealthBar/healthBarEnemy"]
 z_index = 10
+layout_mode = 0
 offset_left = 17.0
 offset_top = 7.0
 offset_right = 209.0
@@ -674,16 +712,44 @@ horizontal_alignment = 2
 
 [node name="Label" type="Label" parent="Shop/Panel"]
 layout_mode = 1
-offset_left = 20.0
-offset_top = 42.0
-offset_right = 133.0
-offset_bottom = 61.0
+offset_left = 81.0
+offset_top = 2.0
+offset_right = 194.0
+offset_bottom = 21.0
 text = "SHOP"
 label_settings = SubResource("LabelSettings_gee14")
 
 [node name="tutorial" type="CanvasLayer" parent="."]
 visible = false
 script = ExtResource("38_nepv3")
+
+[node name="esc" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("52_3hbvx")
+
+[node name="quit" type="Button" parent="esc"]
+offset_left = 263.0
+offset_top = 224.0
+offset_right = 399.0
+offset_bottom = 264.0
+icon = ExtResource("52_o8ni1")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="esc/quit"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -7.0
+offset_right = 19.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("53_3hbvx")
+stretch_mode = 3
 
 [connection signal="button_down" from="ship/UI/changeRenderingBtn" to="ship/UI/changeRenderingBtn" method="_on_button_down"]
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]
@@ -696,3 +762,4 @@ script = ExtResource("38_nepv3")
 [connection signal="button_down" from="Shop/Panel/inventoryBtn" to="Shop" method="_on_inventory_btn_button_down"]
 [connection signal="button_down" from="Shop/Panel/shopBtn" to="Shop" method="_on_shop_btn_button_down"]
 [connection signal="button_down" from="Shop/Panel/repairBtn" to="Shop" method="_on_repair_btn_button_down"]
+[connection signal="button_down" from="esc/quit" to="GameNetworkManager" method="_on_quit_button_down"]

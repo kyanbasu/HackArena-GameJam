@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=3 uid="uid://ykbnynlkyg4e"]
+
+[ext_resource type="Script" uid="uid://chf6gf16v432" path="res://scripts/modules/module.gd" id="1_ixsu5"]
+[ext_resource type="Texture2D" uid="uid://f58coj4mbc2q" path="res://art/modules/Shields_1x2_Back.ase" id="2_0utjt"]
+[ext_resource type="Texture2D" uid="uid://dq1fwmojgjaiv" path="res://art/modules/Floor_1x2.ase" id="3_0utjt"]
+[ext_resource type="Texture2D" uid="uid://c0puf71b2mdsm" path="res://art/modules/Shields_1x2_Inside.ase" id="4_i7kpb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0u6mf"]
+atlas = ExtResource("3_0utjt")
+region = Rect2(32, 0, 32, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ymerc"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xd5mi"]
+size = Vector2(32, 32)
+
+[node name="shields_A" type="Node2D"]
+script = ExtResource("1_ixsu5")
+moduleType = 3
+tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(-1, 0)])
+maxHealth = 10
+maxEnergy = 2
+batteryOffset = Vector2i(-1, 0)
+
+[node name="Shields1x2Back" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(-16, 0)
+texture = ExtResource("2_0utjt")
+
+[node name="floor" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(-16, 0)
+rotation = 1.5708
+texture = SubResource("AtlasTexture_0u6mf")
+
+[node name="Shields1x2Inside" type="Sprite2D" parent="."]
+position = Vector2(-16, 0)
+texture = ExtResource("4_i7kpb")
+
+[node name="boundingBox" type="StaticBody2D" parent="."]
+collision_layer = 128
+collision_mask = 128
+input_pickable = true
+
+[node name="0,0" type="CollisionShape2D" parent="boundingBox"]
+shape = SubResource("RectangleShape2D_ymerc")
+
+[node name="-1,0" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(-32, 0)
+shape = SubResource("RectangleShape2D_xd5mi")
+
+[connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]
+[connection signal="mouse_exited" from="boundingBox" to="." method="_mouse_exited"]

@@ -70,7 +70,7 @@ down={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://localization/languages.en.translation")
+locale/translations=PackedStringArray("res://localization/languages.en.translation", "res://localization/languages.pl.translation", "res://localization/languages.ru.translation")
 
 [layer_names]
 

@@ -105,6 +105,8 @@ func dist_to_closest_planet(pos: Vector2, index: int) -> float:
             minimum = d
     return minimum
 
+@export var shopPlanetTex : Texture2D
+
 @rpc("authority", "call_local", "reliable")
 func sync_planets(_planets : Dictionary):
     var rng = RandomNumberGenerator.new()
@@ -112,7 +114,10 @@ func sync_planets(_planets : Dictionary):
     planets = _planets
     for i in planets.keys():
         planetNodes[i].position = planets[i].planet.position - planetNodes[i].size/2
-        planetNodes[i].get_node("texture").get("texture").region = Rect2(32*rng.randi_range(0,3),0,32,32)
+        if i == 14:
+            planetNodes[i].get_node("texture").set("texture", shopPlanetTex)
+        else:
+            planetNodes[i].get_node("texture").get("texture").region = Rect2(32*rng.randi_range(0,3),0,32,32)
     queue_redraw()
 
 func _draw() -> void:

@@ -22,11 +22,12 @@ var _seed : int = 0
 var target_bg_pitch : float = 1
 
 func _ready() -> void:
+    TranslationServer.set_locale("en")
     defaultCursor = load("res://art/ui/Cursor.ase")
     targetingCursor = load("res://art/ui/Attack_Icon.ase")
     
     if Array(OS.get_cmdline_args()).has("editor"): return
-    get_tree().root.mode = Window.MODE_MAXIMIZED
+    get_tree().root.mode = Window.MODE_EXCLUSIVE_FULLSCREEN
 
 func _process(delta: float) -> void:
     if target_bg_pitch != music.pitch_scale:
