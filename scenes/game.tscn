@@ -1,8 +1,9 @@
-[gd_scene load_steps=44 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=49 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
 [ext_resource type="Script" uid="uid://w204yqawbut1" path="res://scripts/modules/builder.gd" id="2_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://sgdtfnbxiviu" path="res://prefabs/modules/weapon_A.tscn" id="4_gxtfn"]
 [ext_resource type="Script" uid="uid://bcq4ly521oa7u" path="res://scripts/placement_grid_draw.gd" id="4_lbhrr"]
 [ext_resource type="Texture2D" uid="uid://b6f8ru7gycbdv" path="res://art/bg/placement.png" id="6_gee14"]
 [ext_resource type="Script" uid="uid://bnl012y507g0m" path="res://scripts/space_grid_draw.gd" id="6_kvpfn"]
@@ -32,6 +33,9 @@
 [ext_resource type="Texture2D" uid="uid://bsw0dysbarx6r" path="res://art/ui/Currency&Enerygy.ase" id="23_qouja"]
 [ext_resource type="Texture2D" uid="uid://buxps1k61ys32" path="res://art/ui/Attack_Icon.ase" id="24_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://bue4148u1i1d8" path="res://prefabs/ui/ui_action.tscn" id="26_bhx41"]
+[ext_resource type="Script" uid="uid://bt1afsbp1i8pd" path="res://scripts/shop.gd" id="33_js0lu"]
+[ext_resource type="Texture2D" uid="uid://h4dco15es7ag" path="res://art/Shop/Back.ase" id="33_v2yb1"]
+[ext_resource type="PackedScene" uid="uid://ch577snv1wxjr" path="res://prefabs/ui/shop_item.tscn" id="35_twgab"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
@@ -67,9 +71,12 @@ font_size = 12
 
 [sub_resource type="LabelSettings" id="LabelSettings_bhx41"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_js0lu"]
+texture = ExtResource("33_v2yb1")
+
 [node name="Node2D" type="Node2D"]
 
-[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "enemyShip", "builder", "map", "camera", "inventory", "actionPicker", "fightUI")]
+[node name="GameNetworkManager" type="Node2D" parent="." node_paths=PackedStringArray("nextTurnBtn", "ship", "enemyShip", "builder", "map", "camera", "inventory", "actionPicker", "shop", "fightUI")]
 process_mode = 3
 script = ExtResource("1_uwrxv")
 nextTurnBtn = NodePath("../ship/UI/UpperPanel/nextTurn")
@@ -80,6 +87,7 @@ map = NodePath("../Map")
 camera = NodePath("../Camera2D")
 inventory = NodePath("../ship/UI/inventory")
 actionPicker = NodePath("../ActionPicker")
+shop = NodePath("../Shop")
 actionControl = ExtResource("26_bhx41")
 actionIcons = Dictionary[int, Texture2D]({
 0: ExtResource("14_trtic"),
@@ -88,7 +96,12 @@ actionIcons = Dictionary[int, Texture2D]({
 3: ExtResource("14_trtic")
 })
 fightUI = NodePath("../Fight")
-tableShop = Array[PackedScene]([ExtResource("14_1kice"), ExtResource("13_264po"), ExtResource("12_rysoc")])
+tableShop = Dictionary[PackedScene, int]({
+ExtResource("4_gxtfn"): 100,
+ExtResource("14_1kice"): 40,
+ExtResource("13_264po"): 50,
+ExtResource("12_rysoc"): 80
+})
 tableShipInNeed = Array[PackedScene]([ExtResource("13_264po")])
 tableAbandonedStation = Array[PackedScene]([ExtResource("12_rysoc")])
 
@@ -487,6 +500,37 @@ grow_vertical = 2
 label_settings = SubResource("LabelSettings_bhx41")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Shop" type="CanvasLayer" parent="." node_paths=PackedStringArray("inventory", "container")]
+script = ExtResource("33_js0lu")
+inventory = NodePath("../ship/UI/inventory")
+container = NodePath("Panel/ScrollContainer/VBoxContainer")
+shopItem = ExtResource("35_twgab")
+
+[node name="Panel" type="Panel" parent="Shop"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -224.0
+offset_top = -144.0
+offset_bottom = 144.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_js0lu")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Shop/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Shop/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [connection signal="button_down" from="ship/UI/changeRenderingBtn" to="ship/UI/changeRenderingBtn" method="_on_button_down"]
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]

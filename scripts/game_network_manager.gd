@@ -43,6 +43,7 @@ var fightingPlayers : Dictionary = {}
 @export var camera : Camera
 @export var inventory : Inventory
 @export var actionPicker : CanvasLayer
+@export var shop : CanvasLayer
 @export var actionControl : PackedScene # action instance to spawn
 @export var actionIcons : Dictionary[Action, Texture2D] = {}
 
@@ -149,8 +150,8 @@ func player_ready(readiness: bool=true):
                 generate_meteors_bg.rpc(randi_range(-1000,1000))
                 for i in Lobby.players.keys():
                     # Starting Planet
-                    var planet = randi_range(0, map.planetCount-1)
-                    #var planet = 2
+                    #var planet = randi_range(0, map.planetCount-1)
+                    var planet = shopPlanet
                     host_called_end_turn.rpc_id(i, gameState, {"planet": planet})
                     Lobby.players[i].planet = planet
             else:
@@ -215,6 +216,8 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
             gameState = GameState.ACTION
         
         GameState.ACTION:
+            shop.visible = false
+            shop.process_mode = Node.PROCESS_MODE_DISABLED
             fightUI.visible = false
             fightUI.process_mode = Node.PROCESS_MODE_DISABLED
             actionPicker.visible = false
@@ -274,13 +277,14 @@ func process_and_send_action(action: Action):
         var _data = {}
         match action:
             Action.SHOP:
-                _data.items = {}
-                for i in range(randi_range(4,7)):
-                    var item = tableShop.pick_random().resource_path
-                    if !_data.items.has(item):
-                        _data.items[item] = 1
+                _data.shop_items = {}
+                for i in range(randi_range(4,8)):
+                    var item = tableShop.keys().pick_random()
+                    if !_data.shop_items.has(item.resource_path):
+                        _data.shop_items[item.resource_path] = {"price": tableShop[item]}
+                        _data.shop_items[item.resource_path].amount = 1
                     else:
-                        _data.items[item] += 1
+                        _data.shop_items[item.resource_path].amount += 1
             
             Action.MINING:
                 _data.material = randi_range(20, 60)
@@ -296,9 +300,6 @@ func get_random_event_data() -> Dictionary:
         "pirate", "asteroid", "solar_flare", # negative
         "abandoned_ship", "abandoned_station", "quarry", "ship_in_need" # positive
     ].pick_random()
-    
-    #todo remove
-    encounter = "pirate"
     
     _data.name = encounter
     match encounter:
@@ -438,7 +439,7 @@ func pick_action(action: Action):
 # More precise information about picked action, like items in the shop
 @rpc("authority", "call_local", "reliable")
 func send_action_data(_data: Dictionary):
-    #print(_data)
+    print(_data)
     # Random encounters
     if _data.has("random"):
         actionPicker.get_node("TitlePanel/title").text = tr("RANDOM." + _data.name.to_upper())
@@ -496,6 +497,13 @@ func send_action_data(_data: Dictionary):
         #act.get_node("desc").text = tr("_DESC")
         #act.get_node("icon").texture = actionIcons[a]
         actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
+    
+    # Shop
+    if _data.has("shop_items"):
+        actionPicker.visible = false
+        shop.visible = true
+        shop.process_mode = Node.PROCESS_MODE_INHERIT
+        shop.set_items(_data.shop_items)
 
 # called locally
 func pirate_after_decision(accepted: bool, reward=0):
@@ -516,7 +524,7 @@ func pirate_after_decision(accepted: bool, reward=0):
 func damage_random_part():
     var m = ship.modules.values().pick_random().part as ShipModule
     ship.damage(randi_range(3,10), Vector2i(m.global_position-Vector2(16,16)))
-    var modules = inventory.get_name_from_file(m.get_meta("packed_scene"))
+    var modules = Inventory.get_name_from_file(m.get_meta("packed_scene"))
     var act = actionControl.instantiate() as Button
     act.get_node("title").text = tr("PART_DAMAGED") % modules
     #act.get_node("desc").text = tr("_DESC")
@@ -538,6 +546,6 @@ func toggle_next_turn_btn(enable: bool):
 
 ### Loot tables etc.
 
-@export var tableShop : Array[PackedScene]
+@export var tableShop : Dictionary[PackedScene, int]
 @export var tableShipInNeed : Array[PackedScene]
 @export var tableAbandonedStation : Array[PackedScene]

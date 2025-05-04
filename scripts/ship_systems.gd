@@ -50,7 +50,7 @@ func damage(amount: int, _position: Vector2i):
         
         # Chance for dodging
         var chance = log(engines+1) / log(100)
-        print("change to dodge ", chance)
+        #print("change to dodge ", chance)
         if chance > randf():
             return
         
