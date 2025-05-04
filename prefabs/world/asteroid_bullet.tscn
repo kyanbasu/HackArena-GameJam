@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3 uid="uid://5ipwyfnvhbpn"]
+
+[ext_resource type="Texture2D" uid="uid://dwj5viuooekp1" path="res://art/godot_tres/bg/planets.tres" id="1_1h3s0"]
+[ext_resource type="Script" uid="uid://wraw84o351cg" path="res://scripts/bullet.gd" id="2_p24o4"]
+[ext_resource type="PackedScene" uid="uid://uv752n52boi6" path="res://prefabs/world/explosion.tscn" id="3_437hh"]
+
+[node name="bullet" type="Sprite2D"]
+texture = ExtResource("1_1h3s0")
+script = ExtResource("2_p24o4")
+explosion = ExtResource("3_437hh")

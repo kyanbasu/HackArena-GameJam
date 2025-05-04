@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://uv752n52boi6"]
+
+[ext_resource type="SpriteFrames" uid="uid://e5r8ssd5n1a" path="res://art/Explosion.ase" id="1_6hmpk"]
+
+[node name="explosion" type="AnimatedSprite2D"]
+sprite_frames = ExtResource("1_6hmpk")

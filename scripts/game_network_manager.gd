@@ -90,6 +90,7 @@ func _ready():
     actionPicker.visible = false
     actionPicker.process_mode = Node.PROCESS_MODE_DISABLED
     fightUI.visible = false
+    fightUI.get_node("enemyHealthBar").visible = false
     builder.active = false
     if Lobby.players.size() == 0:
         Lobby.players[0] = {"name": "Player"}
@@ -132,7 +133,9 @@ func next_turn():
         for w in ship.modules.values():
             if w.part.moduleType == ShipModule.ModuleType.WEAPON and w.part.target != Vector2i.MAX:
                 damages[w.part.target] = w.part.damage * w.part.energy
+                ship.shoot_weapon(w.part)
         _data.damages = damages
+        _data.ship = {"shields": ship.shields, "health": ship.max_health - ship.total_damage}
         send_data_to_enemy.rpc_id(playerFighting, _data)
         isMyFightingTurn = false
     else:
@@ -222,6 +225,7 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
             inventory.visible = false
             shop.process_mode = Node.PROCESS_MODE_DISABLED
             fightUI.visible = false
+            fightUI.get_node("enemyHealthBar").visible = false
             fightUI.process_mode = Node.PROCESS_MODE_DISABLED
             actionPicker.visible = false
             actionPicker.process_mode = Node.PROCESS_MODE_DISABLED
@@ -408,7 +412,11 @@ func send_data_to_enemy(_data: Dictionary):
     
     if _data.has("damages"):
         for d in _data.damages.keys():
-            ship.damage(_data.damages[d], d)
+            ship.damage(_data.damages[d], d, "res://prefabs/world/bullet.tscn")
+    
+    if _data.has("ship"):
+        enemyShip.health = _data.ship.health
+        enemyShip.shields = _data.ship.shields
     
     ship.reset_weapons()
     
@@ -471,9 +479,10 @@ func send_action_data(_data: Dictionary):
                 actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
                 act.button_down.connect(pirate_after_decision.bind(false))
             "asteroid":
-                damage_random_part()
+                damage_random_part("res://prefabs/world/asteroid_bullet.tscn")
             "solar_flare":
                 damage_random_part()
+                # maybe play some sound idk
         
         if _data.name != "pirate":
             canNextTurn = true
@@ -481,6 +490,7 @@ func send_action_data(_data: Dictionary):
     else:
         if playerFighting:
             fightUI.visible = true
+            fightUI.get_node("enemyHealthBar").visible = true
             fightUI.process_mode = Node.PROCESS_MODE_INHERIT
             actionPicker.visible = false
             return
@@ -528,11 +538,11 @@ func pirate_after_decision(accepted: bool, reward=0):
         #act.get_node("icon").texture = actionIcons[a]
         actionPicker.get_node("ActionsPanel").get_child(0).add_child(act)
     else:
-        damage_random_part()
+        damage_random_part("res://prefabs/world/bullet.tscn")
 
-func damage_random_part():
+func damage_random_part(bullet: String = ""):
     var m = ship.modules.values().pick_random().part as ShipModule
-    var did_damage_part = ship.damage(randi_range(3,10), Vector2i(m.global_position-Vector2(16,16)))
+    var did_damage_part = ship.damage(randi_range(3,10), Vector2i(m.global_position-Vector2(16,16)), bullet)
     var modules = Inventory.get_name_from_file(m.get_meta("packed_scene"))
     var act = actionControl.instantiate() as Button
     if did_damage_part:

@@ -1,15 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://bf77y0m31uitl"]
+[gd_scene load_steps=10 format=3 uid="uid://bf77y0m31uitl"]
 
 [ext_resource type="Script" uid="uid://bthsyk4xdf6xl" path="res://scripts/ui/menu_manager.gd" id="1_yqeox"]
 [ext_resource type="PackedScene" uid="uid://vm08dmxa78b" path="res://scenes/game.tscn" id="2_vjb58"]
+[ext_resource type="Texture2D" uid="uid://cb8frygqqdv4f" path="res://art/Main menu/Button.ase" id="3_13sgg"]
 [ext_resource type="Texture2D" uid="uid://tu26lhp8r3rb" path="res://art/Mainmenu.ase" id="3_con2f"]
+[ext_resource type="Texture2D" uid="uid://tynqinfykosk" path="res://art/Main menu/Dice Icon.ase" id="3_i6lef"]
+[ext_resource type="Texture2D" uid="uid://m48slxvgx7aj" path="res://art/Main menu/Host.ase" id="4_i6lef"]
+[ext_resource type="Texture2D" uid="uid://d3l1pg6fqksfx" path="res://art/Main menu/Join.ase" id="5_70i5f"]
+[ext_resource type="Texture2D" uid="uid://ci6wonqh0bavw" path="res://art/Main menu/Options.ase" id="6_mj5lg"]
+[ext_resource type="Texture2D" uid="uid://fcocfntsfunl" path="res://art/Main menu/Exit.ase" id="7_ufwb2"]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="MenuManager" type="Node" parent="." node_paths=PackedStringArray("connectionMenu", "lobbyMenu")]
+[node name="MenuManager" type="Node" parent="."]
 script = ExtResource("1_yqeox")
-connectionMenu = NodePath("../ConnectionMenu")
-lobbyMenu = NodePath("../Lobby")
 gameScene = ExtResource("2_vjb58")
 
 [node name="playerList" type="Label" parent="MenuManager"]
@@ -17,139 +21,235 @@ anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -89.0
-offset_top = 6.0
+offset_top = 80.0
 offset_right = -9.0
-offset_bottom = 29.0
+offset_bottom = 103.0
 grow_horizontal = 0
-text = "Player List"
 horizontal_alignment = 2
 
-[node name="ConnectionMenu" type="CanvasLayer" parent="."]
+[node name="mainMenu" type="CanvasLayer" parent="."]
 
-[node name="name" type="TextEdit" parent="ConnectionMenu"]
+[node name="menuHost" type="Button" parent="mainMenu"]
+offset_left = 60.0
+offset_top = 60.0
+offset_right = 196.0
+offset_bottom = 100.0
+icon = ExtResource("3_13sgg")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="mainMenu/menuHost"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -7.0
+offset_right = 19.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_i6lef")
+stretch_mode = 3
+
+[node name="menuJoin" type="Button" parent="mainMenu"]
+offset_left = 60.0
+offset_top = 124.0
+offset_right = 196.0
+offset_bottom = 164.0
+icon = ExtResource("3_13sgg")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="mainMenu/menuJoin"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -7.0
+offset_right = 19.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_70i5f")
+stretch_mode = 3
+
+[node name="menuOptions" type="Button" parent="mainMenu"]
+offset_left = 60.0
+offset_top = 220.0
+offset_right = 196.0
+offset_bottom = 260.0
+icon = ExtResource("3_13sgg")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="mainMenu/menuOptions"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -7.0
+offset_right = 19.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_mj5lg")
+stretch_mode = 3
+
+[node name="menuQuit" type="Button" parent="mainMenu"]
+offset_left = 60.0
+offset_top = 284.0
+offset_right = 196.0
+offset_bottom = 324.0
+icon = ExtResource("3_13sgg")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="mainMenu/menuQuit"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -7.0
+offset_right = 19.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_ufwb2")
+stretch_mode = 3
+
+[node name="connectionCommon" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="name" type="TextEdit" parent="connectionCommon"]
 custom_minimum_size = Vector2(260, 40)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -50.0
-offset_top = 45.0
-offset_right = 210.0
-offset_bottom = 85.0
+offset_left = -104.0
+offset_top = -12.0
+offset_right = 156.0
+offset_bottom = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "Player name"
 scroll_fit_content_height = true
 
-[node name="ip" type="TextEdit" parent="ConnectionMenu"]
-custom_minimum_size = Vector2(200, 40)
+[node name="genName" type="Button" parent="connectionCommon"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = 116.0
-offset_right = 180.0
-offset_bottom = 156.0
+offset_left = 165.0
+offset_top = -5.0
+offset_right = 183.0
+offset_bottom = 19.0
 grow_horizontal = 2
 grow_vertical = 2
-placeholder_text = "IP address"
-scroll_fit_content_height = true
-scroll_fit_content_width = true
+icon = ExtResource("3_i6lef")
 
-[node name="port" type="TextEdit" parent="ConnectionMenu"]
+[node name="port" type="TextEdit" parent="connectionCommon"]
 custom_minimum_size = Vector2(100, 40)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 194.0
-offset_top = 116.0
-offset_right = 294.0
-offset_bottom = 156.0
+offset_left = 104.0
+offset_top = 36.0
+offset_right = 204.0
+offset_bottom = 76.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "port"
 scroll_fit_content_height = true
 scroll_fit_content_width = true
 
-[node name="host" type="Button" parent="ConnectionMenu"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -23.0
-offset_top = -1.0
-offset_right = 30.0
-offset_bottom = 30.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Host"
-
-[node name="genName" type="Button" parent="ConnectionMenu"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 216.0
-offset_top = 50.0
-offset_right = 269.0
-offset_bottom = 81.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "roll"
-
-[node name="connect" type="Button" parent="ConnectionMenu"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 125.0
-offset_top = -12.0
-offset_right = 197.0
-offset_bottom = 19.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Connect"
-
-[node name="menuHost" type="Button" parent="ConnectionMenu"]
-offset_left = 64.0
-offset_top = 64.0
-offset_right = 192.0
-offset_bottom = 94.0
-flat = true
-
-[node name="menuJoin" type="Button" parent="ConnectionMenu"]
-offset_left = 64.0
-offset_top = 129.0
-offset_right = 192.0
-offset_bottom = 159.0
-flat = true
-
-[node name="menuOptions" type="Button" parent="ConnectionMenu"]
-offset_left = 64.0
-offset_top = 225.0
-offset_right = 192.0
-offset_bottom = 255.0
-flat = true
-
-[node name="menuQuit" type="Button" parent="ConnectionMenu"]
-offset_left = 64.0
-offset_top = 289.0
-offset_right = 192.0
-offset_bottom = 319.0
-flat = true
-
-[node name="Lobby" type="CanvasLayer" parent="."]
+[node name="connectionHost" type="CanvasLayer" parent="."]
 visible = false
 
-[node name="start" type="Button" parent="Lobby"]
+[node name="host" type="Button" parent="connectionHost"]
+offset_left = 400.0
+offset_top = 272.0
+offset_right = 536.0
+offset_bottom = 312.0
+icon = ExtResource("3_13sgg")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="connectionHost/host"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -7.0
+offset_right = 19.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_i6lef")
+stretch_mode = 3
+
+[node name="connectionJoin" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="join" type="Button" parent="connectionJoin"]
+offset_left = 400.0
+offset_top = 272.0
+offset_right = 536.0
+offset_bottom = 312.0
+icon = ExtResource("3_13sgg")
+flat = true
+
+[node name="TextureRect" type="TextureRect" parent="connectionJoin/join"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.0
+offset_top = -7.0
+offset_right = 19.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_70i5f")
+stretch_mode = 3
+
+[node name="ip" type="TextEdit" parent="connectionJoin"]
+custom_minimum_size = Vector2(200, 40)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -104.0
+offset_top = 36.0
+offset_right = 96.0
+offset_bottom = 76.0
+grow_horizontal = 2
+grow_vertical = 2
+placeholder_text = "IP address"
+scroll_fit_content_height = true
+scroll_fit_content_width = true
+
+[node name="lobby" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="start" type="Button" parent="lobby"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -171,7 +271,11 @@ offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("3_con2f")
 
-[connection signal="button_down" from="ConnectionMenu/host" to="MenuManager" method="_on_host_pressed"]
-[connection signal="button_down" from="ConnectionMenu/genName" to="MenuManager" method="regenerate_name"]
-[connection signal="button_down" from="ConnectionMenu/connect" to="MenuManager" method="_on_join_pressed"]
-[connection signal="button_down" from="Lobby/start" to="MenuManager" method="_host_start_game"]
+[connection signal="button_down" from="mainMenu/menuHost" to="MenuManager" method="_on_menu_host_button_down"]
+[connection signal="button_down" from="mainMenu/menuJoin" to="MenuManager" method="_on_menu_join_button_down"]
+[connection signal="button_down" from="mainMenu/menuOptions" to="MenuManager" method="_on_menu_options_button_down"]
+[connection signal="button_down" from="mainMenu/menuQuit" to="MenuManager" method="_on_menu_quit_button_down"]
+[connection signal="button_down" from="connectionCommon/genName" to="MenuManager" method="regenerate_name"]
+[connection signal="button_down" from="connectionHost/host" to="MenuManager" method="_on_host_pressed"]
+[connection signal="button_down" from="connectionJoin/join" to="MenuManager" method="_on_join_pressed"]
+[connection signal="button_down" from="lobby/start" to="MenuManager" method="_host_start_game"]

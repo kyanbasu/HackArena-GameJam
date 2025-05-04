@@ -45,7 +45,7 @@ func _ready() -> void:
     targetZoom = camera.zoom.x
     targetSize = COLLAPSED_SIZE
     subViewportContainer.size = targetSize
-    extensionIndicator.position = Vector2(targetSize.x, targetSize.y/2) - extensionIndicator.size/2
+    extensionIndicator.position = Vector2(targetSize.x, targetSize.y/2) - Vector2(0, extensionIndicator.size.y/2)
 
 
 func _on_sub_viewport_container_gui_input(event: InputEvent) -> void:
@@ -91,7 +91,7 @@ func _process(delta):
     if smoothSize != targetSize:
         size = Vector2i(smoothSize)
         subViewportContainer.size = size
-        extensionIndicator.position = Vector2(0, smoothSize.y/2) - extensionIndicator.size/2
+        extensionIndicator.position = Vector2(0, smoothSize.y/2) - Vector2(0, extensionIndicator.size.y/2)
         subViewportContainer.position.x = 640 - smoothSize.x
     
         
@@ -101,12 +101,12 @@ func _on_mouse_entered() -> void:
     isMouseOver = true
     #size.x = int(get_tree().root.get_viewport().size.x * 0.8)
     targetSize = EXTENDED_SIZE
-    extensionIndicator.flip_v = true
+    extensionIndicator.flip_h = true
 
 
 func _on_mouse_exited() -> void:
     isMouseOver = false
     targetSize = COLLAPSED_SIZE
-    extensionIndicator.flip_v = false
+    extensionIndicator.flip_h = false
     #print(get_tree().root.get_viewport().size)
     #size.x = int(get_tree().root.get_viewport().size.x * 0.05)

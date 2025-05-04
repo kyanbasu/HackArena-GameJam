@@ -1,13 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://sgdtfnbxiviu"]
+[gd_scene load_steps=9 format=3 uid="uid://sgdtfnbxiviu"]
 
 [ext_resource type="Script" uid="uid://dpxf7jlldgvka" path="res://scripts/modules/weapon.gd" id="1_olytr"]
+[ext_resource type="PackedScene" uid="uid://diw48vgp0ucm3" path="res://prefabs/world/bullet.tscn" id="2_5e27v"]
 [ext_resource type="Texture2D" uid="uid://dq1fwmojgjaiv" path="res://art/modules/Floor_1x2.ase" id="2_fw55f"]
 [ext_resource type="Texture2D" uid="uid://drca3v8tcne20" path="res://art/modules/Weapon_1x2_Back.ase" id="3_fw55f"]
 [ext_resource type="Texture2D" uid="uid://2a6vi6gkhkc8" path="res://art/modules/Weapon_1x2_Inside.ase" id="4_5e27v"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_fw55f"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3yfw"]
 atlas = ExtResource("2_fw55f")
-region = Rect2(0, 0, 32, 64)
+region = Rect2(32, 0, 32, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d3yfw"]
 size = Vector2(32, 32)
@@ -18,6 +19,7 @@ size = Vector2(32, 32)
 [node name="weapon" type="Node2D"]
 script = ExtResource("1_olytr")
 damage = 7
+bullet = ExtResource("2_5e27v")
 moduleType = 4
 tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(-1, 0)])
 isRotateable = false
@@ -29,7 +31,7 @@ batteryOffset = Vector2i(-1, 0)
 z_index = -1
 position = Vector2(-16, 0)
 rotation = 1.5708
-texture = SubResource("AtlasTexture_fw55f")
+texture = SubResource("AtlasTexture_d3yfw")
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
 collision_layer = 128

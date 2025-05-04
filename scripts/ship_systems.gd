@@ -40,7 +40,12 @@ var weapons : int
 func _ready() -> void:
     enemySubViewport.ship = self
 
-func damage(amount: int, _position: Vector2i) -> bool:
+func damage(amount: int, _position: Vector2i, bullet: String="") -> bool:
+    if bullet != "":
+        var bul = load(bullet).instantiate()
+        add_child(bul)
+        bul.init(Vector2(_position) - Vector2(1000,0), _position)
+        
     _position = _position/G.TILE_SIZE
     if builder.occupiedSpace.has(_position): # don't damage anything if projectiles can't hit ship
         # Shield absorbing, doesnt do any damage if shield absorbs all
@@ -141,6 +146,16 @@ func do_reinforcements():
             used_energy += modules[v].part.maxEnergy
             add_module_group_energy(modules[v].part, modules[v].part.maxEnergy)
     refresh_ui()
+
+func shoot_weapon(part: ShipModule):
+    var spawnPoint = part.global_position
+    if part.has_node("bulletPos"):
+        spawnPoint = part.get_node("bulletPos").global_position
+    
+    var bul = part.bullet.instantiate()
+    add_child(bul)
+    bul.init(spawnPoint, spawnPoint + Vector2(1000, 0))
+    bul.silent = true
 
 func create_panel_module(vec: Vector3i):
     var ins = panelModule.instantiate() as Control
@@ -248,6 +263,8 @@ func refresh_ui():
     if barIndex + 2 > healthBarColors.size():
         barIndex = healthBarColors.size()-2
         currHealth = 50
+    
+    get_node("shields").set_level(shields)
     
     healthBar.value = currHealth/50.0
     healthBar.tint_progress = healthBarColors[barIndex+1]

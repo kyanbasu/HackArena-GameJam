@@ -35,3 +35,6 @@ func _process(delta: float) -> void:
 
 func distance(v1: Vector2, v2: Vector2) -> float:
     return sqrt((v1.x - v2.x)**2 + (v1.y - v2.y)**2);
+
+func wait(seconds: float) -> void:
+  await get_tree().create_timer(seconds).timeout

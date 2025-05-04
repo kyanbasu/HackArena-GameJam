@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=3 uid="uid://vm08dmxa78b"]
+[gd_scene load_steps=63 format=3 uid="uid://vm08dmxa78b"]
 
 [ext_resource type="Script" uid="uid://ddcbp7ctc8lrt" path="res://scripts/game_network_manager.gd" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c3e4c2gx0vnmt" path="res://scripts/ship_systems.gd" id="2_dinhu"]
@@ -36,12 +36,18 @@
 [ext_resource type="Texture2D" uid="uid://bsw0dysbarx6r" path="res://art/ui/Currency&Enerygy.ase" id="23_qouja"]
 [ext_resource type="Texture2D" uid="uid://buxps1k61ys32" path="res://art/ui/Attack_Icon.ase" id="24_e1j6l"]
 [ext_resource type="PackedScene" uid="uid://bue4148u1i1d8" path="res://prefabs/ui/ui_action.tscn" id="26_bhx41"]
+[ext_resource type="Script" uid="uid://cok2loaef32of" path="res://scripts/modules/shields_manager.gd" id="29_0sl42"]
+[ext_resource type="SpriteFrames" uid="uid://2gba66yi8fum" path="res://art/Shield1.ase" id="30_h3rex"]
+[ext_resource type="SpriteFrames" uid="uid://bv62dirulm831" path="res://art/Shield2.ase" id="31_fedci"]
+[ext_resource type="SpriteFrames" uid="uid://c8pgnf0nypimj" path="res://art/Shield3.ase" id="32_8qswn"]
 [ext_resource type="Script" uid="uid://bt1afsbp1i8pd" path="res://scripts/shop.gd" id="33_js0lu"]
 [ext_resource type="Texture2D" uid="uid://h4dco15es7ag" path="res://art/Shop/Back.ase" id="33_v2yb1"]
 [ext_resource type="PackedScene" uid="uid://ch577snv1wxjr" path="res://prefabs/ui/shop_item.tscn" id="35_twgab"]
 [ext_resource type="Texture2D" uid="uid://b5m5dndrt57k" path="res://art/Shop/Inventory_Icon.ase" id="37_m4url"]
 [ext_resource type="Texture2D" uid="uid://cdm4tt6kf83m8" path="res://art/Shop/Shop_Icon.ase" id="38_8ool0"]
 [ext_resource type="Script" uid="uid://cp0kvrnssxu30" path="res://scripts/tutorial.gd" id="38_nepv3"]
+[ext_resource type="Texture2D" uid="uid://bon1wm5fqgkgp" path="res://art/ui/HP bar_enemy.ase" id="39_8qswn"]
+[ext_resource type="Texture2D" uid="uid://daystot1i02ay" path="res://art/ui/Viewarrow.ase" id="39_fedci"]
 [ext_resource type="Texture2D" uid="uid://hsr4wj2e4rru" path="res://art/Shop/Reapair.ase" id="39_pr1ej"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
@@ -180,6 +186,7 @@ script = ExtResource("12_ca42v")
 [node name="inventory" type="CanvasLayer" parent="ship/UI" node_paths=PackedStringArray("uiModulesContainer")]
 process_mode = 3
 layer = 3
+visible = false
 script = ExtResource("8_gee14")
 uiModulesContainer = NodePath("Panel/ScrollContainer/VBoxContainer")
 uiModule = ExtResource("9_0tnpc")
@@ -301,8 +308,8 @@ show_percentage = false
 [node name="healthBar" type="TextureProgressBar" parent="ship/UI/UpperPanel"]
 z_index = 10
 layout_mode = 0
-offset_left = 15.0
-offset_top = 5.0
+offset_left = 17.0
+offset_top = 7.0
 offset_right = 209.0
 offset_bottom = 25.0
 max_value = 1.0
@@ -377,6 +384,26 @@ horizontal_alignment = 2
 vertical_alignment = 1
 clip_text = true
 
+[node name="shields" type="Node2D" parent="ship" node_paths=PackedStringArray("shields")]
+script = ExtResource("29_0sl42")
+shields = [NodePath("1"), NodePath("2"), NodePath("3")]
+
+[node name="1" type="AnimatedSprite2D" parent="ship/shields"]
+visible = false
+sprite_frames = ExtResource("30_h3rex")
+autoplay = "default"
+frame_progress = 0.828203
+
+[node name="2" type="AnimatedSprite2D" parent="ship/shields"]
+visible = false
+sprite_frames = ExtResource("31_fedci")
+autoplay = "default"
+
+[node name="3" type="AnimatedSprite2D" parent="ship/shields"]
+visible = false
+sprite_frames = ExtResource("32_8qswn")
+autoplay = "default"
+
 [node name="globalBG" type="Parallax2D" parent="."]
 z_index = -100
 scroll_scale = Vector2(0.8, 0.8)
@@ -425,7 +452,6 @@ enemyMeteorsTilemap = NodePath("../Fight/SubViewportContainer/SubViewport/SubVie
 
 [node name="Fight" type="CanvasLayer" parent="."]
 process_mode = 4
-visible = false
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Fight"]
 offset_right = 20.0
@@ -437,12 +463,13 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="TextureRect" type="TextureRect" parent="Fight/SubViewportContainer/Control"]
+custom_minimum_size = Vector2(0, 360)
 layout_mode = 0
 offset_left = 15.0
 offset_top = 163.0
 offset_right = 38.0
 offset_bottom = 337.0
-texture = ExtResource("14_trtic")
+texture = ExtResource("39_fedci")
 expand_mode = 1
 
 [node name="SubViewport" type="SubViewport" parent="Fight/SubViewportContainer" node_paths=PackedStringArray("target", "enemyShip", "extensionIndicator")]
@@ -450,7 +477,7 @@ disable_3d = true
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
 size = Vector2i(20, 360)
-render_target_update_mode = 0
+render_target_update_mode = 4
 script = ExtResource("16_1kice")
 target = NodePath("SubViewportTarget")
 enemyShip = NodePath("SubViewportTarget/enemyShip")
@@ -465,6 +492,26 @@ position = Vector2(8192, 0)
 script = ExtResource("23_bt5mj")
 targetSelectionTex = ExtResource("24_e1j6l")
 
+[node name="shields" type="Node2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget" node_paths=PackedStringArray("shields")]
+script = ExtResource("29_0sl42")
+shields = [NodePath("1"), NodePath("2"), NodePath("3")]
+
+[node name="1" type="AnimatedSprite2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget/shields"]
+visible = false
+sprite_frames = ExtResource("30_h3rex")
+autoplay = "default"
+frame_progress = 0.685556
+
+[node name="2" type="AnimatedSprite2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget/shields"]
+visible = false
+sprite_frames = ExtResource("31_fedci")
+autoplay = "default"
+
+[node name="3" type="AnimatedSprite2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget/shields"]
+visible = false
+sprite_frames = ExtResource("32_8qswn")
+autoplay = "default"
+
 [node name="globalBG" type="Parallax2D" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget"]
 z_index = -100
 scroll_scale = Vector2(0.8, 0.8)
@@ -472,6 +519,40 @@ scroll_scale = Vector2(0.8, 0.8)
 [node name="Meteors" type="TileMapLayer" parent="Fight/SubViewportContainer/SubViewport/SubViewportTarget/globalBG"]
 z_index = -9
 tile_set = ExtResource("20_37s47")
+
+[node name="enemyHealthBar" type="CanvasLayer" parent="Fight"]
+layer = 2
+visible = false
+
+[node name="healthBarEnemy" type="TextureRect" parent="Fight/enemyHealthBar"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -233.0
+offset_right = -9.0
+offset_bottom = 64.0
+grow_horizontal = 0
+texture = ExtResource("39_8qswn")
+
+[node name="healthBar" type="TextureProgressBar" parent="Fight/enemyHealthBar/healthBarEnemy"]
+z_index = 10
+offset_left = 17.0
+offset_top = 7.0
+offset_right = 209.0
+offset_bottom = 25.0
+max_value = 1.0
+step = 0.01
+value = 0.3
+texture_progress = ExtResource("22_02fa5")
+
+[node name="bg" type="TextureRect" parent="Fight/enemyHealthBar/healthBarEnemy/healthBar"]
+self_modulate = Color(0.129412, 0.129412, 0.137255, 1)
+z_index = -1
+layout_mode = 0
+offset_right = 194.0
+offset_bottom = 20.0
+texture = ExtResource("22_02fa5")
+stretch_mode = 2
 
 [node name="ActionPicker" type="CanvasLayer" parent="."]
 visible = false

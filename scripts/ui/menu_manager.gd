@@ -1,14 +1,12 @@
 extends Node
 
-@export var connectionMenu : CanvasLayer
-@export var lobbyMenu : CanvasLayer
 @export var gameScene : PackedScene
 
 
 func _ready() -> void:
-    connectionMenu.get_node("ip").text = Lobby.defaultIp
-    connectionMenu.get_node("port").text = str(Lobby.localPort)
-    connectionMenu.get_node("name").text = NameGenerator.get_random_name()
+    get_node("../connectionJoin").get_node("ip").text = Lobby.defaultIp
+    get_node("../connectionCommon").get_node("port").text = str(Lobby.localPort)
+    get_node("../connectionCommon").get_node("name").text = NameGenerator.get_random_name()
     
     Lobby.player_connected.connect(player_connected)
     Lobby.player_disconnected.connect(player_disconnected)
@@ -17,7 +15,7 @@ func _ready() -> void:
     multiplayer.connection_failed.connect(_on_connected_fail)
 
 func regenerate_name():
-    connectionMenu.get_node("name").text = NameGenerator.get_random_name()
+    get_node("../connectionCommon").get_node("name").text = NameGenerator.get_random_name()
 
 func player_connected(_peer_id, _player_info):
     refresh_player_list()
@@ -26,39 +24,37 @@ func player_disconnected(_peer_id):
     refresh_player_list()
 
 func _on_host_pressed() -> void:
-    connectionMenu.get_node("host").disabled = true
-    connectionMenu.get_node("connect").disabled = true
-    Lobby.localPort = int(connectionMenu.get_node("port").text)
-    Lobby.player_info.name = connectionMenu.get_node("name").text
+    get_node("../connectionHost").get_node("host").disabled = true
+    Lobby.localPort = int(get_node("../connectionCommon").get_node("port").text)
+    Lobby.player_info.name = get_node("../connectionCommon").get_node("name").text
     var err = Lobby.create_game()
     if err != OK:
         printerr("Error creating session")
-        connectionMenu.get_node("host").disabled = false
-        connectionMenu.get_node("connect").disabled = false
+        get_node("../connectionHost").get_node("host").disabled = false
         return
-    connectionMenu.visible = false
-    lobbyMenu.visible = true
-    lobbyMenu.get_node("start").disabled = false
+    get_node("../connectionCommon").visible = false
+    get_node("../connectionHost").visible = false
+    get_node("../lobby").visible = true
+    get_node("../lobby").get_node("start").disabled = false
     
 func _on_join_pressed() -> void:
-    connectionMenu.get_node("host").disabled = true
-    connectionMenu.get_node("connect").disabled = true
-    Lobby.player_info.name = connectionMenu.get_node("name").text
-    var err = Lobby.join_game(connectionMenu.get_node("ip").text, int(connectionMenu.get_node("port").text))
+    get_node("../connectionHost").get_node("host").disabled = true
+    Lobby.player_info.name = get_node("../connectionCommon").get_node("name").text
+    var err = Lobby.join_game(get_node("../connectionJoin").get_node("ip").text, int(get_node("../connectionCommon").get_node("port").text))
     if err != OK:
 
         return
 
 
 func _on_connected_ok():
-    connectionMenu.visible = false
-    lobbyMenu.visible = true
-    lobbyMenu.get_node("start").disabled = true
+    get_node("../connectionCommon").visible = false
+    get_node("../connectionJoin").visible = false
+    get_node("../lobby").visible = true
+    get_node("../lobby").get_node("start").disabled = true
 
 func _on_connected_fail():
     printerr("Error joining session")
-    connectionMenu.get_node("host").disabled = false
-    connectionMenu.get_node("connect").disabled = false
+    get_node("../connectionHost").get_node("host").disabled = false
 
 func _host_start_game() -> void:
     Lobby.isInGame = true
@@ -72,13 +68,33 @@ func refresh_player_list():
         if i == 1:
             prefix = "[Host] " + prefix
         if i == multiplayer.multiplayer_peer.get_unique_id():
-            prefix = "# " + prefix
+            prefix = "[You] " + prefix
         names.append(prefix % Lobby.players[i].name)
     names.sort()
     for n in names:
         $playerList.text += "%s\n" % n
 
 func text_edit_input():
-    connectionMenu.get_node("name").text = connectionMenu.get_node("name").text.strip_escapes()
-    connectionMenu.get_node("ip").text = connectionMenu.get_node("ip").text.strip_escapes().replace(" ", "")
-    connectionMenu.get_node("port").text = connectionMenu.get_node("port").text.strip_escapes().replace(" ", "")
+    get_node("../connectionCommon").get_node("name").text = get_node("../connectionCommon").get_node("name").text.strip_escapes()
+    get_node("../connectionJoin").get_node("ip").text = get_node("../connectionJoin").get_node("ip").text.strip_escapes().replace(" ", "")
+    get_node("../connectionCommon").get_node("port").text = get_node("../connectionCommon").get_node("port").text.strip_escapes().replace(" ", "")
+
+
+func _on_menu_host_button_down() -> void:
+    get_node("../connectionCommon").visible = true
+    get_node("../connectionHost").visible = true
+    get_node("../mainMenu").visible = false
+
+
+func _on_menu_join_button_down() -> void:
+    get_node("../connectionCommon").visible = true
+    get_node("../connectionJoin").visible = true
+    get_node("../mainMenu").visible = false
+
+
+func _on_menu_options_button_down() -> void:
+    pass # Replace with function body.
+
+
+func _on_menu_quit_button_down() -> void:
+    pass # Replace with function body.
