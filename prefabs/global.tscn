@@ -1,6 +1,46 @@
-[gd_scene load_steps=2 format=3 uid="uid://i8k35gc1awkr"]
+[gd_scene load_steps=9 format=3 uid="uid://i8k35gc1awkr"]
 
 [ext_resource type="Script" uid="uid://slrnbsa1cvr5" path="res://scripts/Global.gd" id="1_niuhh"]
+[ext_resource type="AudioStream" uid="uid://78n74gv68msy" path="res://art/Sounds/Beep down.wav" id="2_6dd5f"]
+[ext_resource type="AudioStream" uid="uid://bboauc5ga6726" path="res://art/Sounds/Beep up.wav" id="3_lg7cy"]
+[ext_resource type="AudioStream" uid="uid://dhsvs6metpdte" path="res://art/Sounds/BackMusic2.wav" id="4_lsym3"]
+[ext_resource type="AudioStream" uid="uid://b5dp8dxvc727h" path="res://art/Sounds/BackMusic_made_by_Ilariio.mp3" id="5_5t2fl"]
+[ext_resource type="AudioStream" uid="uid://p4nmssxgcpmr" path="res://art/Sounds/Explosion.wav" id="6_5t2fl"]
+[ext_resource type="AudioStream" uid="uid://c86khvx08jux4" path="res://art/Sounds/SciFiExplosion.wav" id="7_fjwwx"]
+[ext_resource type="AudioStream" uid="uid://b6bh4kdf2ml68" path="res://art/Sounds/Press_made_by_EtherAudio.wav" id="8_4x25m"]
 
 [node name="Global" type="Node2D"]
 script = ExtResource("1_niuhh")
+
+[node name="down" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_6dd5f")
+
+[node name="up" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_lg7cy")
+
+[node name="picked" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_6dd5f")
+pitch_scale = 0.6
+
+[node name="placed" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_lg7cy")
+pitch_scale = 0.6
+
+[node name="ambient" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_lsym3")
+volume_db = -1.0
+autoplay = true
+
+[node name="music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_5t2fl")
+autoplay = true
+
+[node name="death" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_5t2fl")
+
+[node name="explosion" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_fjwwx")
+max_polyphony = 2
+
+[node name="click" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_4x25m")

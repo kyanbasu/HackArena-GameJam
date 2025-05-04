@@ -2,16 +2,16 @@ extends Node2D
 class_name Ship
 
 @export var builder : Builder
-@export var healthBar : ProgressBar
+@export var healthBar : TextureProgressBar
 @export var systemsPanel : Container
 
 @export var enemySubViewport : SubViewport
 
 # Stacks of healthbars
 var healthBarColors : Array = [
-    Color("#212123"), #empty
-    Color(.8, .2, .2),
-    Color(.3, .8, .2),
+    Color("212123"), #empty
+    Color("c2d368"),
+    Color(.8, .1, .2),
     Color(.2, .3, .8),
     Color(.8, .8, .1),
     Color(.9, .1, .9),
@@ -142,6 +142,7 @@ func create_panel_module(vec: Vector3i):
     var ins = panelModule.instantiate() as Control
     systemsPanel.add_child(ins)
     ins.gui_input.connect(panel_module_input.bind(vec))
+    ins.mouse_exited.connect(panel_module_mouse_exited.bind(vec))
     systemsPanel.move_child(systemsPanel.get_node("moduleEnd"), -1) # set it to be at the end
     
     var tex = ins.get_node("icon").get("texture").duplicate()
@@ -178,9 +179,12 @@ func modulate_part(part: ShipModule=null):
         part.modulate = Color(.3,1,.3)
     lastModulatedPart = part    
 
+func panel_module_mouse_exited(v: Vector3i):
+    modules[v].part.modulate = Color.WHITE
+
 func panel_module_input(event, v: Vector3i):
-    modulate_part(modules[v].part)
-    if !builder.gameNetworkManager.isMyFightingTurn: return
+    modules[v].part.modulate = Color(.3,1,.3)
+    if !builder.gameNetworkManager.isMyFightingTurn and !builder.active: return
     if modules[v].part.health <= 0: return
     if event is InputEventMouseButton and event.pressed:
         # increase used energy
@@ -192,6 +196,7 @@ func panel_module_input(event, v: Vector3i):
             add_module_group_energy(modules[v].part, 1)
             modules[v].part.energy += 1
             used_energy += 1
+            G.down.play()
         # decrease used energy
         elif event.button_index == MOUSE_BUTTON_RIGHT and modules[v].part.energy > 0:
             if modules[v].part.moduleType == ShipModule.ModuleType.WEAPON:
@@ -200,6 +205,7 @@ func panel_module_input(event, v: Vector3i):
             add_module_group_energy(modules[v].part, -1)
             modules[v].part.energy -= 1
             used_energy -= 1
+            G.up.play()
         
         refresh_ui()
 
@@ -228,5 +234,5 @@ func refresh_ui():
         currHealth = 50
     
     healthBar.value = currHealth/50.0
-    healthBar.get("theme_override_styles/fill").bg_color = healthBarColors[barIndex+1]
+    healthBar.tint_progress = healthBarColors[barIndex+1]
     healthBar.get_child(0).self_modulate = healthBarColors[barIndex]

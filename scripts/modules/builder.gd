@@ -62,6 +62,7 @@ func _ready() -> void:
     p = _load_part("res://prefabs/modules/weapon_A.tscn")
     place_part(p, Vector2(64,-32))
     selectedModule = null
+    G.placed.stop()
 
 func _load_part(path: String) -> ShipModule:
     var sc = load(path)
@@ -154,6 +155,7 @@ func pickup_part(part: ShipModule):
         place_part(part, new_pos, lastPartPositionRotation.z)
         return
     
+    G.picked.play()
     isHoldingModule = true
 
 const FOUR_SIDES : Array[Vector2i] = [Vector2i(-1,0), Vector2i(1,0), Vector2i(0,-1), Vector2i(0,1)]
@@ -201,5 +203,6 @@ func place_part(part: ShipModule, _position: Vector2, _rotation: float=-1):
     for t in part.tiles:
         var v = t + Vector2i(part.global_position/G.TILE_SIZE - Vector2(.5,.5))
         occupiedSpace[v] = part
+    G.placed.play()
     ship.changed_ship_module(part, true)
     inventory.add_module(part, -1)

@@ -64,7 +64,11 @@ var health;
 
 # Total energy used by module
 @export var maxEnergy : int = 0;
-var energy : int = 0;
+var energy : int = 0:
+    set(nv):
+        energy = nv
+        if battery:
+            battery.value = batTexOff + nv * 0.15
 
 @export var batteryOffset : Vector2i = Vector2i(1,0)
 
@@ -107,7 +111,8 @@ func _mouse_exited():
 
 
 var icon : Node2D = null
-var battery : Node2D = null
+var battery : TextureProgressBar = null
+var batTexOff : float = 0
 
 func update_icons():
     if moduleType == ModuleType.EMPTY: return
@@ -140,16 +145,27 @@ func update_icons():
         match maxEnergy:
             1:
                 off = Vector2(0,0)
+                batTexOff = 0.37
             2:
                 off = Vector2(32,0)
+                batTexOff = 0.3
             3:
                 off = Vector2(0,32)
+                batTexOff = 0.21
             4:
                 off = Vector2(32,32)
+                batTexOff = 0.15
             5:
                 off = Vector2(0,64)
-        
-        var tex = battery.get("texture").duplicate()
+                batTexOff = 0.06
+
+        # under
+        var tex = battery.get("texture_under").duplicate()
         tex.region = Rect2(off, Vector2(32,32))
-        battery.set("texture", tex)
-        battery.position = batteryOffset * G.TILE_SIZE
+        battery.set("texture_under", tex)
+        
+        # overlay
+        tex = battery.get("texture_progress").duplicate()
+        tex.region = Rect2(off, Vector2(32,32))
+        battery.set("texture_progress", tex)
+        battery.position = batteryOffset * G.TILE_SIZE - Vector2i(battery.size/2)

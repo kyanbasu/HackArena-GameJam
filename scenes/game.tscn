@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://b0031q7p6yqqx" path="res://art/bg/nothing.png" id="20_5newe"]
 [ext_resource type="TileSet" uid="uid://dumtug50wm586" path="res://art/bg/Meteors_tileset.tres" id="20_37s47"]
 [ext_resource type="PackedScene" uid="uid://ytwn3l5mduw1" path="res://prefabs/ui/panel_module.tscn" id="21_sgl2t"]
+[ext_resource type="Texture2D" uid="uid://bumrmtb6kcko4" path="res://art/ui/HP bar.ase" id="22_02fa5"]
 [ext_resource type="Texture2D" uid="uid://bdcwq0x6d654e" path="res://art/ui/shipSystems/Module_UI_end.ase" id="22_qouja"]
 [ext_resource type="Texture2D" uid="uid://cnnl1ucb1ja4y" path="res://art/ui/Currency&Enerygy_back.ase" id="22_sgl2t"]
 [ext_resource type="Script" uid="uid://8r307hxfrrj2" path="res://scripts/enemy_ship.gd" id="23_bt5mj"]
@@ -36,6 +37,7 @@
 [ext_resource type="Script" uid="uid://bt1afsbp1i8pd" path="res://scripts/shop.gd" id="33_js0lu"]
 [ext_resource type="Texture2D" uid="uid://h4dco15es7ag" path="res://art/Shop/Back.ase" id="33_v2yb1"]
 [ext_resource type="PackedScene" uid="uid://ch577snv1wxjr" path="res://prefabs/ui/shop_item.tscn" id="35_twgab"]
+[ext_resource type="Script" uid="uid://cp0kvrnssxu30" path="res://scripts/tutorial.gd" id="38_nepv3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u5sy4"]
 shader = ExtResource("6_u5sy4")
@@ -62,11 +64,6 @@ texture_margin_top = 4.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qnb83"]
 bg_color = Color(1, 1, 1, 0.321569)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sww3w"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_suyxu"]
-bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_qouja"]
 font_size = 10
@@ -287,17 +284,17 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_qnb83")
 max_value = 1.0
 show_percentage = false
 
-[node name="healthBar" type="ProgressBar" parent="ship/UI/UpperPanel"]
+[node name="healthBar" type="TextureProgressBar" parent="ship/UI/UpperPanel"]
 z_index = 10
 layout_mode = 0
 offset_left = 15.0
 offset_top = 5.0
 offset_right = 209.0
 offset_bottom = 25.0
-theme_override_styles/background = SubResource("StyleBoxEmpty_sww3w")
-theme_override_styles/fill = SubResource("StyleBoxFlat_suyxu")
 max_value = 1.0
-show_percentage = false
+step = 0.01
+value = 0.3
+texture_progress = ExtResource("22_02fa5")
 
 [node name="bg" type="TextureRect" parent="ship/UI/UpperPanel/healthBar"]
 self_modulate = Color(0.129412, 0.129412, 0.137255, 1)
@@ -305,7 +302,8 @@ z_index = -1
 layout_mode = 0
 offset_right = 194.0
 offset_bottom = 20.0
-texture = ExtResource("20_5newe")
+texture = ExtResource("22_02fa5")
+stretch_mode = 2
 
 [node name="SystemsPanel" type="HBoxContainer" parent="ship/UI"]
 anchors_preset = 2
@@ -518,9 +516,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -224.0
-offset_top = -144.0
-offset_bottom = 144.0
+offset_left = -256.0
+offset_top = -180.0
+offset_bottom = 204.0
 grow_horizontal = 0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_js0lu")
@@ -535,7 +533,11 @@ grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Shop/Panel/ScrollContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 4
+
+[node name="tutorial" type="CanvasLayer" parent="."]
+visible = false
+script = ExtResource("38_nepv3")
 
 [connection signal="button_down" from="ship/UI/changeRenderingBtn" to="ship/UI/changeRenderingBtn" method="_on_button_down"]
 [connection signal="mouse_entered" from="ship/UI/inventory/Panel" to="ship/UI/inventory" method="_on_mouse_entered"]

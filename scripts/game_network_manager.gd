@@ -112,7 +112,6 @@ func _process(delta: float) -> void:
         if nextTurnCounter > nextTurnCounterFire:
             nextTurnCounter = 0
             next_turn()
-            ship.modulate_part() # idk some solution to permanent coloring
 
 var nextTurnCounter : float = 0
 const nextTurnCounterFire : float = .5 #time in seconds after which skipping turn is confirmed
@@ -124,6 +123,7 @@ func next_turn_btn_up():
 # Invoked when player presses next turn button, everyone must be ready
 # Changes fight turn if is fighting
 func next_turn():
+    G.down.play()
     if playerFighting != 0:
         var _data = {}
         var damages = {}
@@ -225,6 +225,7 @@ func host_called_end_turn(_gameState: GameState, _data: Dictionary={}):
             gameState = GameState.MAP
         
         GameState.MAP:
+            G.target_bg_pitch = 1
             ship.process_mode = Node.PROCESS_MODE_INHERIT
             ship.visible = true
             map.process_mode = Node.PROCESS_MODE_DISABLED
@@ -255,6 +256,7 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
             
         
         GameState.MAP:
+            G.target_bg_pitch = .8
             camera.position = map.planetNodes[map.playerPlanet].position
             camera.change_param(Vector2(1400, 1800), .2, 1)
             ship.process_mode = Node.PROCESS_MODE_DISABLED
@@ -432,6 +434,7 @@ func send_available_actions(actions: Array, _data: Dictionary={}):
         act.button_down.connect(pick_action.bind(a))
 
 func pick_action(action: Action):
+    G.click.play()
     for c in actionPicker.get_node("ActionsPanel").get_child(0).get_children():
         c.queue_free()
     process_and_send_action.rpc_id(1, action)
@@ -537,7 +540,7 @@ func add_materials(amount: int):
 
 @rpc("authority", "call_local", "reliable")
 func generate_bg(_seed: int):
-    G.seed = _seed
+    G._seed = _seed
     map.generate_background()
 
 

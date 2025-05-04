@@ -58,7 +58,6 @@ func init():
         var pl = planet.instantiate()
         pl.button_down.connect(select_planet.bind(i))
         tex = pl.get_node("texture").get("texture").duplicate()
-        tex.region = Rect2(32*randi_range(0,3),0,32,32)
         pl.get_node("texture").set("texture", tex)
         planetNodes[i] = pl
         add_child(pl)
@@ -108,9 +107,12 @@ func dist_to_closest_planet(pos: Vector2, index: int) -> float:
 
 @rpc("authority", "call_local", "reliable")
 func sync_planets(_planets : Dictionary):
+    var rng = RandomNumberGenerator.new()
+    rng.seed = G._seed
     planets = _planets
     for i in planets.keys():
         planetNodes[i].position = planets[i].planet.position - planetNodes[i].size/2
+        planetNodes[i].get_node("texture").get("texture").region = Rect2(32*rng.randi_range(0,3),0,32,32)
     queue_redraw()
 
 func _draw() -> void:
@@ -139,7 +141,7 @@ func generate_background():
 func generate_meteors():
     meteorsTilemap.clear()
     var rng = RandomNumberGenerator.new()
-    rng.seed = G.seed
+    rng.seed = G._seed
     
     var tilesAmount = meteorsTilemap.tile_set.get_source(0).get_tiles_count()
     

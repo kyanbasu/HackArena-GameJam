@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://mpn7fcl8hmyd"]
+
+[ext_resource type="Texture2D" uid="uid://pplpmvmn8sjg" path="res://art/ui/shipSystems/Ship_batteries_energy_Full.ase" id="1_amjd0"]
+
+[resource]
+atlas = ExtResource("1_amjd0")
+region = Rect2(0, 0, 32, 32)
