@@ -75,6 +75,8 @@ var isReady : bool = false:
 
 var fightTurn : int = 0
 
+var isDead := false
+
 func _ready():
     if !Array(OS.get_cmdline_args()).has("editor"):
         Input.mouse_mode = Input.MOUSE_MODE_CONFINED
@@ -98,8 +100,6 @@ func _ready():
 func player_disconnected_during_game(peer_id):
     if !multiplayer.is_server(): return
     playersDead += 1
-    if Lobby.players.has(peer_id):
-        Lobby.players.erase(peer_id)
     if fightingPlayers.has(peer_id):
         send_data_to_enemy.rpc_id(fightingPlayers[peer_id], {"force_end": true})
         fightingPlayers.erase(peer_id)
@@ -138,20 +138,19 @@ func next_turn():
 
 @rpc("any_peer", "call_local", "reliable")
 func player_ready(readiness: bool=true):
-    if multiplayer.is_server():
+    if multiplayer.is_server() and Lobby.players.has(multiplayer.get_remote_sender_id()):
         if readiness:
             playersReady += 1
         else:
             playersReady -= 1
-        
-        if playersReady + playersDead == Lobby.players.size(): #all players are ready
+        if playersReady == Lobby.players.size(): #all players are ready
             if turn == 0:
                 add_materials.rpc(startingMaterials)
                 generate_meteors_bg.rpc(randi_range(-1000,1000))
                 for i in Lobby.players.keys():
                     # Starting Planet
-                    #var planet = randi_range(0, map.planetCount-1)
-                    var planet = 2
+                    var planet = randi_range(0, map.planetCount-1)
+                    #var planet = 2
                     host_called_end_turn.rpc_id(i, gameState, {"planet": planet})
                     Lobby.players[i].planet = planet
             else:
@@ -260,12 +259,12 @@ func host_called_next_turn(_gameState: GameState, _data: Dictionary={}):
 
 @rpc("any_peer", "call_local", "reliable")
 func flew_to_planet(index: int):
-    if multiplayer.is_server():
+    if multiplayer.is_server() and Lobby.players.has(multiplayer.get_remote_sender_id()):
         Lobby.players[multiplayer.get_remote_sender_id()].planet = index
 
 @rpc("any_peer", "call_local", "reliable")
 func process_and_send_action(action: Action):
-    if multiplayer.is_server():
+    if multiplayer.is_server() and Lobby.players.has(multiplayer.get_remote_sender_id()):
         var peer_id = multiplayer.get_remote_sender_id()
         var _data = {}
         match action:
@@ -293,8 +292,6 @@ func get_random_event_data() -> Dictionary:
         "abandoned_ship", "abandoned_station", "quarry", "ship_in_need" # positive
     ].pick_random()
     
-    encounter = "abandoned_station"
-    
     _data.name = encounter
     match encounter:
         "pirate":
@@ -314,6 +311,12 @@ func get_random_event_data() -> Dictionary:
             _data.reward = tableShipInNeed.pick_random().resource_path
     
     return _data
+
+@rpc("any_peer", "call_local", "reliable")
+func dead():
+    playersDead += 1
+    if multiplayer.is_server() and Lobby.players.has(multiplayer.get_remote_sender_id()):
+        Lobby.players.erase(multiplayer.get_remote_sender_id())
 
 ### Host and client
 
@@ -372,17 +375,33 @@ func send_data_to_enemy(_data: Dictionary):
     if multiplayer.get_remote_sender_id() == 1:
         if _data.has("starting"):
             isMyFightingTurn = _data.starting
+            if !_data.starting:
+                ship.do_reinforcements()
             return
         if _data.has("force_end"):
             playerFighting = 0
             toggle_next_turn_btn(true)
             return
     
+    if _data.has("end"):
+        playerFighting = 0
+        ship.reset_all_energy()
+        toggle_next_turn_btn(true)
+        return
+    
     if _data.has("damages"):
         for d in _data.damages.keys():
             ship.damage(_data.damages[d], d)
     
     ship.reset_weapons()
+    
+    # is dead
+    if ship.max_health - ship.total_damage <= 0:
+        send_data_to_enemy.rpc_id(playerFighting, {"end": true})
+        playerFighting = 0
+        dead.rpc()
+        isDead = true
+        return
     
     # Enemy ended their turn so its mine now
     isMyFightingTurn = true

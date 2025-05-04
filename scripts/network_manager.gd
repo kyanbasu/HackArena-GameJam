@@ -110,8 +110,12 @@ func _register_player(new_player_info):
 
 
 func _on_player_disconnected(id):
-    print("player disconnected %s %s" % [id, players[id].name])
-    players.erase(id)
+    if id == 1:
+        get_tree().change_scene_to_file("res://scenes/menu.tscn")
+        return
+    if players.has(id):
+        print("player disconnected %s %s" % [id, players[id].name])
+        players.erase(id)
     player_disconnected.emit(id)
 
 

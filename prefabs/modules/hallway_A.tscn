@@ -1,7 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://yqkvwn43lux7"]
+[gd_scene load_steps=8 format=3 uid="uid://yqkvwn43lux7"]
 
 [ext_resource type="Script" uid="uid://chf6gf16v432" path="res://scripts/modules/module.gd" id="1_4hni7"]
-[ext_resource type="Texture2D" uid="uid://b2ewkuq67okdx" path="res://art/godot_tres/modules/Floor_2x2.tres" id="2_4hni7"]
+[ext_resource type="Texture2D" uid="uid://vo6ohbj7iyjw" path="res://art/modules/Floor_2x2.ase" id="2_4hni7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b6ejq"]
+atlas = ExtResource("2_4hni7")
+region = Rect2(128, 0, 64, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4hni7"]
 size = Vector2(32, 32)
@@ -22,7 +26,7 @@ maxHealth = 6
 
 [node name="floor" type="Sprite2D" parent="."]
 position = Vector2(-16, -16)
-texture = ExtResource("2_4hni7")
+texture = SubResource("AtlasTexture_b6ejq")
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
 collision_layer = 128

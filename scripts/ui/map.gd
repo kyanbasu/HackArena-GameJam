@@ -62,9 +62,7 @@ func init():
         pl.get_node("texture").set("texture", tex)
         planetNodes[i] = pl
         add_child(pl)
-    nextPlayerPlanet = 2#randi_range(0, planetCount-1)
-    playerPlanet = nextPlayerPlanet
-    gameNetworkManager.flew_to_planet.rpc_id(1, playerPlanet)
+
     if multiplayer.is_server():
         init_server()
 

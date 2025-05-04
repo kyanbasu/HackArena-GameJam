@@ -27,7 +27,7 @@ var lastPartPositionRotation : Vector3
 
 @export var overlapping : Array[Vector2i]
 
-var gameNetworkManager
+var gameNetworkManager : GameNetworkManager
 
 func _draw() -> void:
     if debugOccupied:

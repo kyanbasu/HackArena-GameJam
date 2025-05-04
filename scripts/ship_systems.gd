@@ -26,17 +26,10 @@ var total_damage : int #is just negative health, real health is max_health-damag
 var max_energy : int
 var used_energy : int
 
-# distributing energy to modules
-var max_shield : int
-var shield : int
-
-var max_oxygen : int
+# distributed energy to modules
+var shields : int
 var oxygen : int
-
-var max_engines : int
 var engines : int
-
-var max_weapons : int
 var weapons : int
 
 # Vector3i(pos.x, pos.y, rotation_degrees) -> {part: ShipModule, ui: Control}
@@ -50,6 +43,17 @@ func _ready() -> void:
 func damage(amount: int, _position: Vector2i):
     _position = _position/G.TILE_SIZE
     if builder.occupiedSpace.has(_position): # don't damage anything if projectiles can't hit ship
+        # Shield absorbing, doesnt do any damage if shield absorbs all
+        if shields * 4 > amount:
+            return
+        amount -= shields*4
+        
+        # Chance for dodging
+        var chance = log(engines+1) / log(100)
+        print("change to dodge ", chance)
+        if chance > randf():
+            return
+        
         builder.occupiedSpace[_position].deal_damage(amount)
         total_damage += amount
         var vec = Vector3i(
@@ -62,6 +66,7 @@ func damage(amount: int, _position: Vector2i):
         
         if modules[vec].part.health <= 0 and modules[vec].part.energy > 0:
             used_energy -= modules[vec].part.energy
+            add_module_group_energy(modules[vec].part, -modules[vec].part.energy)
             modules[vec].part.energy = 0
         
         refresh_ui()
@@ -100,14 +105,38 @@ func changed_ship_module(part: ShipModule, added: bool):
             if modules[v].part.energy > 0:
                 modules[v].part.energy -= 1
                 used_energy -= 1
+                add_module_group_energy(modules[v].part, -1)
+    refresh_ui()
+
+func reset_all_energy():
+    for v in modules.keys():
+        if modules[v].part.energy > 0:
+            modules[v].part.energy = 0
+            used_energy -= modules[v].part.energy
+            add_module_group_energy(modules[v].part, -modules[v].part.energy)
+    builder.gameNetworkManager.enemyShip.targets = []
     refresh_ui()
 
 func reset_weapons():
     for v in modules.keys():
         if modules[v].part.moduleType == ShipModule.ModuleType.WEAPON and modules[v].part.energy > 0:
             used_energy -= modules[v].part.energy
+            add_module_group_energy(modules[v].part, -modules[v].part.energy)
             modules[v].part.energy = 0
             modules[v].part.target = Vector2i.MAX
+    builder.gameNetworkManager.enemyShip.targets = []
+    refresh_ui()
+
+# Disposes entire energy for shields and engines
+func do_reinforcements():
+    reset_all_energy()
+    for v in modules.keys():
+        if used_energy == max_energy: return
+        if modules[v].part.moduleType == ShipModule.ModuleType.WEAPON or modules[v].part.moduleType == ShipModule.ModuleType.SHIELD:
+            modules[v].part.energy += modules[v].part.maxEnergy
+            used_energy += modules[v].part.maxEnergy
+            add_module_group_energy(modules[v].part, modules[v].part.maxEnergy)
+    refresh_ui()
 
 func create_panel_module(vec: Vector3i):
     var ins = panelModule.instantiate() as Control
@@ -160,6 +189,7 @@ func panel_module_input(event, v: Vector3i):
                 if builder.gameNetworkManager.playerFighting == 0: return
                 enemySubViewport.pickingTarget = modules[v].part # Selecting target for weapon
                 Input.set_custom_mouse_cursor(G.targetingCursor)
+            add_module_group_energy(modules[v].part, 1)
             modules[v].part.energy += 1
             used_energy += 1
         # decrease used energy
@@ -167,11 +197,21 @@ func panel_module_input(event, v: Vector3i):
             if modules[v].part.moduleType == ShipModule.ModuleType.WEAPON:
                 enemySubViewport.pickingTarget = null
                 Input.set_custom_mouse_cursor(G.defaultCursor)
+            add_module_group_energy(modules[v].part, -1)
             modules[v].part.energy -= 1
             used_energy -= 1
         
         refresh_ui()
-        
+
+func add_module_group_energy(part: ShipModule, amount: int):
+    if part.moduleType == ShipModule.ModuleType.WEAPON:
+        weapons += amount
+    elif part.moduleType == ShipModule.ModuleType.ENGINE:
+        engines += amount
+    elif part.moduleType == ShipModule.ModuleType.SHIELD:
+        shields += amount
+    elif part.moduleType == ShipModule.ModuleType.OXYGEN:
+        oxygen += amount
 
 func refresh_ui():
     if G.currencyNEnergy:

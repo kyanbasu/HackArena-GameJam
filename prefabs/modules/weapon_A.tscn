@@ -1,9 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://sgdtfnbxiviu"]
+[gd_scene load_steps=8 format=3 uid="uid://sgdtfnbxiviu"]
 
 [ext_resource type="Script" uid="uid://dpxf7jlldgvka" path="res://scripts/modules/weapon.gd" id="1_olytr"]
-[ext_resource type="Texture2D" uid="uid://bbs48n78k4gp1" path="res://art/godot_tres/modules/Floor_1x2.tres" id="2_fw55f"]
+[ext_resource type="Texture2D" uid="uid://dq1fwmojgjaiv" path="res://art/modules/Floor_1x2.ase" id="2_fw55f"]
 [ext_resource type="Texture2D" uid="uid://drca3v8tcne20" path="res://art/modules/Weapon_1x2_Back.ase" id="3_fw55f"]
 [ext_resource type="Texture2D" uid="uid://2a6vi6gkhkc8" path="res://art/modules/Weapon_1x2_Inside.ase" id="4_5e27v"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5e27v"]
+atlas = ExtResource("2_fw55f")
+region = Rect2(32, 0, 32, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d3yfw"]
 size = Vector2(32, 32)
@@ -24,7 +28,7 @@ batteryOffset = Vector2i(-1, 0)
 z_index = -1
 position = Vector2(-16, 0)
 rotation = 1.5708
-texture = ExtResource("2_fw55f")
+texture = SubResource("AtlasTexture_5e27v")
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
 collision_layer = 128
