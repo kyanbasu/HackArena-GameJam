@@ -147,7 +147,7 @@ func player_ready(readiness: bool=true):
         if playersReady == Lobby.players.size(): #all players are ready
             if turn == 0:
                 add_materials.rpc(startingMaterials)
-                generate_meteors_bg.rpc(randi_range(-1000,1000))
+                generate_bg.rpc(randi_range(-1000,1000))
                 for i in Lobby.players.keys():
                     # Starting Planet
                     #var planet = randi_range(0, map.planetCount-1)
@@ -188,7 +188,7 @@ func player_ready(readiness: bool=true):
                 for p in Lobby.players.keys():
                     if !playersAndActions.has(p):
                         if Lobby.players[p].planet == shopPlanet:
-                            playersAndActions[p] = [Action.SHOP]
+                            playersAndActions[p] = [Action.SHOP, [Action.MINING, Action.RANDOM].pick_random()]
                         else:
                             playersAndActions[p] = [Action.MINING, Action.RANDOM]
                     send_available_actions.rpc_id(p, playersAndActions[p])
@@ -536,8 +536,9 @@ func add_materials(amount: int):
     inventory.materials += amount 
 
 @rpc("authority", "call_local", "reliable")
-func generate_meteors_bg(_seed: int):
-    map.generate_meteors(_seed)
+func generate_bg(_seed: int):
+    G.seed = _seed
+    map.generate_background()
 
 
 

@@ -2,11 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://cujo5bpwd21ua" path="res://art/ui/shipSystems/Module_UI.ase" id="1_k8w0c"]
 [ext_resource type="Texture2D" uid="uid://s1swnxfm2kd3" path="res://art/ui/shipSystems/Module_UI_Icons.tres" id="2_6gx1s"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k8w0c"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6gx1s"]
-bg_color = Color(0, 0.796078, 1, 1)
+[ext_resource type="Texture2D" uid="uid://b0031q7p6yqqx" path="res://art/bg/nothing.png" id="3_6gx1s"]
+[ext_resource type="Texture2D" uid="uid://b2g6fbrrcb3af" path="res://art/ui/shipSystems/Module_UI_hp.ase" id="4_w3og4"]
 
 [node name="module" type="TextureRect"]
 texture = ExtResource("1_k8w0c")
@@ -19,14 +16,25 @@ offset_right = 24.0
 offset_bottom = 64.0
 texture = ExtResource("2_6gx1s")
 
-[node name="bar" type="ProgressBar" parent="."]
+[node name="TextureRect" type="TextureRect" parent="."]
+self_modulate = Color(0.129412, 0.129412, 0.137255, 1)
+z_index = 1
 layout_mode = 0
 offset_left = 5.0
 offset_top = 30.0
 offset_right = 27.0
 offset_bottom = 35.0
-theme_override_styles/background = SubResource("StyleBoxEmpty_k8w0c")
-theme_override_styles/fill = SubResource("StyleBoxFlat_6gx1s")
+texture = ExtResource("3_6gx1s")
+expand_mode = 1
+
+[node name="bar" type="TextureProgressBar" parent="."]
+z_index = 2
+layout_mode = 0
+offset_left = 5.0
+offset_top = 30.0
+offset_right = 27.0
+offset_bottom = 35.0
 max_value = 1.0
+step = 0.1
 value = 1.0
-show_percentage = false
+texture_progress = ExtResource("4_w3og4")

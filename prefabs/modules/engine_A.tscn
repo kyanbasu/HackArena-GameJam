@@ -1,55 +1,44 @@
-[gd_scene load_steps=6 format=3 uid="uid://cy1h7dfvyrqbx"]
+[gd_scene load_steps=9 format=3 uid="uid://cy1h7dfvyrqbx"]
 
 [ext_resource type="Script" uid="uid://yb71drptt4ua" path="res://scripts/modules/engine.gd" id="1_xcdbn"]
+[ext_resource type="Texture2D" uid="uid://btvs7eo6wneqm" path="res://art/modules/Engines_2x2_Back.ase" id="2_dd6il"]
 [ext_resource type="Texture2D" uid="uid://cvv7d4h8rbowc" path="res://art/modules/Engines_2x2_Inside.ase" id="2_qg0q7"]
-[ext_resource type="Texture2D" uid="uid://jhuap7ms6vwu" path="res://art/grid.tres" id="2_xcdbn"]
+[ext_resource type="Texture2D" uid="uid://b2ewkuq67okdx" path="res://art/godot_tres/modules/Floor_2x2.tres" id="3_wl2m5"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xcdbn"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dd6il"]
 size = Vector2(32, 32)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qg0q7"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wl2m5"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4mfgc"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_svqoy"]
 size = Vector2(32, 32)
 
 [node name="engine" type="Node2D"]
 script = ExtResource("1_xcdbn")
 moduleType = 2
-tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1)])
+tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 1), Vector2i(1, 0), Vector2i(1, 1)])
 isRotateable = false
 maxHealth = 5
 maxEnergy = 2
 batteryOffset = Vector2i(0, 1)
 
+[node name="Engines2x2Back" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(-16, 16)
+texture = ExtResource("2_dd6il")
+
+[node name="floor" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(16, 16)
+texture = ExtResource("3_wl2m5")
+
 [node name="Engines2x2Inside" type="Sprite2D" parent="."]
 position = Vector2(16, 16)
 texture = ExtResource("2_qg0q7")
-
-[node name="Grid" type="Sprite2D" parent="."]
-z_index = -2
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_xcdbn")
-
-[node name="Label" type="Label" parent="Grid"]
-z_index = 1
-offset_left = -13.0
-offset_top = -53.0
-offset_right = 59.0
-offset_bottom = -30.0
-text = "engine A"
-metadata/_edit_use_anchors_ = true
-
-[node name="Grid2" type="Sprite2D" parent="."]
-z_index = -2
-position = Vector2(0, 32)
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_xcdbn")
-
-[node name="Label" type="Label" parent="Grid2"]
-z_index = 1
-offset_left = -13.0
-offset_top = -53.0
-offset_right = 59.0
-offset_bottom = -30.0
-text = "engine A"
 
 [node name="boundingBox" type="StaticBody2D" parent="."]
 collision_layer = 128
@@ -57,11 +46,19 @@ collision_mask = 128
 input_pickable = true
 
 [node name="0,0" type="CollisionShape2D" parent="boundingBox"]
-shape = SubResource("RectangleShape2D_xcdbn")
+shape = SubResource("RectangleShape2D_dd6il")
 
 [node name="0,1" type="CollisionShape2D" parent="boundingBox"]
 position = Vector2(0, 32)
-shape = SubResource("RectangleShape2D_qg0q7")
+shape = SubResource("RectangleShape2D_wl2m5")
+
+[node name="1,0" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(32, 0)
+shape = SubResource("RectangleShape2D_4mfgc")
+
+[node name="1,1" type="CollisionShape2D" parent="boundingBox"]
+position = Vector2(32, 32)
+shape = SubResource("RectangleShape2D_svqoy")
 
 [connection signal="mouse_entered" from="boundingBox" to="." method="_mouse_entered"]
 [connection signal="mouse_exited" from="boundingBox" to="." method="_mouse_exited"]

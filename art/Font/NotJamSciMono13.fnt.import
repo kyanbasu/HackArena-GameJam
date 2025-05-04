@@ -1,0 +1,17 @@
+[remap]
+
+importer="font_data_bmfont"
+type="FontFile"
+uid="uid://cpw2q5x3wcdtv"
+path="res://.godot/imported/NotJamSciMono13.fnt-5be1140ddd69e3dc6ce9d48f21e582e3.fontdata"
+
+[deps]
+
+source_file="res://art/Font/NotJamSciMono13.fnt"
+dest_files=["res://.godot/imported/NotJamSciMono13.fnt-5be1140ddd69e3dc6ce9d48f21e582e3.fontdata"]
+
+[params]
+
+fallbacks=[]
+compress=true
+scaling_mode=2

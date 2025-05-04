@@ -132,11 +132,14 @@ func _draw() -> void:
 
 
 ### Background ###
+func generate_background():
+    generate_meteors()
+
 # Temporary randomization, maybe generate them in clusters?
-func generate_meteors(_seed: int):
+func generate_meteors():
     meteorsTilemap.clear()
     var rng = RandomNumberGenerator.new()
-    rng.seed = _seed 
+    rng.seed = G.seed
     
     var tilesAmount = meteorsTilemap.tile_set.get_source(0).get_tiles_count()
     

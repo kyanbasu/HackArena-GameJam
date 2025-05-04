@@ -21,7 +21,7 @@ aseprite_executable_path="D:/Wszystko/aseprite/aseprite.exe"
 
 [autoload]
 
-G="*res://scripts/Global.gd"
+G="*res://prefabs/global.tscn"
 Lobby="*res://scripts/network_manager.gd"
 NameGenerator="*res://scripts/ui/name_generator.gd"
 
@@ -39,6 +39,11 @@ run/main_run_args="editor"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/nklbdev.aseprite_importers/plugin.cfg")
+
+[gui]
+
+theme/custom_font="uid://ulenaercs4lg"
+theme/default_font_antialiasing=0
 
 [input]
 

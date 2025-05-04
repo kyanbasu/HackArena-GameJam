@@ -52,9 +52,11 @@ VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_bhx41")
 VScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_bhx41")
 
 [sub_resource type="LabelSettings" id="LabelSettings_gee14"]
+font_size = 18
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sww3w"]
 texture = ExtResource("13_qnb83")
+texture_margin_top = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qnb83"]
 
@@ -67,7 +69,7 @@ bg_color = Color(1, 1, 1, 0.321569)
 bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_qouja"]
-font_size = 12
+font_size = 10
 
 [sub_resource type="LabelSettings" id="LabelSettings_bhx41"]
 
@@ -224,10 +226,10 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -140.0
-offset_top = -127.0
-offset_right = -28.0
-offset_bottom = -93.0
+offset_left = -165.0
+offset_top = -122.0
+offset_right = -52.0
+offset_bottom = -103.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "INVENTORY"
@@ -343,22 +345,24 @@ stretch_mode = 2
 clip_contents = true
 layout_mode = 0
 offset_left = 5.0
-offset_top = 39.0
+offset_top = 41.0
 offset_right = 27.0
-offset_bottom = 56.0
+offset_bottom = 57.0
 label_settings = SubResource("LabelSettings_qouja")
 horizontal_alignment = 2
+vertical_alignment = 1
 clip_text = true
 
 [node name="energy" type="Label" parent="ship/UI/currencyNEnergy"]
 clip_contents = true
 layout_mode = 0
 offset_left = 5.0
-offset_top = 103.0
+offset_top = 105.0
 offset_right = 27.0
 offset_bottom = 120.0
 label_settings = SubResource("LabelSettings_qouja")
 horizontal_alignment = 2
+vertical_alignment = 1
 clip_text = true
 
 [node name="globalBG" type="Parallax2D" parent="."]
@@ -502,6 +506,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Shop" type="CanvasLayer" parent="." node_paths=PackedStringArray("inventory", "container")]
+visible = false
 script = ExtResource("33_js0lu")
 inventory = NodePath("../ship/UI/inventory")
 container = NodePath("Panel/ScrollContainer/VBoxContainer")

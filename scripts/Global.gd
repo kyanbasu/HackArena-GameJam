@@ -7,6 +7,8 @@ var currencyNEnergy : Control
 var defaultCursor : Texture2D
 var targetingCursor : Texture2D
 
+var seed : int = 0
+
 func _ready() -> void:
     defaultCursor = load("res://art/ui/Cursor.ase")
     targetingCursor = load("res://art/ui/Attack_Icon.ase")
