@@ -17,3 +17,4 @@ mono_crash.*.json
 *.exe
 *.zip
 /addons
+/build/linux

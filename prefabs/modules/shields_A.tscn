@@ -5,9 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://dq1fwmojgjaiv" path="res://art/modules/Floor_1x2.ase" id="3_0utjt"]
 [ext_resource type="Texture2D" uid="uid://c0puf71b2mdsm" path="res://art/modules/Shields_1x2_Inside.ase" id="4_i7kpb"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0u6mf"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_0utjt"]
 atlas = ExtResource("3_0utjt")
-region = Rect2(32, 0, 32, 64)
+region = Rect2(0, 0, 32, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ymerc"]
 size = Vector2(32, 32)
@@ -32,7 +32,7 @@ texture = ExtResource("2_0utjt")
 z_index = -1
 position = Vector2(-16, 0)
 rotation = 1.5708
-texture = SubResource("AtlasTexture_0u6mf")
+texture = SubResource("AtlasTexture_0utjt")
 
 [node name="Shields1x2Inside" type="Sprite2D" parent="."]
 position = Vector2(-16, 0)

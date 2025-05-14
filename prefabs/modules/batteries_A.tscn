@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://ciwbv7hannw5p"]
+[gd_scene load_steps=9 format=3 uid="uid://ciwbv7hannw5p"]
 
 [ext_resource type="Script" uid="uid://chf6gf16v432" path="res://scripts/modules/module.gd" id="1_lnuvx"]
 [ext_resource type="Texture2D" uid="uid://kiyjkj5v3se5" path="res://art/modules/Batteries_x2x3_Back.ase" id="2_570wu"]
 [ext_resource type="Texture2D" uid="uid://bk0d5oqk5hb7g" path="res://art/modules/Batteries_x2x3_Inside.ase" id="3_1a7t3"]
+[ext_resource type="Texture2D" uid="uid://cnrft13rbx70g" path="res://art/godot_tres/modules/Floor_x2x3.tres" id="3_1k264"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1k264"]
 size = Vector2(32, 32)
@@ -27,6 +28,11 @@ maxEnergy = -3
 z_index = -2
 position = Vector2(0, 16)
 texture = ExtResource("2_570wu")
+
+[node name="floor" type="Sprite2D" parent="."]
+z_index = -1
+position = Vector2(0, 16)
+texture = ExtResource("3_1k264")
 
 [node name="BatteriesX2x3Inside" type="Sprite2D" parent="."]
 position = Vector2(0, 16)
